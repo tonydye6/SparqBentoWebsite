@@ -105,13 +105,13 @@ export function BentoGrid() {
             <ThreeViewer />
           </Card>
           <Card 
-            className="bento-card h-[440px] cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[440px] mb-5 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("join")}
           >
             <JoinUs />
           </Card>
           <Card 
-            className="bento-card h-[440px] mb-6"
+            className="bento-card h-[440px] mb-5"
           >
             <div className="h-full flex items-center justify-center">
               <span className="text-2xl font-bold">Coming Soon</span>
@@ -121,26 +121,26 @@ export function BentoGrid() {
 
         <div className="flex-1">
           <Card 
-            className="bento-card h-[440px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[440px] mb-5 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("discord")}
           >
             <DiscordWidget />
           </Card>
           <Card 
-            className="bento-card h-[340px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[340px] mb-5 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("school")}
           >
             <SchoolSpotlight />
           </Card>
           <Card 
-            className="bento-card h-[440px]"
+            className="bento-card h-[440px] mb-5"
           >
             <div className="h-full flex items-center justify-center">
               <span className="text-2xl font-bold">Additional Content</span>
             </div>
           </Card>
           <Card 
-            className="bento-card h-[440px] cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[440px] mb-5 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("about")}
           >
             <AboutUs title="Our Mission" variant="secondary" />
