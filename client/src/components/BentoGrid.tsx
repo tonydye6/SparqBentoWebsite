@@ -131,7 +131,7 @@ export function BentoGrid() {
         animate={{ opacity: 1, y: 0 }}
       >
         <div className="flex items-center justify-between">
-          <img src="/sparqIcon.png" alt="Sparq Games Logo" className="h-12" />
+          <img src="/sparqIcon.png" alt="Sparq Games Logo" className="h-16" />
           <div className="flex items-center gap-4">
             <button className="text-white hover:text-gray-300 transition-colors">About</button>
             <button className="text-white hover:text-gray-300 transition-colors">Contact</button>
