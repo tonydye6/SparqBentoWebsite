@@ -88,16 +88,10 @@ export function BentoGrid() {
             <BetaForm />
           </Card>
           <Card 
-            className="bento-card h-36 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => handleCardClick("news")}
+            className="bento-card h-126 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("team")}
           >
-            <GameNews />
-          </Card>
-          <Card 
-            className="bento-card h-36 cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => handleCardClick("about")}
-          >
-            <AboutUs title="Our Mission" variant="secondary" />
+            <TeamCarousel />
           </Card>
         </div>
 
@@ -112,10 +106,16 @@ export function BentoGrid() {
             <ThreeViewer />
           </Card>
           <Card 
-            className="bento-card h-126 cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => handleCardClick("team")}
+            className="bento-card h-36 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("news")}
           >
-            <TeamCarousel />
+            <GameNews />
+          </Card>
+          <Card 
+            className="bento-card h-36 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("about")}
+          >
+            <AboutUs title="Our Mission" variant="secondary" />
           </Card>
         </div>
 
