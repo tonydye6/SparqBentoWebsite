@@ -67,6 +67,29 @@ export function BentoGrid() {
     }
   };
 
+  useEffect(() => {
+    const cards = document.querySelectorAll('.bento-card');
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      const card = (e.currentTarget as HTMLElement);
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / card.offsetWidth) * 100;
+      const y = ((e.clientY - rect.top) / card.offsetHeight) * 100;
+      card.style.setProperty('--mouse-x', `${x}%`);
+      card.style.setProperty('--mouse-y', `${y}%`);
+    };
+
+    cards.forEach(card => {
+      card.addEventListener('mousemove', handleMouseMove as any);
+    });
+
+    return () => {
+      cards.forEach(card => {
+        card.removeEventListener('mousemove', handleMouseMove as any);
+      });
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0A0A1E] p-6">
       <div className="flex gap-5 max-w-[1600px] mx-auto">
