@@ -27,104 +27,26 @@
 @layer components {
   .bento-card {
     @apply rounded-2xl overflow-hidden relative;
-    background: #E51937; /* Outlaw Red PMS 185 - Default for all cards */
+    background: #E51937; /* Default - Outlaw Red PMS 185 */
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transform: translateZ(0);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: transform, box-shadow, background-color;
-    transform-style: preserve-3d;
-    perspective: 1000px;
+    transition: transform 0.3s ease;
   }
 
   .ai-chat-card {
-    background: #42B4E6; /* Future Blue PMS 298 */
+    background: #42B4E6 !important; /* Future Blue PMS 298 */
   }
 
   .image-card {
-    background: #00FF7F; /* Digital Green PMS 354 */
+    background: #00FF7F !important; /* Digital Green PMS 354 */
   }
 
   .beta-card {
-    background: #FF6B1C; /* Energy Orange PMS 1585 */
+    background: #FF6B1C !important; /* Energy Orange PMS 1585 */
   }
 
   .bento-card:hover {
-    transform: scale(1.02) translateZ(20px) rotateX(2deg) rotateY(2deg);
-    box-shadow: 
-      0 0 20px 0 hsl(var(--tech-purple) / 0.2),
-      0 0 40px 0 hsl(var(--outlaw-red) / 0.1),
-      0 0 60px 0 hsl(var(--future-blue) / 0.15);
-    background: rgba(40, 40, 60, 0.95);
-    border-color: hsl(var(--tech-purple) / 0.4);
-  }
-
-  .bento-card::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    background: linear-gradient(
-      135deg,
-      hsl(var(--outlaw-red) / 0.5),
-      hsl(var(--tech-purple) / 0.5)
-    );
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .bento-card:hover::before {
-    opacity: 0.15;
-  }
-
-  .bento-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      hsl(var(--tech-purple) / 0.15),
-      transparent 40%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-
-  .bento-card:hover::after {
-    opacity: 1;
-  }
-
-  .bento-card::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    background: linear-gradient(90deg, #00f6ff, #0044ff);
-    z-index: -1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .bento-card:hover::before {
-    opacity: 0.5;
-  }
-
-  .bento-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    opacity: 0;
-    background: radial-gradient(
-      circle at center,
-      rgba(255, 255, 255, 0.1) 0%,
-      transparent 70%
-    );
-    transition: opacity 0.3s ease;
-  }
-
-  .bento-card:hover::after {
-    opacity: 1;
+    transform: scale(1.02);
   }
 
   .grid-container {
