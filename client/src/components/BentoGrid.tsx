@@ -111,10 +111,17 @@ export function BentoGrid() {
             <JoinUs />
           </Card>
           <Card 
-            className="bento-card h-[440px] mb-5"
+            className="bento-card h-[220px] mb-5"
           >
             <div className="h-full flex items-center justify-center">
-              <span className="text-2xl font-bold">Coming Soon</span>
+              <span className="text-2xl font-bold">Here</span>
+            </div>
+          </Card>
+          <Card 
+            className="bento-card h-[220px] mb-5"
+          >
+            <div className="h-full flex items-center justify-center">
+              <span className="text-2xl font-bold">Now</span>
             </div>
           </Card>
         </div>
