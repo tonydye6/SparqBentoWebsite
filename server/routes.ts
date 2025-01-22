@@ -39,7 +39,15 @@ export function registerRoutes(app: Express): Server {
 
       console.log('Found admin:', admin ? 'yes' : 'no'); // Debug log
 
-      if (!admin || !await bcrypt.compare(password, admin.password)) {
+      if (!admin) {
+        console.log('Admin not found'); // Debug log
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      const passwordMatch = await bcrypt.compare(password, admin.password);
+      console.log('Password match:', passwordMatch); // Debug log
+
+      if (!passwordMatch) {
         console.log('Password verification failed'); // Debug log
         return res.status(401).json({ message: "Invalid credentials" });
       }
