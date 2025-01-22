@@ -75,7 +75,7 @@ export function BentoGrid() {
             <TeamCarousel />
           </Card>
           <Card 
-            className="bento-card h-[440px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[220px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("sparqverse")}
           >
             <AboutUs />
@@ -105,7 +105,7 @@ export function BentoGrid() {
             <ThreeViewer />
           </Card>
           <Card 
-            className="bento-card h-[440px] mb-5 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[220px] mb-5 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("join")}
           >
             <JoinUs />
@@ -140,7 +140,7 @@ export function BentoGrid() {
             </div>
           </Card>
           <Card 
-            className="bento-card h-[440px] mb-5 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[220px] mb-5 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("about")}
           >
             <AboutUs title="Our Mission" variant="secondary" />
