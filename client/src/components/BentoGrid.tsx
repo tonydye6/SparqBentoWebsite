@@ -32,9 +32,9 @@ export function BentoGrid() {
         <GameNews />
       </Card>
 
-      {/* Card 5: 2D Character */}
+      {/* Card 5: About Us */}
       <Card className="bento-card card-5 bg-[rgba(28,28,44,0.8)] backdrop-blur-md">
-        <img src="/basketballPlayer.png" alt="Basketball Player" className="w-full h-full object-cover" />
+        <AboutUs title="Our Mission" variant="secondary" />
       </Card>
 
       {/* Card 6: Join Us */}
@@ -58,7 +58,7 @@ export function BentoGrid() {
       </Card>
 
       {/* Card 10: 3D Character Viewer */}
-      <Card className="bento-card card-10 rounded-full bg-[#E01E3C]">
+      <Card className="bento-card card-10 bg-[#E01E3C]">
         <ThreeViewer />
       </Card>
     </div>

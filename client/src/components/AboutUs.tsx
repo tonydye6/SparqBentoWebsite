@@ -1,14 +1,26 @@
 import { Button } from "@/components/ui/button";
 import { Gamepad2, Sparkles, Trophy } from "lucide-react";
 
-export function AboutUs() {
+interface AboutUsProps {
+  title?: string;
+  variant?: 'primary' | 'secondary';
+}
+
+export function AboutUs({ title = "Enter the Sparqverse", variant = 'primary' }: AboutUsProps) {
   return (
     <div className="h-full p-6 flex flex-col text-white">
-      <h2 className="text-2xl font-bold mb-4">Enter the Sparqverse</h2>
-      <p className="text-white/80 mb-6">
-        Join the revolution in sports-centric mobile gaming, powered by AAA Sports IP,
-        cutting-edge AI, and blockchain technology.
-      </p>
+      <h2 className="text-2xl font-bold mb-4">{title}</h2>
+      {variant === 'primary' ? (
+        <p className="text-white/80 mb-6">
+          Join the revolution in sports-centric mobile gaming, powered by AAA Sports IP,
+          cutting-edge AI, and blockchain technology.
+        </p>
+      ) : (
+        <p className="text-white/80 mb-6">
+          Sparq Games is revolutionizing sports gaming through innovative AI technology,
+          creating immersive experiences that bring fans closer to the action.
+        </p>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="flex items-center gap-2">
@@ -25,15 +37,17 @@ export function AboutUs() {
         </div>
       </div>
 
-      <Button 
-        className="mt-auto bg-white/10 hover:bg-white/20 backdrop-blur-sm"
-        onClick={() => {
-          // Handle expansion to full screen
-          console.log("Expand About Us");
-        }}
-      >
-        Learn More
-      </Button>
+      {variant === 'primary' && (
+        <Button 
+          className="mt-auto bg-white/10 hover:bg-white/20 backdrop-blur-sm"
+          onClick={() => {
+            // Handle expansion to full screen
+            console.log("Expand About Us");
+          }}
+        >
+          Learn More
+        </Button>
+      )}
     </div>
   );
 }
