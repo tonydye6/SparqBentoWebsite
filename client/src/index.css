@@ -77,12 +77,17 @@
     border-color: rgba(255, 107, 28, 0.3);
   }
 
-  .team-card, .discord-card {
+  .team-card {
     background: #42B4E6 !important; /* Future Blue PMS 298 - for community elements */
     border-color: rgba(66, 180, 230, 0.3);
   }
 
-  .news-card, .about-card, .school-card {
+  .discord-card, .school-card {
+    background: #4E2FE6 !important; /* Tech Purple PMS 2736 */
+    border-color: rgba(78, 47, 230, 0.3);
+  }
+
+  .news-card, .about-card {
     background: #00FF7F !important; /* Digital Green PMS 354 - for informational content */
     border-color: rgba(0, 255, 127, 0.3);
   }
