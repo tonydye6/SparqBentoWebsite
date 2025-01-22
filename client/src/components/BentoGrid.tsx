@@ -124,7 +124,7 @@ export function BentoGrid() {
 
         <div className="flex-1">
           <Card 
-            className="bento-card h-144 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[600px] mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("discord")}
           >
             <DiscordWidget />
