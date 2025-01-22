@@ -80,6 +80,16 @@ export function BentoGrid() {
       </motion.div>
 
       <div className="bento-grid">
+        {/* 3D Viewer - Now larger and more prominent */}
+        <motion.div
+          className="bento-card feature-card"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("3d")}
+        >
+          <ThreeViewer />
+        </motion.div>
+
+        {/* AI Chat */}
         <motion.div
           className="bento-card card-1"
           whileHover={{ scale: 1.02 }}
@@ -88,6 +98,7 @@ export function BentoGrid() {
           <AboutUs title="AI Chat" variant="secondary" />
         </motion.div>
 
+        {/* Sparqverse */}
         <motion.div
           className="bento-card card-2"
           whileHover={{ scale: 1.02 }}
@@ -96,36 +107,13 @@ export function BentoGrid() {
           <AboutUs />
         </motion.div>
 
+        {/* Beta Form */}
         <motion.div
           className="bento-card card-3"
           whileHover={{ scale: 1.02 }}
           onClick={() => handleCardClick("beta")}
         >
           <BetaForm />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-4"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("news")}
-        >
-          <GameNews />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-5"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("about")}
-        >
-          <AboutUs variant="secondary" />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-6"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("join")}
-        >
-          <JoinUs />
         </motion.div>
 
         {/* UCLA Card */}
@@ -142,6 +130,24 @@ export function BentoGrid() {
           </div>
         </motion.div>
 
+        {/* News */}
+        <motion.div
+          className="bento-card card-4"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("news")}
+        >
+          <GameNews />
+        </motion.div>
+
+        {/* About Us */}
+        <motion.div
+          className="bento-card card-5"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("about")}
+        >
+          <AboutUs variant="secondary" />
+        </motion.div>
+
         {/* LA Rams Card */}
         <motion.div
           className="bento-card image-card"
@@ -156,6 +162,16 @@ export function BentoGrid() {
           </div>
         </motion.div>
 
+        {/* Join Us */}
+        <motion.div
+          className="bento-card card-6"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("join")}
+        >
+          <JoinUs />
+        </motion.div>
+
+        {/* School Spotlight */}
         <motion.div
           className="bento-card card-7"
           whileHover={{ scale: 1.02 }}
@@ -164,6 +180,7 @@ export function BentoGrid() {
           <SchoolSpotlight />
         </motion.div>
 
+        {/* Team Carousel */}
         <motion.div
           className="bento-card card-8"
           whileHover={{ scale: 1.02 }}
@@ -193,20 +210,13 @@ export function BentoGrid() {
           </div>
         </motion.div>
 
+        {/* Discord */}
         <motion.div
           className="bento-card card-9"
           whileHover={{ scale: 1.02 }}
           onClick={() => handleCardClick("discord")}
         >
           <DiscordWidget />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-10"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("3d")}
-        >
-          <ThreeViewer />
         </motion.div>
       </div>
 

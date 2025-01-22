@@ -31,7 +31,7 @@
 @layer components {
   .bento-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1.5rem;
     padding: 1.5rem;
     max-width: 1800px;
@@ -111,92 +111,117 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
-  /* Card size variations */
+  /* Feature card (3D Viewer) */
+  .feature-card {
+    grid-column: span 2;
+    grid-row: span 2;
+    height: 480px;
+    animation-delay: 0.1s;
+  }
+
+  /* Other card variations */
   .card-1 {
     grid-column: span 1;
     grid-row: span 2;
-    animation-delay: 0.1s;
     height: 480px;
+    animation-delay: 0.2s;
   }
 
   .card-2 {
-    grid-column: span 2;
+    grid-column: span 1;
     grid-row: span 1;
-    animation-delay: 0.2s;
-    height: 280px;
+    height: 220px;
+    animation-delay: 0.3s;
   }
 
   .card-3 {
     grid-column: span 1;
     grid-row: span 2;
-    animation-delay: 0.3s;
     height: 480px;
+    animation-delay: 0.4s;
   }
 
   .card-4 {
     grid-column: span 1;
     grid-row: span 1;
-    animation-delay: 0.4s;
-    height: 280px;
+    height: 220px;
+    animation-delay: 0.5s;
   }
 
   .card-5 {
     grid-column: span 1;
     grid-row: span 1;
-    animation-delay: 0.5s;
-    height: 280px;
+    height: 220px;
+    animation-delay: 0.6s;
   }
 
   .card-6 {
     grid-column: span 1;
     grid-row: span 2;
-    animation-delay: 0.6s;
     height: 480px;
+    animation-delay: 0.7s;
   }
 
   .card-7 {
     grid-column: span 1;
     grid-row: span 1;
-    animation-delay: 0.7s;
-    height: 280px;
+    height: 220px;
+    animation-delay: 0.8s;
   }
 
   .card-8 {
     grid-column: span 2;
     grid-row: span 2;
-    animation-delay: 0.8s;
     height: 480px;
+    animation-delay: 0.9s;
   }
 
   .card-9 {
     grid-column: span 1;
     grid-row: span 1;
-    animation-delay: 0.9s;
-    height: 280px;
-  }
-
-  .card-10 {
-    grid-column: span 2;
-    grid-row: span 1;
+    height: 220px;
     animation-delay: 1s;
-    height: 280px;
   }
 
   .image-card {
     grid-column: span 1;
     grid-row: span 1;
-    height: 280px;
+    height: 220px;
     animation-delay: 0.5s;
   }
 
   /* Responsive adjustments */
-  @media (max-width: 1024px) {
+  @media (max-width: 1280px) {
+    .bento-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .feature-card {
+      grid-column: span 3;
+    }
+
+    .card-8 {
+      grid-column: span 2;
+    }
+  }
+
+  @media (max-width: 768px) {
     .bento-grid {
       grid-template-columns: repeat(2, 1fr);
     }
 
-    .card-2, .card-8, .card-10 {
+    .feature-card {
       grid-column: span 2;
+    }
+
+    .card-1, .card-3, .card-6 {
+      grid-column: span 1;
+      height: 380px;
+    }
+
+    .card-8 {
+      grid-column: span 2;
+      height: 380px;
     }
   }
 
@@ -212,6 +237,7 @@
     }
   }
 
+  /* Card theme colors */
   .ai-chat-card {
     background: #4E2FE6 !important; /* Tech Purple PMS 2736 - for AI/tech features */
     border-color: rgba(78, 47, 230, 0.3);
@@ -241,6 +267,7 @@
     background: #00FF7F !important; /* Digital Green PMS 354 - for informational content */
     border-color: rgba(0, 255, 127, 0.3);
   }
+
   .small-card {
     @apply mb-4 h-[64px] rounded-xl border-2 border-slate-400/10 bg-neutral-100 p-4 dark:bg-neutral-900;
   }
