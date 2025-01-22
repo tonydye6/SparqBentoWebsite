@@ -90,9 +90,16 @@ export function BentoGrid() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#4E2FE6] dark:bg-[#1a1a2e] p-6">
-      {/* Tech Purple PMS 2736 */} {/* Tech Purple background */}
-      <div className="flex gap-5 max-w-[1600px] mx-auto">
+    <div className="min-h-screen bg-black p-6">
+      <div className="max-w-[1600px] mx-auto">
+        <Card className="bento-card h-[50px] mb-6 w-full flex items-center justify-between px-6">
+          <h1 className="text-2xl">Sparq Games</h1>
+          <div className="flex items-center gap-4">
+            <button className="text-white hover:text-gray-300">About</button>
+            <button className="text-white hover:text-gray-300">Contact</button>
+          </div>
+        </Card>
+        <div className="flex gap-5">
         <div className="flex-1">
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
             <Card className="bento-card h-[440px] mb-6 cursor-pointer team-card" onClick={() => handleCardClick("team")}>
@@ -192,6 +199,7 @@ export function BentoGrid() {
           </motion.div>
         </div>
       </div>
+    </div>
 
       <BentoCardModal
         isOpen={expandedCard !== null}
