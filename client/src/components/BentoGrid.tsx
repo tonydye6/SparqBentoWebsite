@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Image from 'next/image'; 
-
-import { useState, useEffect } from "react";
+import Image from 'next/image';
 import { Card } from "@/components/ui/card";
 import { ThreeViewer } from "./ThreeViewer";
 import { AiChat } from "./AiChat";
