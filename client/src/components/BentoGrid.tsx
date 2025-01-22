@@ -105,7 +105,7 @@ export function BentoGrid() {
             <ThreeViewer />
           </Card>
           <Card 
-            className="bento-card h-72 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[245px] cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("join")}
           >
             <JoinUs />
