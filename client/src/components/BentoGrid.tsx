@@ -11,56 +11,58 @@ import { AboutUs } from "./AboutUs";
 
 export function BentoGrid() {
   return (
-    <div className="grid-container p-6 gap-6">
-      {/* Card 1: AI Chat */}
-      <Card className="bento-card card-1 bg-[rgba(28,28,44,0.8)] backdrop-blur-md">
-        <AiChat />
-      </Card>
+    <div className="min-h-screen bg-[#0A0A1E]">
+      <div className="grid-container">
+        {/* Card 1: AI Chat */}
+        <Card className="bento-card card-1">
+          <AiChat />
+        </Card>
 
-      {/* Card 2: Enter Sparqverse */}
-      <Card className="bento-card card-2 bg-gradient-to-br from-[#5B4CDB] to-[#3B0099]">
-        <AboutUs />
-      </Card>
+        {/* Card 2: Enter Sparqverse */}
+        <Card className="bento-card card-2">
+          <AboutUs />
+        </Card>
 
-      {/* Card 3: Join Beta */}
-      <Card className="bento-card card-3 bg-[rgba(28,28,44,0.8)] backdrop-blur-md">
-        <BetaForm />
-      </Card>
+        {/* Card 3: Join Beta */}
+        <Card className="bento-card card-3">
+          <BetaForm />
+        </Card>
 
-      {/* Card 4: News Carousel */}
-      <Card className="bento-card card-4 bg-[rgba(28,28,44,0.8)] backdrop-blur-md">
-        <GameNews />
-      </Card>
+        {/* Card 4: News */}
+        <Card className="bento-card card-4">
+          <GameNews />
+        </Card>
 
-      {/* Card 5: About Us */}
-      <Card className="bento-card card-5 bg-[rgba(28,28,44,0.8)] backdrop-blur-md">
-        <AboutUs title="Our Mission" variant="secondary" />
-      </Card>
+        {/* Card 5: About Us */}
+        <Card className="bento-card card-5">
+          <AboutUs title="Our Mission" variant="secondary" />
+        </Card>
 
-      {/* Card 6: Join Us */}
-      <Card className="bento-card card-6 bg-[rgba(28,28,44,0.8)] backdrop-blur-md">
-        <JoinUs />
-      </Card>
+        {/* Card 6: Join Us */}
+        <Card className="bento-card card-6">
+          <JoinUs />
+        </Card>
 
-      {/* Card 7: School Spotlight */}
-      <Card className="bento-card card-7 bg-[rgba(28,28,44,0.8)] backdrop-blur-md">
-        <SchoolSpotlight />
-      </Card>
+        {/* Card 7: School Spotlight */}
+        <Card className="bento-card card-7">
+          <SchoolSpotlight />
+        </Card>
 
-      {/* Card 8: Team */}
-      <Card className="bento-card card-8 bg-[rgba(28,28,44,0.8)] backdrop-blur-md">
-        <TeamCarousel />
-      </Card>
+        {/* Card 8: Team */}
+        <Card className="bento-card card-8">
+          <TeamCarousel />
+        </Card>
 
-      {/* Card 9: Discord */}
-      <Card className="bento-card card-9 bg-[rgba(28,28,44,0.8)] backdrop-blur-md">
-        <DiscordWidget />
-      </Card>
+        {/* Card 9: Discord */}
+        <Card className="bento-card card-9">
+          <DiscordWidget />
+        </Card>
 
-      {/* Card 10: 3D Character Viewer */}
-      <Card className="bento-card card-10 bg-[#E01E3C]">
-        <ThreeViewer />
-      </Card>
+        {/* Card 10: 3D Character */}
+        <Card className="bento-card card-10">
+          <ThreeViewer />
+        </Card>
+      </div>
     </div>
   );
 }
