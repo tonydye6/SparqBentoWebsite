@@ -108,11 +108,8 @@ export function BentoGrid() {
           >
             <JoinUs />
           </Card>
-          <Card 
-            className="bento-card h-90 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => handleCardClick("school")}
-          >
-            <SchoolSpotlight />
+          <Card className="bento-card h-72 mb-4">
+            <ThreeViewer />
           </Card>
           <Card 
             className="bento-card h-126 cursor-pointer transition-transform hover:scale-[1.02]"
@@ -129,8 +126,11 @@ export function BentoGrid() {
           >
             <DiscordWidget />
           </Card>
-          <Card className="bento-card h-72 mb-4">
-            <ThreeViewer />
+          <Card 
+            className="bento-card h-90 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("school")}
+          >
+            <SchoolSpotlight />
           </Card>
           <Card 
             className="bento-card h-72"
