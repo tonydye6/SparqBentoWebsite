@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import Image from 'next/image'; // Added import for Next.js Image component
+import Image from 'next/image'; 
 
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
@@ -69,7 +69,7 @@ export function BentoGrid() {
 
   useEffect(() => {
     const cards = document.querySelectorAll('.bento-card');
-    
+
     const handleMouseMove = (e: MouseEvent) => {
       const card = (e.currentTarget as HTMLElement);
       const rect = card.getBoundingClientRect();
@@ -91,26 +91,26 @@ export function BentoGrid() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0A0A1E] p-6">
+    <div className="min-h-screen bg-[#551A8B] p-6"> {/* Tech Purple background */}
       <div className="flex gap-5 max-w-[1600px] mx-auto">
         <div className="flex-1">
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[440px] mb-6 cursor-pointer" onClick={() => handleCardClick("team")}>
+            <Card className="bento-card h-[440px] mb-6 cursor-pointer team-card" onClick={() => handleCardClick("team")}>
               <TeamCarousel />
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[220px] mb-6 cursor-pointer" onClick={() => handleCardClick("sparqverse")}>
+            <Card className="bento-card h-[220px] mb-6 cursor-pointer sparqverse-card" onClick={() => handleCardClick("sparqverse")}>
               <AboutUs />
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[340px] mb-6 cursor-pointer" onClick={() => handleCardClick("beta")}>
+            <Card className="bento-card h-[340px] mb-6 cursor-pointer beta-card" onClick={() => handleCardClick("beta")}>
               <BetaForm />
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[440px] mb-6 cursor-pointer" onClick={() => handleCardClick("ai-chat")}>
+            <Card className="bento-card h-[440px] mb-6 cursor-pointer ai-chat-card" onClick={() => handleCardClick("ai-chat")}>
               <AiChat />
             </Card>
           </motion.div>
@@ -118,22 +118,22 @@ export function BentoGrid() {
 
         <div className="flex-1">
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[315px] mb-6 cursor-pointer" onClick={() => handleCardClick("news")}>
+            <Card className="bento-card h-[315px] mb-6 cursor-pointer news-card" onClick={() => handleCardClick("news")}>
               <GameNews />
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[440px] mb-6">
+            <Card className="bento-card h-[440px] mb-6 image-card">
               <ThreeViewer />
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[220px] mb-5 cursor-pointer" onClick={() => handleCardClick("join")}>
+            <Card className="bento-card h-[220px] mb-5 cursor-pointer join-card" onClick={() => handleCardClick("join")}>
               <JoinUs />
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[220px] mb-5 overflow-hidden"> {/* Changed */}
+            <Card className="bento-card h-[220px] mb-5 overflow-hidden image-card"> 
               <div className="h-full flex items-center justify-center relative">
                 <img
                   src="/path/to/your/image1.png"
@@ -144,7 +144,7 @@ export function BentoGrid() {
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[220px] mb-5 overflow-hidden"> {/* Changed */}
+            <Card className="bento-card h-[220px] mb-5 overflow-hidden image-card"> 
               <div className="h-full flex items-center justify-center relative">
                 <img
                   src="/path/to/your/image2.png"
@@ -158,17 +158,17 @@ export function BentoGrid() {
 
         <div className="flex-1">
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[440px] mb-5 cursor-pointer" onClick={() => handleCardClick("discord")}>
+            <Card className="bento-card h-[440px] mb-5 cursor-pointer discord-card" onClick={() => handleCardClick("discord")}>
               <DiscordWidget />
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[340px] mb-5 cursor-pointer" onClick={() => handleCardClick("school")}>
+            <Card className="bento-card h-[340px] mb-5 cursor-pointer school-card" onClick={() => handleCardClick("school")}>
               <SchoolSpotlight />
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[440px] mb-5" >
+            <Card className="bento-card h-[440px] mb-5 image-card">
               <motion.div className="h-full flex items-center justify-center relative overflow-hidden" whileHover={{ z: 20 }} style={{ transformStyle: "preserve-3d" }}>
                 <div className="flex w-full h-full">
                   <img
@@ -186,7 +186,7 @@ export function BentoGrid() {
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[220px] mb-5 cursor-pointer" onClick={() => handleCardClick("about")}>
+            <Card className="bento-card h-[220px] mb-5 cursor-pointer about-card" onClick={() => handleCardClick("about")}>
               <AboutUs title="Our Mission" variant="secondary" />
             </Card>
           </motion.div>
@@ -203,3 +203,38 @@ export function BentoGrid() {
     </div>
   );
 }
+
+{/* Added CSS styles for background colors */}
+<style jsx>{`
+  .ai-chat-card {
+    background-color: #4682B4; /* Future Blue */
+  }
+  .image-card {
+    background-color: #50C878; /* Digital Green */
+  }
+  .beta-card {
+    background-color: #FFA500; /* Energy Orange */
+  }
+  .news-card {
+    background-color: #50C878; /* Digital Green */
+  }
+  .join-card {
+    background-color: #FFA500; /* Energy Orange */
+  }
+  .about-card {
+    background-color: #FFA500; /* Energy Orange */
+  }
+  .team-card {
+    background-color: #4682B4; /* Future Blue */
+  }
+  .sparqverse-card {
+    background-color: #50C878; /* Digital Green */
+  }
+  .discord-card {
+    background-color: #4682B4; /* Future Blue */
+  }
+  .school-card {
+    background-color: #FFA500; /* Energy Orange */
+  }
+
+`}</style>
