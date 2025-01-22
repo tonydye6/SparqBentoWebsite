@@ -27,7 +27,7 @@
 @layer components {
   .bento-card {
     @apply rounded-2xl overflow-hidden relative;
-    background: rgba(28, 28, 44, 0.8);
+    background: #E51937; /* Outlaw Red PMS 185 - Default for all cards */
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transform: translateZ(0);
@@ -38,15 +38,15 @@
   }
 
   .ai-chat-card {
-    background: rgba(66, 180, 230, 0.2); /* Future Blue PMS 298 */
+    background: #42B4E6; /* Future Blue PMS 298 */
   }
 
   .image-card {
-    background: rgba(0, 255, 127, 0.2); /* Digital Green PMS 354 */
+    background: #00FF7F; /* Digital Green PMS 354 */
   }
 
   .beta-card {
-    background: rgba(255, 107, 28, 0.2); /* Energy Orange PMS 1585 */
+    background: #FF6B1C; /* Energy Orange PMS 1585 */
   }
 
   .bento-card:hover {
