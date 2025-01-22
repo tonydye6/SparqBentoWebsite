@@ -26,10 +26,10 @@ export function PixelPattern({ className }: PixelPatternProps) {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    const createPixels = (size = 4) => {
+    const createPixels = (size = 3) => {
       for (let x = 0; x < canvas.width; x += size) {
         for (let y = 0; y < canvas.height; y += size) {
-          const opacity = Math.random() * 0.5;
+          const opacity = Math.random() * 0.15 + 0.05; // Range from 0.05 to 0.2
           ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
           ctx.fillRect(x, y, size, size);
         }
