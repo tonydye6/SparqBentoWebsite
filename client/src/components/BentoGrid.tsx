@@ -163,9 +163,9 @@ export function BentoGrid() {
         >
           <div className="h-full flex items-center justify-center p-4">
             <img
-              src="/ucla.png"
-              alt="UCLA"
-              className="w-full h-full object-contain"
+              src="/footbalPlayer.png"
+              alt="Football Player"
+              className="w-full h-full object-cover"
             />
           </div>
         </motion.div>
