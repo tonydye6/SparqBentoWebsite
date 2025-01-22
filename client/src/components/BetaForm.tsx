@@ -13,7 +13,11 @@ const betaSignupSchema = z.object({
 
 type BetaSignupForm = z.infer<typeof betaSignupSchema>;
 
-export function BetaForm() {
+interface BetaFormProps {
+  expanded?: boolean;
+}
+
+export function BetaForm({ expanded }: BetaFormProps) {
   const { toast } = useToast();
   const { register, handleSubmit, formState: { errors }, reset } = useForm<BetaSignupForm>();
 
@@ -24,11 +28,11 @@ export function BetaForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to sign up for beta');
       }
-      
+
       return response.json();
     },
     onSuccess: () => {
@@ -52,13 +56,26 @@ export function BetaForm() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
         <h3 className="text-lg font-semibold mb-2">Join Sparq's Beta</h3>
         <p className="text-sm text-muted-foreground">
           Be the first to experience our revolutionary sports gaming platform.
         </p>
       </div>
+
+      {expanded && (
+        <div className="mb-6">
+          <h4 className="text-md font-medium mb-2">What to Expect</h4>
+          <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+            <li>Early access to our mobile gaming platform</li>
+            <li>Exclusive in-game rewards and items</li>
+            <li>Direct feedback channel with our development team</li>
+            <li>Special events and tournaments for beta testers</li>
+            <li>Regular updates on new features and improvements</li>
+          </ul>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
@@ -93,6 +110,22 @@ export function BetaForm() {
           {signupMutation.isPending ? "Joining..." : "Join the Beta"}
         </Button>
       </form>
+
+      {expanded && (
+        <div className="mt-6 p-4 bg-primary/5 rounded-lg">
+          <h4 className="text-md font-medium mb-2">Beta Program Details</h4>
+          <p className="text-sm text-muted-foreground">
+            Our beta program runs in phases, with each phase introducing new features
+            and gameplay elements. Beta testers get exclusive access to:
+          </p>
+          <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+            <li>• Customizable player characters</li>
+            <li>• AI-powered game mechanics</li>
+            <li>• Multiplayer tournaments</li>
+            <li>• Virtual currency rewards</li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
