@@ -143,9 +143,9 @@ export function BentoGrid() {
             <Card className="bento-card h-[220px] mb-5 overflow-hidden image-card"> 
               <div className="h-full flex items-center justify-center relative">
                 <img
-                  src="/path/to/your/image1.png"
-                  alt="Description"
-                  className="w-full h-full object-cover"
+                  src="/ucla.png"
+                  alt="UCLA"
+                  className="w-full h-full object-contain p-4"
                 />
               </div>
             </Card>
@@ -154,9 +154,9 @@ export function BentoGrid() {
             <Card className="bento-card h-[220px] mb-5 overflow-hidden image-card"> 
               <div className="h-full flex items-center justify-center relative">
                 <img
-                  src="/path/to/your/image2.png"
-                  alt="Description"
-                  className="w-full h-full object-cover"
+                  src="/rams.png"
+                  alt="LA Rams"
+                  className="w-full h-full object-contain p-4"
                 />
               </div>
             </Card>
