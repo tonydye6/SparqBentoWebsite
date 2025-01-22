@@ -147,11 +147,18 @@ export function BentoGrid() {
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
             <Card className="bento-card h-[440px] mb-5" >
               <motion.div className="h-full flex items-center justify-center relative overflow-hidden" whileHover={{ z: 20 }} style={{ transformStyle: "preserve-3d" }}>
-                <img
-                  src="/basketballPlayer.png"
-                  alt="Basketball Player"
-                  className="w-full h-full object-cover"
-                />
+                <div className="flex w-full h-full">
+                  <img
+                    src="/basketballPlayer.png"
+                    alt="Basketball Player"
+                    className="w-1/2 h-full object-contain"
+                  />
+                  <img
+                    src="/softballPlayer.png"
+                    alt="Softball Player"
+                    className="w-1/2 h-full object-contain"
+                  />
+                </div>
               </motion.div>
             </Card>
           </motion.div>
