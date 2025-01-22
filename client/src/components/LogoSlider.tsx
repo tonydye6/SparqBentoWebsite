@@ -25,7 +25,7 @@ const logos: Logo[] = [
   }
 ];
 
-const LogoSlider = (): JSX.Element => {
+export const LogoSlider = (): JSX.Element => {
   return (
     <div className="w-full py-12 bg-white">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -56,5 +56,3 @@ const LogoSlider = (): JSX.Element => {
     </div>
   );
 };
-
-export default LogoSlider;

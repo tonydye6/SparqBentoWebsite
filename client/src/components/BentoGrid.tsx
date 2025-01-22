@@ -22,7 +22,7 @@ module.exports = {
 
 import { LogoSlider } from "./components/LogoSlider";
 
-const BentoGrid = () => {
+export const BentoGrid = () => {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div>Main Content</div>
@@ -30,8 +30,6 @@ const BentoGrid = () => {
     </main>
   );
 };
-
-export default BentoGrid;
 
 
 //components/LogoSlider.tsx
