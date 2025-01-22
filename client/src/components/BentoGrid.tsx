@@ -1,3 +1,6 @@
+
+import { motion } from "framer-motion";
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { ThreeViewer } from "./ThreeViewer";
@@ -139,13 +142,27 @@ export function BentoGrid() {
           >
             <SchoolSpotlight />
           </Card>
-          <Card 
-            className="bento-card h-[440px] mb-5"
+          <motion.div
+            className="relative perspective-1000"
+            style={{ transformStyle: "preserve-3d" }}
+            whileHover={{ scale: 1.02 }}
           >
-            <div className="h-full flex items-center justify-center">
-              <span className="text-2xl font-bold">Additional Content</span>
-            </div>
-          </Card>
+            <Card 
+              className="bento-card h-[440px] mb-5 transform-gpu transition-all duration-300"
+              style={{
+                transformStyle: "preserve-3d",
+                transform: "translateZ(0)",
+              }}
+            >
+              <motion.div
+                className="h-full flex items-center justify-center"
+                whileHover={{ z: 20 }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <span className="text-2xl font-bold">Additional Content</span>
+              </motion.div>
+            </Card>
+          </motion.div>
           <Card 
             className="bento-card h-[220px] mb-5 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("about")}
