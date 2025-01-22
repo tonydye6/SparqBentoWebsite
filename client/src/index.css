@@ -38,8 +38,8 @@
 
   /* Card Positions */
   .card-1 { grid-area: 1 / 1 / 2 / 2; } /* AI Chat */
-  .card-2 { grid-area: 1 / 4 / 2 / 5; } /* Enter Sparqverse (moved) */ 
-  .card-3 { grid-area: 1 / 3 / 2 / 4; } /* Join Beta */
+  .card-2 { grid-area: 2 / 3 / 3 / 4; } /* Enter Sparqverse (between Discord and Join Beta) */ 
+  .card-3 { grid-area: 1 / 3 / 2 / 4; } /* Join Beta (restored) */
   .card-4 { grid-area: 2 / 4 / 3 / 5; } /* News */
   .card-5 { grid-area: 2 / 1 / 3 / 2; } /* About Us */
   .card-6 { grid-area: 3 / 1 / 4 / 2; } /* Join Us */
