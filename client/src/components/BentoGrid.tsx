@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Image from 'next/image'; // Added import for Next.js Image component
 
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
@@ -109,16 +110,24 @@ export function BentoGrid() {
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[220px] mb-5">
-              <div className="h-full flex items-center justify-center">
-                <span className="text-2xl font-bold">Here</span>
+            <Card className="bento-card h-[220px] mb-5 overflow-hidden"> {/* Changed */}
+              <div className="h-full flex items-center justify-center relative"> {/* Changed */}
+                <img
+                  src="/path/to/your/image1.png" {/* Placeholder image path */}
+                  alt="Description"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </Card>
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-            <Card className="bento-card h-[220px] mb-5">
-              <div className="h-full flex items-center justify-center">
-                <span className="text-2xl font-bold">Now</span>
+            <Card className="bento-card h-[220px] mb-5 overflow-hidden"> {/* Changed */}
+              <div className="h-full flex items-center justify-center relative"> {/* Changed */}
+                <img
+                  src="/path/to/your/image2.png" {/* Placeholder image path */}
+                  alt="Description"
+                  className="w-full h-full object-cover"
+                />
               </div>
             </Card>
           </motion.div>
