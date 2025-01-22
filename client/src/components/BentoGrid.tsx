@@ -92,8 +92,8 @@ export function BentoGrid() {
   return (
     <div className="min-h-screen bg-black p-6">
       <div className="max-w-[1600px] mx-auto">
-        <Card className="bento-card h-[50px] mb-6 w-full flex items-center justify-between px-6">
-          <h1 className="text-2xl">Sparq Games</h1>
+        <Card className="bento-card h-[100px] mb-6 w-full bg-black flex items-center justify-between px-6">
+          <img src="/trilogo1.png" alt="Sparq Games Logo" className="h-[60px] object-contain" />
           <div className="flex items-center gap-4">
             <button className="text-white hover:text-gray-300">About</button>
             <button className="text-white hover:text-gray-300">Contact</button>
