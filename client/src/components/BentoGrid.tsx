@@ -148,12 +148,52 @@ export function BentoGrid() {
             whileHover={{ scale: 1.02 }}
           >
             <Card 
-              className="bento-card h-[440px] mb-5 transform-gpu transition-all duration-300"
+              className="bento-card h-[440px] mb-5 transform-gpu transition-all duration-300 overflow-hidden"
               style={{
                 transformStyle: "preserve-3d",
                 transform: "translateZ(0)",
               }}
             >
+              <div className="relative">
+                {["top", "right", "bottom", "left"].map((side) => (
+                  <div
+                    key={side}
+                    style={{
+                      position: "absolute",
+                      background: "linear-gradient(90deg, #00f6ff, #0044ff)",
+                      opacity: 0.7,
+                      ...(side === "top" || side === "bottom"
+                        ? { height: "2px", width: "100%", [side]: "-1px", left: 0 }
+                        : { width: "2px", height: "100%", [side]: "-1px", top: 0 }),
+                    }}
+                  >
+                    <motion.div
+                      style={{
+                        position: "absolute",
+                        background: "#00f6ff",
+                        boxShadow: "0 0 8px #00f6ff",
+                        ...(side === "top" || side === "bottom"
+                          ? { height: "100%", width: "20px" }
+                          : { width: "100%", height: "20px" }),
+                      }}
+                      initial={{ 
+                        [side === "top" || side === "bottom" ? "x" : "y"]: 
+                        side === "right" || side === "bottom" ? "100%" : 0 
+                      }}
+                      animate={{ 
+                        [side === "top" || side === "bottom" ? "x" : "y"]: 
+                        side === "right" || side === "bottom" ? 0 : "100%" 
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        ease: "linear",
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
               <motion.div
                 className="h-full flex items-center justify-center"
                 whileHover={{ z: 20 }}
