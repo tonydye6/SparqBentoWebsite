@@ -38,11 +38,12 @@
   }
 
   .header-card {
-    width: 100%;
-    max-width: 1800px;
-    height: 80px;
+    width: calc(100% - 10px);
+    max-width: 1790px;
+    height: 90px;
     padding: 0 2rem;
-    margin-top: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
   }
 
   .bento-card {
