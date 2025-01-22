@@ -111,9 +111,9 @@ export function BentoGrid() {
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
             <Card className="bento-card h-[220px] mb-5 overflow-hidden"> {/* Changed */}
-              <div className="h-full flex items-center justify-center relative"> {/* Changed */}
+              <div className="h-full flex items-center justify-center relative">
                 <img
-                  src="/path/to/your/image1.png" {/* Placeholder image path */}
+                  src="/path/to/your/image1.png"
                   alt="Description"
                   className="w-full h-full object-cover"
                 />
@@ -122,9 +122,9 @@ export function BentoGrid() {
           </motion.div>
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
             <Card className="bento-card h-[220px] mb-5 overflow-hidden"> {/* Changed */}
-              <div className="h-full flex items-center justify-center relative"> {/* Changed */}
+              <div className="h-full flex items-center justify-center relative">
                 <img
-                  src="/path/to/your/image2.png" {/* Placeholder image path */}
+                  src="/path/to/your/image2.png"
                   alt="Description"
                   className="w-full h-full object-cover"
                 />
