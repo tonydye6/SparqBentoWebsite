@@ -1,8 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { db } from "@db";
-import { betaSignups, adminUsers } from "@db/schema";
-import { eq } from "drizzle-orm";
+import { betaSignups, adminUsers, newsItems, teamMembers } from "@db/schema";
+import { eq, desc } from "drizzle-orm";
 import session from "express-session";
 import { requireAdmin, adminSessionMiddleware } from "./middleware/auth";
 import bcrypt from "bcryptjs";
@@ -31,35 +31,22 @@ export function registerRoutes(app: Express): Server {
   app.post("/api/admin/login", async (req, res) => {
     try {
       const { username, password } = req.body;
-      console.log('Login attempt for username:', username);
-      console.log('Received password:', password);
 
       const admin = await db.query.adminUsers.findFirst({
         where: eq(adminUsers.username, username)
       });
 
       if (!admin) {
-        console.log('Admin not found');
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      console.log('Found admin with hash:', admin.password);
-
-      // Generate a test hash with the same input to compare
-      const salt = bcrypt.genSaltSync(10, 'a');
-      const testHash = bcrypt.hashSync(password, salt);
-      console.log('Generated test hash:', testHash);
-
       const passwordMatch = await bcrypt.compare(password, admin.password);
-      console.log('Password match result:', passwordMatch);
 
       if (!passwordMatch) {
-        console.log('Password verification failed');
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
       req.session.adminUser = { id: admin.id, username: admin.username };
-      console.log('Session after login:', req.session);
 
       res.json({ message: "Logged in successfully" });
     } catch (error) {
@@ -78,7 +65,68 @@ export function registerRoutes(app: Express): Server {
     });
   });
 
-  // Beta signup endpoint
+  // Content management endpoints
+  // News Items
+  app.get("/api/admin/news", requireAdmin, async (req, res) => {
+    try {
+      const items = await db.query.newsItems.findMany({
+        orderBy: [desc(newsItems.createdAt)]
+      });
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching news items:", error);
+      res.status(500).json({ message: "Failed to fetch news items" });
+    }
+  });
+
+  app.post("/api/admin/news", requireAdmin, async (req, res) => {
+    try {
+      const { title, description, category } = req.body;
+      const result = await db.insert(newsItems).values({
+        title,
+        description,
+        category,
+        active: true
+      });
+      res.status(201).json(result);
+    } catch (error) {
+      console.error("Error creating news item:", error);
+      res.status(500).json({ message: "Failed to create news item" });
+    }
+  });
+
+  // Team Members
+  app.get("/api/admin/team", requireAdmin, async (req, res) => {
+    try {
+      const members = await db.query.teamMembers.findMany({
+        orderBy: [desc(teamMembers.createdAt)]
+      });
+      res.json(members);
+    } catch (error) {
+      console.error("Error fetching team members:", error);
+      res.status(500).json({ message: "Failed to fetch team members" });
+    }
+  });
+
+  app.post("/api/admin/team", requireAdmin, async (req, res) => {
+    try {
+      const { name, title, photo, linkedIn, previousCompanies } = req.body;
+      const result = await db.insert(teamMembers).values({
+        name,
+        title,
+        photo,
+        linkedIn,
+        previousCompanies,
+        active: true
+      });
+      res.status(201).json(result);
+    } catch (error) {
+      console.error("Error creating team member:", error);
+      res.status(500).json({ message: "Failed to create team member" });
+    }
+  });
+
+  // Beta signups endpoint
   app.post("/api/beta-signup", async (req, res) => {
     try {
       const { email, subscribe } = req.body;
@@ -113,7 +161,7 @@ export function registerRoutes(app: Express): Server {
   app.get("/api/admin/beta-signups", requireAdmin, async (req, res) => {
     try {
       const signups = await db.query.betaSignups.findMany({
-        orderBy: (betaSignups, { desc }) => [desc(betaSignups.createdAt)]
+        orderBy: [desc(betaSignups.createdAt)]
       });
       res.json(signups);
     } catch (error) {
