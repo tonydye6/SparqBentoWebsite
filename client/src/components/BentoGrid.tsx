@@ -70,10 +70,10 @@ export function BentoGrid() {
       <div className="flex gap-4 max-w-[1600px] mx-auto">
         <div className="flex-1">
           <Card 
-            className="bento-card h-54 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => handleCardClick("ai-chat")}
+            className="bento-card h-126 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("team")}
           >
-            <AiChat />
+            <TeamCarousel />
           </Card>
           <Card 
             className="bento-card h-72 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
@@ -88,28 +88,28 @@ export function BentoGrid() {
             <BetaForm />
           </Card>
           <Card 
-            className="bento-card h-126 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => handleCardClick("team")}
+            className="bento-card h-54 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("ai-chat")}
           >
-            <TeamCarousel />
+            <AiChat />
           </Card>
         </div>
 
         <div className="flex-1">
           <Card 
-            className="bento-card h-72 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => handleCardClick("join")}
+            className="bento-card h-36 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("news")}
           >
-            <JoinUs />
+            <GameNews />
           </Card>
           <Card className="bento-card h-72 mb-4">
             <ThreeViewer />
           </Card>
           <Card 
-            className="bento-card h-36 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => handleCardClick("news")}
+            className="bento-card h-72 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("join")}
           >
-            <GameNews />
+            <JoinUs />
           </Card>
           <Card 
             className="bento-card h-36 cursor-pointer transition-transform hover:scale-[1.02]"
