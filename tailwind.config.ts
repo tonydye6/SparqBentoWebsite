@@ -79,10 +79,6 @@ export default {
             height: "0",
           },
         },
-        "logo-cloud": {
-          from: { transform: "translateX(0)" },
-          to: { transform: "translateX(calc(-100% - 4rem))" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
