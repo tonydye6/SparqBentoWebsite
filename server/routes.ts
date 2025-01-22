@@ -31,29 +31,35 @@ export function registerRoutes(app: Express): Server {
   app.post("/api/admin/login", async (req, res) => {
     try {
       const { username, password } = req.body;
-      console.log('Login attempt for username:', username); // Debug log
+      console.log('Login attempt for username:', username);
+      console.log('Received password:', password);
 
       const admin = await db.query.adminUsers.findFirst({
         where: eq(adminUsers.username, username)
       });
 
-      console.log('Found admin:', admin ? 'yes' : 'no'); // Debug log
-
       if (!admin) {
-        console.log('Admin not found'); // Debug log
+        console.log('Admin not found');
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
+      console.log('Found admin with hash:', admin.password);
+
+      // Generate a test hash with the same input to compare
+      const salt = bcrypt.genSaltSync(10, 'a');
+      const testHash = bcrypt.hashSync(password, salt);
+      console.log('Generated test hash:', testHash);
+
       const passwordMatch = await bcrypt.compare(password, admin.password);
-      console.log('Password match:', passwordMatch); // Debug log
+      console.log('Password match result:', passwordMatch);
 
       if (!passwordMatch) {
-        console.log('Password verification failed'); // Debug log
+        console.log('Password verification failed');
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
       req.session.adminUser = { id: admin.id, username: admin.username };
-      console.log('Session after login:', req.session); // Debug log
+      console.log('Session after login:', req.session);
 
       res.json({ message: "Logged in successfully" });
     } catch (error) {
@@ -133,11 +139,11 @@ export function registerRoutes(app: Express): Server {
           stream: false
         })
       });
-      
+
       if (!response.ok) {
         throw new Error("Perplexity API request failed");
       }
-      
+
       const data = await response.json();
       res.json(data);
     } catch (error) {
