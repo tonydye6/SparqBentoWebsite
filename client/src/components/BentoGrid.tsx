@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { MouseTrail } from "./MouseTrail";
 import { Card } from "@/components/ui/card";
 import { AboutUs } from "./AboutUs";
 import { GameNews } from "./GameNews";
@@ -24,6 +25,63 @@ type ExpandedCard =
   | "discord" 
   | "3d" 
   | null;
+
+const MagneticCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springConfig = { damping: 15, stiffness: 150 };
+  const springX = useSpring(x, springConfig);
+  const springY = useSpring(y, springConfig);
+
+  const rotateX = useTransform(springY, [-50, 50], [10, -10]);
+  const rotateY = useTransform(springX, [-50, 50], [-10, 10]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const card = ref.current;
+      if (!card) return;
+
+      const rect = card.getBoundingClientRect();
+      const centerX = rect.x + rect.width / 2;
+      const centerY = rect.y + rect.height / 2;
+      const deltaX = e.clientX - centerX;
+      const deltaY = e.clientY - centerY;
+
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      const maxDistance = 400;
+
+      if (distance < maxDistance) {
+        const factor = 1 - distance / maxDistance;
+        x.set(deltaX * factor * 0.2);
+        y.set(deltaY * factor * 0.2);
+      } else {
+        x.set(0);
+        y.set(0);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [x, y]);
+
+  return (
+    <motion.div
+      ref={ref}
+      style={{
+        x: springX,
+        y: springY,
+        rotateX,
+        rotateY,
+        perspective: 1000,
+      }}
+      whileHover={{ scale: 1.02 }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 export function BentoGrid() {
   const [expandedCard, setExpandedCard] = useState<ExpandedCard>(null);
@@ -65,6 +123,7 @@ export function BentoGrid() {
 
   return (
     <div className="min-h-screen bg-transparent">
+      <MouseTrail />
       {/* Header Card */}
       <motion.div
         className="bento-card header-card mx-auto mb-6 p-4"
