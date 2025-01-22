@@ -148,6 +148,7 @@ export function BentoGrid() {
           >
           <AboutUs title="AI Chat" variant="secondary" />
         </motion.div>
+        </MagneticCard>
 
         {/* Sparqverse */}
         <motion.div
