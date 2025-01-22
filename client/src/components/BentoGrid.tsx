@@ -65,84 +65,80 @@ export function BentoGrid() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A1E]">
-      <div className="grid-container">
-        {/* Card 1: AI Chat */}
-        <Card 
-          className="bento-card card-1 cursor-pointer transition-transform hover:scale-[1.02]"
-          onClick={() => handleCardClick("ai-chat")}
-        >
-          <AiChat />
-        </Card>
+    <div className="min-h-screen bg-[#0A0A1E] p-6">
+      <div className="flex gap-4 max-w-[1600px] mx-auto">
+        <div className="flex-1">
+          <Card 
+            className="bento-card h-24 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("ai-chat")}
+          >
+            <AiChat />
+          </Card>
+          <Card 
+            className="bento-card h-32 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("sparqverse")}
+          >
+            <AboutUs />
+          </Card>
+          <Card 
+            className="bento-card h-32 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("beta")}
+          >
+            <BetaForm />
+          </Card>
+          <Card 
+            className="bento-card h-16 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("news")}
+          >
+            <GameNews />
+          </Card>
+          <Card 
+            className="bento-card h-16 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("about")}
+          >
+            <AboutUs title="Our Mission" variant="secondary" />
+          </Card>
+        </div>
 
-        {/* Card 2: Enter Sparqverse */}
-        <Card 
-          className="bento-card card-2 cursor-pointer transition-transform hover:scale-[1.02]"
-          onClick={() => handleCardClick("sparqverse")}
-        >
-          <AboutUs />
-        </Card>
+        <div className="flex-1">
+          <Card 
+            className="bento-card h-32 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("join")}
+          >
+            <JoinUs />
+          </Card>
+          <Card 
+            className="bento-card h-40 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("school")}
+          >
+            <SchoolSpotlight />
+          </Card>
+          <Card 
+            className="bento-card h-56 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("team")}
+          >
+            <TeamCarousel />
+          </Card>
+        </div>
 
-        {/* Card 3: Join Beta */}
-        <Card 
-          className="bento-card card-3 cursor-pointer transition-transform hover:scale-[1.02]"
-          onClick={() => handleCardClick("beta")}
-        >
-          <BetaForm />
-        </Card>
-
-        {/* Card 4: News */}
-        <Card 
-          className="bento-card card-4 cursor-pointer transition-transform hover:scale-[1.02]"
-          onClick={() => handleCardClick("news")}
-        >
-          <GameNews />
-        </Card>
-
-        {/* Card 5: About Us */}
-        <Card 
-          className="bento-card card-5 cursor-pointer transition-transform hover:scale-[1.02]"
-          onClick={() => handleCardClick("about")}
-        >
-          <AboutUs title="Our Mission" variant="secondary" />
-        </Card>
-
-        {/* Card 6: Join Us */}
-        <Card 
-          className="bento-card card-6 cursor-pointer transition-transform hover:scale-[1.02]"
-          onClick={() => handleCardClick("join")}
-        >
-          <JoinUs />
-        </Card>
-
-        {/* Card 7: School Spotlight */}
-        <Card 
-          className="bento-card card-7 cursor-pointer transition-transform hover:scale-[1.02]"
-          onClick={() => handleCardClick("school")}
-        >
-          <SchoolSpotlight />
-        </Card>
-
-        {/* Card 8: Team */}
-        <Card 
-          className="bento-card card-8 cursor-pointer transition-transform hover:scale-[1.02]"
-          onClick={() => handleCardClick("team")}
-        >
-          <TeamCarousel />
-        </Card>
-
-        {/* Card 9: Discord */}
-        <Card 
-          className="bento-card card-9 cursor-pointer transition-transform hover:scale-[1.02]"
-          onClick={() => handleCardClick("discord")}
-        >
-          <DiscordWidget />
-        </Card>
-
-        {/* Card 10: 3D Character */}
-        <Card className="bento-card card-10">
-          <ThreeViewer />
-        </Card>
+        <div className="flex-1">
+          <Card 
+            className="bento-card h-64 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("discord")}
+          >
+            <DiscordWidget />
+          </Card>
+          <Card className="bento-card h-32 mb-4">
+            <ThreeViewer />
+          </Card>
+          <Card 
+            className="bento-card h-32"
+          >
+            <div className="h-full flex items-center justify-center">
+              <span className="text-2xl font-bold">Additional Content</span>
+            </div>
+          </Card>
+        </div>
       </div>
 
       <BentoCardModal 
