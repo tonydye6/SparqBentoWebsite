@@ -19,7 +19,10 @@ export function registerRoutes(app: Express): Server {
     secret: process.env.SESSION_SECRET || 'dev-secret-key',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === 'production' }
+    cookie: { 
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
   }));
 
   app.use(adminSessionMiddleware);
@@ -28,16 +31,22 @@ export function registerRoutes(app: Express): Server {
   app.post("/api/admin/login", async (req, res) => {
     try {
       const { username, password } = req.body;
+      console.log('Login attempt for username:', username); // Debug log
 
       const admin = await db.query.adminUsers.findFirst({
         where: eq(adminUsers.username, username)
       });
 
+      console.log('Found admin:', admin ? 'yes' : 'no'); // Debug log
+
       if (!admin || !await bcrypt.compare(password, admin.password)) {
+        console.log('Password verification failed'); // Debug log
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
       req.session.adminUser = { id: admin.id, username: admin.username };
+      console.log('Session after login:', req.session); // Debug log
+
       res.json({ message: "Logged in successfully" });
     } catch (error) {
       console.error("Admin login error:", error);
