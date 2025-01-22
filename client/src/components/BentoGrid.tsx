@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { ThreeViewer } from "./ThreeViewer";
@@ -106,16 +105,10 @@ export function BentoGrid() {
             <ThreeViewer />
           </Card>
           <Card 
-            className="bento-card h-72 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-72 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("join")}
           >
             <JoinUs />
-          </Card>
-          <Card 
-            className="bento-card h-36 cursor-pointer transition-transform hover:scale-[1.02]"
-            onClick={() => handleCardClick("about")}
-          >
-            <AboutUs title="Our Mission" variant="secondary" />
           </Card>
         </div>
 
@@ -138,6 +131,12 @@ export function BentoGrid() {
             <div className="h-full flex items-center justify-center">
               <span className="text-2xl font-bold">Additional Content</span>
             </div>
+          </Card>
+          <Card 
+            className="bento-card h-36 cursor-pointer transition-transform hover:scale-[1.02]"
+            onClick={() => handleCardClick("about")}
+          >
+            <AboutUs title="Our Mission" variant="secondary" />
           </Card>
         </div>
       </div>
