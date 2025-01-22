@@ -38,15 +38,15 @@
   }
 
   .ai-chat-card {
-    background: hsl(var(--future-blue) / 0.2);
+    background: rgba(66, 180, 230, 0.2); /* Future Blue PMS 298 */
   }
 
   .image-card {
-    background: hsl(var(--digital-green) / 0.2);
+    background: rgba(0, 255, 127, 0.2); /* Digital Green PMS 354 */
   }
 
   .beta-card {
-    background: hsl(var(--energy-orange) / 0.2);
+    background: rgba(255, 107, 28, 0.2); /* Energy Orange PMS 1585 */
   }
 
   .bento-card:hover {
