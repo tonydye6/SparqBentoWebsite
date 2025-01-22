@@ -81,7 +81,7 @@ export function BentoGrid() {
             <AboutUs />
           </Card>
           <Card 
-            className="bento-card h-[440px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[340px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("beta")}
           >
             <BetaForm />
@@ -96,7 +96,7 @@ export function BentoGrid() {
 
         <div className="flex-1">
           <Card 
-            className="bento-card h-[440px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[340px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("news")}
           >
             <GameNews />
@@ -127,7 +127,7 @@ export function BentoGrid() {
             <DiscordWidget />
           </Card>
           <Card 
-            className="bento-card h-[440px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[340px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("school")}
           >
             <SchoolSpotlight />
