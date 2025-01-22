@@ -66,7 +66,7 @@ export function BentoGrid() {
 
   return (
     <div className="min-h-screen bg-[#0A0A1E] p-6">
-      <div className="flex gap-4 max-w-[1600px] mx-auto">
+      <div className="flex gap-5 max-w-[1600px] mx-auto">
         <div className="flex-1">
           <Card 
             className="bento-card h-126 mb-6 cursor-pointer transition-transform hover:scale-[1.02]"

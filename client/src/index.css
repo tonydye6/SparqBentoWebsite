@@ -61,7 +61,7 @@
   }
 
   .grid-container {
-    @apply flex gap-4 p-6 mx-auto max-w-[1600px] min-h-screen;
+    @apply flex gap-5 p-6 mx-auto max-w-[1600px] min-h-screen;
   }
 
   .flex-column {
