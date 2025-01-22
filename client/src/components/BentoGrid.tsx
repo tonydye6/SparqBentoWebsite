@@ -69,31 +69,31 @@ export function BentoGrid() {
       <div className="flex gap-4 max-w-[1600px] mx-auto">
         <div className="flex-1">
           <Card 
-            className="bento-card h-24 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-36 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("ai-chat")}
           >
             <AiChat />
           </Card>
           <Card 
-            className="bento-card h-32 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-48 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("sparqverse")}
           >
             <AboutUs />
           </Card>
           <Card 
-            className="bento-card h-32 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-48 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("beta")}
           >
             <BetaForm />
           </Card>
           <Card 
-            className="bento-card h-16 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-24 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("news")}
           >
             <GameNews />
           </Card>
           <Card 
-            className="bento-card h-16 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-24 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("about")}
           >
             <AboutUs title="Our Mission" variant="secondary" />
@@ -102,19 +102,19 @@ export function BentoGrid() {
 
         <div className="flex-1">
           <Card 
-            className="bento-card h-32 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-48 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("join")}
           >
             <JoinUs />
           </Card>
           <Card 
-            className="bento-card h-40 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-60 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("school")}
           >
             <SchoolSpotlight />
           </Card>
           <Card 
-            className="bento-card h-56 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-84 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("team")}
           >
             <TeamCarousel />
@@ -123,16 +123,16 @@ export function BentoGrid() {
 
         <div className="flex-1">
           <Card 
-            className="bento-card h-64 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-96 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("discord")}
           >
             <DiscordWidget />
           </Card>
-          <Card className="bento-card h-32 mb-4">
+          <Card className="bento-card h-48 mb-4">
             <ThreeViewer />
           </Card>
           <Card 
-            className="bento-card h-32"
+            className="bento-card h-48"
           >
             <div className="h-full flex items-center justify-center">
               <span className="text-2xl font-bold">Additional Content</span>
