@@ -79,6 +79,8 @@
   .bento-card {
     @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 transition-transform duration-300 hover:scale-[1.02];
     min-height: 200px;
+    transform-style: preserve-3d;
+    perspective: 1000px;
   }
 
   .card-1 { grid-area: 1 / 1 / 2 / 2; }
