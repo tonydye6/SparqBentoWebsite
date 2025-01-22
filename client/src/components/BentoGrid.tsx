@@ -80,15 +80,6 @@ export function BentoGrid() {
       </motion.div>
 
       <div className="bento-grid">
-        {/* 3D Viewer - Now larger and more prominent */}
-        <motion.div
-          className="bento-card feature-card"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("3d")}
-        >
-          <ThreeViewer />
-        </motion.div>
-
         {/* AI Chat */}
         <motion.div
           className="bento-card card-1"
@@ -105,15 +96,6 @@ export function BentoGrid() {
           onClick={() => handleCardClick("sparqverse")}
         >
           <AboutUs />
-        </motion.div>
-
-        {/* Beta Form */}
-        <motion.div
-          className="bento-card card-3"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("beta")}
-        >
-          <BetaForm />
         </motion.div>
 
         {/* UCLA Card */}
@@ -139,6 +121,15 @@ export function BentoGrid() {
           <GameNews />
         </motion.div>
 
+        {/* 3D Viewer - Now in the middle */}
+        <motion.div
+          className="bento-card feature-card"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("3d")}
+        >
+          <ThreeViewer />
+        </motion.div>
+
         {/* About Us */}
         <motion.div
           className="bento-card card-5"
@@ -148,18 +139,13 @@ export function BentoGrid() {
           <AboutUs variant="secondary" />
         </motion.div>
 
-        {/* LA Rams Card */}
+        {/* Beta Form */}
         <motion.div
-          className="bento-card image-card"
+          className="bento-card card-3"
           whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("beta")}
         >
-          <div className="h-full flex items-center justify-center p-4">
-            <img
-              src="/rams.png"
-              alt="LA Rams"
-              className="w-full h-full object-contain"
-            />
-          </div>
+          <BetaForm />
         </motion.div>
 
         {/* Join Us */}
