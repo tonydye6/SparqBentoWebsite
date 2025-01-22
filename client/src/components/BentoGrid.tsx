@@ -96,7 +96,7 @@ export function BentoGrid() {
 
         <div className="flex-1">
           <Card 
-            className="bento-card h-[320px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[315px] mb-6 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("news")}
           >
             <GameNews />
