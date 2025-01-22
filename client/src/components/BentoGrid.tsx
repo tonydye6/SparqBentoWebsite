@@ -1,4 +1,3 @@
-javascript
 // tailwind.config.js
 module.exports = {
   content: [],
@@ -21,8 +20,7 @@ module.exports = {
 // pages/index.js
 "use client";
 
-import LogoSlider from "./components/LogoSlider";
-
+import { LogoSlider } from "./components/LogoSlider";
 
 const BentoGrid = () => {
   return (
@@ -36,7 +34,7 @@ const BentoGrid = () => {
 export default BentoGrid;
 
 
-//components/LogoSlider.js
+//components/LogoSlider.tsx
 "use client";
 
 interface Logo {
