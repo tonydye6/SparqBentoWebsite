@@ -1,42 +1,4 @@
-javascript
-// tailwind.config.js
-module.exports = {
-  content: [],
-  theme: {
-    extend: {
-      keyframes: {
-        "logo-cloud": {
-          from: { transform: "translateX(0)" },
-          to: { transform: "translateX(calc(-100% - 4rem))" },
-        },
-      },
-      animation: {
-        "logo-cloud": "logo-cloud 35s linear infinite",
-      },
-    },
-  },
-  plugins: [],
-}
 
-// pages/index.js
-"use client";
-
-import LogoSlider from "./components/LogoSlider";
-
-
-const BentoGrid = () => {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>Main Content</div>
-      <LogoSlider />
-    </main>
-  );
-};
-
-export default BentoGrid;
-
-
-//components/LogoSlider.js
 "use client";
 
 interface Logo {
