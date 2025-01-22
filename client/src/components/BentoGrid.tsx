@@ -1,68 +1,248 @@
-"use client";
-
-import { AboutUs } from "./AboutUs";
-import { GameNews } from "./GameNews";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import Image from 'next/image';
+import { Card } from "@/components/ui/card";
+import { ThreeViewer } from "./ThreeViewer";
+import { AiChat } from "./AiChat";
+import { BetaForm } from "./BetaForm";
 import { DiscordWidget } from "./DiscordWidget";
+import { GameNews } from "./GameNews";
 import { JoinUs } from "./JoinUs";
 import { SchoolSpotlight } from "./SchoolSpotlight";
 import { TeamCarousel } from "./TeamCarousel";
-import { ThreeViewer } from "./ThreeViewer";
-import { BetaForm } from "./BetaForm";
+import { AboutUs } from "./AboutUs";
+import { BentoCardModal } from "./BentoCardModal";
+
+type ExpandedCard = "ai-chat" | "sparqverse" | "beta" | "news" | "about" | "join" | "school" | "team" | "discord" | null;
 
 export function BentoGrid() {
+  const [expandedCard, setExpandedCard] = useState<ExpandedCard>(null);
+
+  const handleCardClick = (card: ExpandedCard) => {
+    setExpandedCard(card);
+  };
+
+  const handleCloseModal = () => {
+    setExpandedCard(null);
+  };
+
+  const renderExpandedContent = () => {
+    switch (expandedCard) {
+      case "ai-chat":
+        return <AiChat expanded />;
+      case "sparqverse":
+        return <AboutUs expanded />;
+      case "beta":
+        return <BetaForm expanded />;
+      case "news":
+        return <GameNews expanded />;
+      case "about":
+        return <AboutUs title="Our Mission" variant="secondary" expanded />;
+      case "join":
+        return <JoinUs expanded />;
+      case "school":
+        return <SchoolSpotlight expanded />;
+      case "team":
+        return <TeamCarousel expanded />;
+      case "discord":
+        return <DiscordWidget expanded />;
+      default:
+        return null;
+    }
+  };
+
+  const getModalTitle = () => {
+    switch (expandedCard) {
+      case "ai-chat": return "AI Chat Assistant";
+      case "sparqverse": return "Enter the Sparqverse";
+      case "beta": return "Join Our Beta";
+      case "news": return "Latest News";
+      case "about": return "Our Mission";
+      case "join": return "Join Our Team";
+      case "school": return "School Spotlight";
+      case "team": return "Meet Our Team";
+      case "discord": return "Join Our Discord";
+      default: return "";
+    }
+  };
+
+  useEffect(() => {
+    const cards = document.querySelectorAll('.bento-card');
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const card = (e.currentTarget as HTMLElement);
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / card.offsetWidth) * 100;
+      const y = ((e.clientY - rect.top) / card.offsetHeight) * 100;
+      card.style.setProperty('--mouse-x', `${x}%`);
+      card.style.setProperty('--mouse-y', `${y}%`);
+    };
+
+    cards.forEach(card => {
+      card.addEventListener('mousemove', handleMouseMove as any);
+    });
+
+    return () => {
+      cards.forEach(card => {
+        card.removeEventListener('mousemove', handleMouseMove as any);
+      });
+    };
+  }, []);
+
   return (
-    <div className="container mx-auto p-4 md:p-8 lg:p-12">
-      <div className="bento-grid">
-        {/* AI Chat - Card 1 */}
-        <div className="bento-card card-1">
-          <AboutUs title="AI Chat" variant="secondary" />
+    <div className="min-h-screen bg-black p-6">
+      <div className="max-w-[1600px] mx-auto">
+        <Card className="bento-card h-[100px] mb-6 w-full bg-black flex items-center justify-between px-6">
+          <img src="/trilogo1.png" alt="Sparq Games Logo" className="h-[60px] object-contain" />
+          <div className="flex items-center gap-4">
+            <button className="text-white hover:text-gray-300">About</button>
+            <button className="text-white hover:text-gray-300">Contact</button>
+          </div>
+        </Card>
+        <div className="flex gap-5">
+        <div className="flex-1">
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[440px] mb-6 cursor-pointer team-card" onClick={() => handleCardClick("team")}>
+              <TeamCarousel />
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[220px] mb-6 cursor-pointer sparqverse-card" onClick={() => handleCardClick("sparqverse")}>
+              <AboutUs />
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[340px] mb-6 cursor-pointer beta-card" onClick={() => handleCardClick("beta")}>
+              <BetaForm />
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[440px] mb-6 cursor-pointer ai-chat-card" onClick={() => handleCardClick("ai-chat")}>
+              <AiChat />
+            </Card>
+          </motion.div>
         </div>
 
-        {/* Enter Sparqverse - Card 2 */}
-        <div className="bento-card card-2">
-          <AboutUs />
+        <div className="flex-1">
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[315px] mb-6 cursor-pointer news-card" onClick={() => handleCardClick("news")}>
+              <GameNews />
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[440px] mb-6 image-card">
+              <ThreeViewer />
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[220px] mb-5 cursor-pointer join-card" onClick={() => handleCardClick("join")}>
+              <JoinUs />
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[220px] mb-5 overflow-hidden image-card"> 
+              <div className="h-full flex items-center justify-center relative">
+                <img
+                  src="/path/to/your/image1.png"
+                  alt="Description"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[220px] mb-5 overflow-hidden image-card"> 
+              <div className="h-full flex items-center justify-center relative">
+                <img
+                  src="/path/to/your/image2.png"
+                  alt="Description"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </Card>
+          </motion.div>
         </div>
 
-        {/* Join Beta - Card 3 */}
-        <div className="bento-card card-3">
-          <BetaForm />
-        </div>
-
-        {/* News - Card 4 */}
-        <div className="bento-card card-4">
-          <GameNews />
-        </div>
-
-        {/* About Us - Card 5 */}
-        <div className="bento-card card-5">
-          <AboutUs variant="secondary" />
-        </div>
-
-        {/* Join Us - Card 6 */}
-        <div className="bento-card card-6">
-          <JoinUs />
-        </div>
-
-        {/* School Spotlight - Card 7 */}
-        <div className="bento-card card-7">
-          <SchoolSpotlight />
-        </div>
-
-        {/* Team - Card 8 */}
-        <div className="bento-card card-8">
-          <TeamCarousel />
-        </div>
-
-        {/* Discord - Card 9 */}
-        <div className="bento-card card-9">
-          <DiscordWidget />
-        </div>
-
-        {/* 3D Character - Card 10 */}
-        <div className="bento-card card-10">
-          <ThreeViewer />
+        <div className="flex-1">
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[440px] mb-5 cursor-pointer discord-card" onClick={() => handleCardClick("discord")}>
+              <DiscordWidget />
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[340px] mb-5 cursor-pointer school-card" onClick={() => handleCardClick("school")}>
+              <SchoolSpotlight />
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[440px] mb-5 image-card">
+              <motion.div className="h-full flex items-center justify-center relative overflow-hidden" whileHover={{ z: 20 }} style={{ transformStyle: "preserve-3d" }}>
+                <div className="flex w-full h-full">
+                  <img
+                    src="/basketballPlayer.png"
+                    alt="Basketball Player"
+                    className="w-1/2 h-full object-contain"
+                  />
+                  <img
+                    src="/softballPlayer.png"
+                    alt="Softball Player"
+                    className="w-1/2 h-full object-contain"
+                  />
+                </div>
+              </motion.div>
+            </Card>
+          </motion.div>
+          <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
+            <Card className="bento-card h-[220px] mb-5 cursor-pointer about-card" onClick={() => handleCardClick("about")}>
+              <AboutUs title="Our Mission" variant="secondary" />
+            </Card>
+          </motion.div>
         </div>
       </div>
     </div>
+
+      <BentoCardModal
+        isOpen={expandedCard !== null}
+        onClose={handleCloseModal}
+        title={getModalTitle()}
+      >
+        {renderExpandedContent()}
+      </BentoCardModal>
+    </div>
   );
 }
+
+{/* Added CSS styles for background colors */}
+<style jsx>{`
+  .ai-chat-card {
+    background-color: #4682B4; /* Future Blue */
+  }
+  .image-card {
+    background-color: #50C878; /* Digital Green */
+  }
+  .beta-card {
+    background-color: #FFA500; /* Energy Orange */
+  }
+  .news-card {
+    background-color: #50C878; /* Digital Green */
+  }
+  .join-card {
+    background-color: #FFA500; /* Energy Orange */
+  }
+  .about-card {
+    background-color: #FFA500; /* Energy Orange */
+  }
+  .team-card {
+    background-color: #4682B4; /* Future Blue */
+  }
+  .sparqverse-card {
+    background-color: #50C878; /* Digital Green */
+  }
+  .discord-card {
+    background-color: #4682B4; /* Future Blue */
+  }
+  .school-card {
+    background-color: #FFA500; /* Energy Orange */
+  }
+
+`}</style>
