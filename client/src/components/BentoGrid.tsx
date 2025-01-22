@@ -156,13 +156,18 @@ export function BentoGrid() {
           <AboutUs />
         </motion.div>
 
-        {/* Join Us - Moved to former UCLA Card position */}
+        {/* UCLA Card */}
         <motion.div
-          className="bento-card card-6"
+          className="bento-card image-card"
           whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("join")}
         >
-          <JoinUs />
+          <div className="h-full flex items-center justify-center p-4">
+            <img
+              src="/footbalPlayer.png"
+              alt="Football Player"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </motion.div>
 
         {/* Stats Card */}
@@ -239,18 +244,13 @@ export function BentoGrid() {
           <BetaForm />
         </motion.div>
 
-        {/* Football Player - Moved to former Join Us position */}
+        {/* Join Us */}
         <motion.div
-          className="bento-card image-card"
+          className="bento-card card-6"
           whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("join")}
         >
-          <div className="h-full flex items-center justify-center p-4">
-            <img
-              src="/footbalPlayer.png"
-              alt="Football Player"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <JoinUs />
         </motion.div>
 
         {/* Community Stats Card */}
