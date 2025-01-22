@@ -27,22 +27,30 @@
 @layer components {
   .bento-card {
     @apply rounded-2xl overflow-hidden relative;
-    background: #E51937; /* Default - Outlaw Red PMS 185 */
+    background: #E51937; /* Outlaw Red PMS 185 - for core brand elements */
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     transition: transform 0.3s ease;
   }
 
   .ai-chat-card {
-    background: #42B4E6 !important; /* Future Blue PMS 298 */
+    background: #4E2FE6 !important; /* Tech Purple PMS 2736 - for AI/tech features */
   }
 
-  .image-card {
-    background: #00FF7F !important; /* Digital Green PMS 354 */
+  .image-card, .sparqverse-card {
+    background: #E51937 !important; /* Outlaw Red PMS 185 - for core brand visuals */
   }
 
-  .beta-card {
-    background: #FF6B1C !important; /* Energy Orange PMS 1585 */
+  .beta-card, .join-card {
+    background: #FF6B1C !important; /* Energy Orange PMS 1585 - for calls to action */
+  }
+
+  .team-card, .discord-card {
+    background: #42B4E6 !important; /* Future Blue PMS 298 - for community elements */
+  }
+
+  .news-card, .about-card, .school-card {
+    background: #00FF7F !important; /* Digital Green PMS 354 - for informational content */
   }
 
   .bento-card:hover {
