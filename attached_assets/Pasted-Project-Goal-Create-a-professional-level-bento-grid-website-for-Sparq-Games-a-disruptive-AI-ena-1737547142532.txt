@@ -1,0 +1,523 @@
+Project Goal:
+
+Create a professional-level bento grid website for Sparq Games, a disruptive AI-enabled sports mobile game publisher, using Wix Studio's Code IDE. The design should reflect Sparq's innovative brand identity and showcase their unique value proposition.
+Key Requirements:
+
+* Dynamic bento grid layout (layout described in this prompt)
+
+* Integration of 3D character asset via Spline (“Travis.fbx”)
+
+* Interactive elements and smooth animations
+
+* Dark mode aesthetic with brand color accents
+
+* Mobile-responsive design
+
+* AI chat interface integration - Perplexity API Key for AI Chat interface: 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
+
+* True to Sparq's disruptive, innovative brand archetype
+
+* Live Score & Results ticker for multiple NCAA sports using API: https://github.com/henrygd/ncaa-api
+
+* The bento grid layout should feature interactive, expandable cards. When a user clicks certain cards, it should smoothly animate and expand to fill the entire viewport, transforming into a full-screen modal/popup that displays additional detailed content. The expanded card should maintain the same styling and design elements (including textures and glass-morphism effects) but scale up to accommodate more information. Each expanded card should include a prominent close button in the top-right corner. When clicked, the card should smoothly animate back to its original position and size in the bento grid. The transition between states should be fluid and natural, using CSS transforms and transitions for smooth animation. The expanded state should also handle scrolling for overflow content while maintaining the background bento grid visible but blurred. This functionality should be keyboard-accessible (Esc key to close) and include proper focus management for accessibility.
+
+
+
+Visual Language Preferences
+Dark Mode Dominance with a toggle for light mode
+* Consistent preference for dark interfaces with high contrast
+* Deep blacks and rich purples create premium gaming atmosphere
+* Neon accents and vibrant highlights for energy and excitement
+Potential Accent Color Psychology
+* Electric purples suggest innovation and luxury (#3B0099)
+* Bright greens for action and engagement (#3B0099)
+* Electric blues (#33CCFF)
+* Gradient overlays adding depth and sophistication
+* Cyberpunk-inspired color schemes that blend retro and futuristic
+Interactive Elements:
+
+* 3D Integration via Spline
+Link - https://my.spline.design/untitled-61fd32762a48cfe586b07aed3b895cbb/
+Embed - <iframe src='https://my.spline.design/untitled-61fd32762a48cfe586b07aed3b895cbb/' frameborder='0' width='100%' height='100%'></iframe>
+
+* Card 2 expands to a large pop up window with more detail on mouse click.
+* Card 3 expands to a large pop up window with more detail on mouse click.
+* Card 6 expands to a large pop up window with more detail on mouse click.
+* Card 4 has Carousel click functionality.
+
+Content Organization:
+
+Card 1 (AI Chat interface)
+Card 2 (Enter the Sparqverse)
+Card 3 (Join Beta)
+Card 4 (News)
+Card 5 (2D character image)
+Card 6 (Join Us)
+Card 7 (School Spotlight)
+Card 8 (Team)
+Card 9 (Live Discord Chat)
+Card 10 (3D character)
+Animation Concepts:
+Micro-interactions
+* Subtle hover effects on all interactive elements
+* Loading state animations
+* Progress indicators with particle systems
+* Smooth transitions between states
+
+Macro-animations
+* Hero section character animations
+* Environmental particle systems
+* Dynamic background patterns
+Innovative Suggestions:
+
+* Real-time NCAA game Results & Scores flowing through grid lines (using API: https://github.com/henrygd/ncaa-api)
+Key Requirements:
+
+* Dynamic bento grid layout (layout described in this prompt)
+
+* Integration of 3D character asset via Spline (“Travis.fbx”)
+
+* Interactive elements and smooth animations
+
+* Dark mode aesthetic with brand color accents
+
+* Mobile-responsive design
+
+* AI chat interface integration - Perplexity API Key for AI Chat interface: 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
+
+* True to Sparq's disruptive, innovative brand archetype
+
+* Live Score & Results ticker for multiple NCAA sports using API: {
+  "division": "d1",
+  "inputMD5Sum": "ba47f9e21af54d3d4b5f81fc38048e29",
+  "month": "02",
+  "conference_name": "all-conf",
+  "created_at": "08-07-2023 15:32:05",
+  "season": "2022",
+  "sport": "MBB",
+  "gameDates": [
+    {
+      "contest_date": "02-01-2023",
+      "year": "2023",
+      "weekday": "Wed",
+      "games": 47,
+      "season": "2022",
+      "day": "01"
+    },
+    {
+      "contest_date": "02-02-2023",
+      "year": "2023",
+      "weekday": "Thu",
+      "games": 75,
+      "season": "2022",
+      "day": "02"
+    },
+    ...
+  ]
+}
+
+
+* The bento grid layout should feature interactive, expandable cards. When a user clicks certain cards, it should smoothly animate and expand to fill the entire viewport, transforming into a full-screen modal/popup that displays additional detailed content. The expanded card should maintain the same styling and design elements (including textures and glass-morphism effects) but scale up to accommodate more information. Each expanded card should include a prominent close button in the top-right corner. When clicked, the card should smoothly animate back to its original position and size in the bento grid. The transition between states should be fluid and natural, using CSS transforms and transitions for smooth animation. The expanded state should also handle scrolling for overflow content while maintaining the background bento grid visible but blurred. This functionality should be keyboard-accessible (Esc key to close) and include proper focus management for accessibility.
+
+
+
+Technical Environment:
+*Replit
+ 
+Brand Context
+
+* Company: Sparq Games
+* Position: AI-enabled, blockchain-supported sports mobile game publisher
+* IP Rights: 700+ university sports trademarks and mascot designs
+* Vision: High-growth leader in next-generation sports gaming
+* Technology Focus: AI-driven game development and optimization
+Design Requirements
+
+* Modern, dynamic interface
+* Asymmetrical grid sections
+* Interactive 3D character showcase (Rotation interaction only)
+* Smooth transitions and animations
+* Mobile-first approach
+* Integration of university partnerships showcase (University of Utah)
+* Games ecosystem popup display (from Sparqverse card)
+* Clean, efficient code structure
+* Responsive grid system
+* 3D model integration
+* Live Discord Server Chat embed via Discord widget
+* Animation frameworks
+* AI Chat interface implementation (Perplexity AI Chat interface)
+* Cross-browser compatibility
+* Performance optimization
+Additional Context
+
+* No prior web design experience
+* Familiar with implementing AI-generated code
+* Access to brand assets and style guide
+
+
+This is a sophisticated bento grid layout with 10 distinct cards arranged in a 4x3 grid pattern with unique positioning and hierarchy. Here's the technical breakdown:
+
+Grid Architecture
+.bento-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 24px;
+    padding: 32px;
+    background-color: #0A0A1E;
+}
+
+Card Positioning
+Card 1: grid-area: 1 / 1 / 2 / 2 (Top left)
+Card 2: grid-area: 1 / 2 / 2 / 4 (Top center, double width)
+Card 3: grid-area: 1 / 4 / 2 / 5 (Top right)
+Card 4: grid-area: 2 / 4 / 3 / 5 (Right upper)
+Card 5: grid-area: 2 / 1 / 3 / 2 (Middle left)
+Card 6: grid-area: 3 / 1 / 4 / 2 (Bottom left)
+Card 7: grid-area: 3 / 2 / 4 / 3 (Bottom center-left)
+Card 8: grid-area: 3 / 3 / 4 / 4 (Bottom center-right)
+Card 9: grid-area: 2 / 4 / 4 / 5 (Right column, double height)
+Card 10: grid-area: 2 / 2 / 3 / 4 (Center circle overlay)
+Design Elements
+.bento-card {
+    border-radius: 24px;
+    background: rgba(28, 28, 44, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.card-2 {
+    background: var(--tech-purple, #5B4CDB);
+    position: relative;
+}
+
+.card-10 {
+    background: var(--outlaw-red, #E01E3C);
+    border-radius: 50%;
+    position: absolute;
+    z-index: 2;
+    width: 200px;
+    height: 200px;
+    transform: translateY(25%);
+}
+
+Notable Features
+Binary code ring animation around Card 10
+Glass-morphic effect on all cards
+Consistent spacing and alignment
+Responsive grid structure
+Layered depth with Card 10 overlapping Card 2
+Dark theme with subtle transparency
+Smooth corner radius on all cards except Card 10
+
+Card details:
+
+
+Card 1 (AI Chat interface) - We would use Perplexity via API key to host an AI chat interface and encourage visitors to ask about Gaming, NCAA Sports, AI, and Sparq.
+
+Card 2 (Enter the Sparqverse Beta) - When clicked, this interactive card should expand to fill the entire viewport, transforming into a full-screen modal/popup that displays additional detailed content about the Sparq Gaming Ecosystem and additional detailed content about the Sparq Beta Program and a signup form for those who want to participate.
+
+Card 3 (About Us) - When clicked, this interactive card should expand to fill the entire viewport, transforming into a full-screen modal/popup that displays additional detailed content about the Sparq Mission & Vision.
+
+Card 4 (News) - Has Carousel functionality and automatically rotates between headlines of 3 different news items that pertain to industries relevant to Sparq Games (AI, Gaming, NCAA N.I.L.). These news items should be automatically updated every 3 days. When clicked, this interactive card should expand to fill the entire viewport, transforming into a full-screen modal/popup that displays the full news content of the headline that the visitor clicked on; we would essentially host the source within our popup window.
+
+Card 5 (2D character image) - We would use this card to showcase game art of our characters or scenes.
+
+Card 6 (Join Us) - When clicked, this interactive card should expand to fill the entire viewport, transforming into a full-screen modal/popup that displays additional detailed content about the employment needs of Sparq. It should have a section for posted job openings and the ability to apply for them. It should also have a section that encourages visitors to reach out and contact us via email. It should also have a third section that encourages visitors to give us new game ideas for us to include in the Sparqverse (we want to be community-driven).
+
+Card 7 (School Spotlight) - Where we celebrate the universities participating in our gaming ecosystem. The first school is University of Utah, so we would show their school logo and style the card with their colors.
+
+Card 8 (Team) - Has Carousel functionality and automatically rotates the display of Sparq team members at a set interval of time. Each team member should have a photo, their title in the company, their experience displayed via small images of the logos of former employers, a LinkedIn logo that is hyperlinked to their Linkedin profile. There should be capability for the user to manually click forward or backward to another team member on the carousel. 
+
+Card 9 (Live Discord Chat) - Discord widget displaying Sparq server chat.
+
+Card 10 (3D character) - This is the place to display the 3D character via Spline.
+
+Potential Card design elements:
+(Note - These textures should be implemented with semi-transparent white (rgba(255, 255, 255, opacity)) on dark backgrounds for optimal visual effect.)
+1. Pixels Texture: A structured grid of small squares with varying opacity levels creating a digital, matrix-like effect.
+function createPixels(size = 4) {
+    for (let x = 0; x < width; x += size) {
+        for (let y = 0; y < height; y += size) {
+            const opacity = Math.random() * 0.5;
+            ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+            ctx.fillRect(x, y, size, size);
+        }
+    }
+}
+
+2. Dots Texture: Uniform grid of evenly-spaced dots creating a clean, organized pattern.
+function createDots(spacing = 8) {
+    for (let x = 0; x < width; x += spacing) {
+        for (let y = 0; y < height; y += spacing) {
+            ctx.beginPath();
+            ctx.arc(x, y, 1, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+}
+
+3. Stairs Texture: Diagonal repeating pattern creating a stepped, architectural effect.
+function createStairs(size = 10) {
+    for (let x = 0; x < width; x += size) {
+        for (let y = 0; y < height; y += size) {
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + size, y + size);
+            ctx.stroke();
+        }
+    }
+}
+
+4. Metal Texture: A crosshatch pattern with uniform spacing creating an industrial, metallic appearance.
+function createMetal(spacing = 8) {
+    // Horizontal lines
+    for (let y = 0; y < height; y += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+    }
+    // Vertical lines
+    for (let x = 0; x < width; x += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+    }
+}
+
+5. Noise Texture
+function createNoiseTexture(ctx, width, height) {
+    const imageData = ctx.createImageData(width, height);
+    const data = imageData.data;
+    
+    for (let i = 0; i < data.length; i += 4) {
+        // Create smaller, more subtle noise particles
+        const random = Math.random() * 0.15; // Reduced opacity
+        const value = 255 * random;
+        
+        data[i] = value;     // red
+        data[i + 1] = value; // green
+        data[i + 2] = value; // blue
+        data[i + 3] = 25;    // very subtle alpha
+    }
+    
+    ctx.putImageData(imageData, 0, 0);
+}
+
+6. Crypto Texture
+function createCryptoTexture(ctx, width, height) {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 0.5;
+    
+    for (let i = 0; i < height; i += 1) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        
+        for (let x = 0; x < width; x++) {
+            const y = i + Math.sin(x * 0.01) * 1;
+            ctx.lineTo(x, y);
+        }
+        
+        ctx.stroke();
+    }
+}
+
+
+
+
+Background Effects 
+- Semi-transparent backgrounds (rgba(255, 255, 255, 0.05)) 
+- Subtle shadow layering for depth
+- Backdrop blur effects (8-10px)
+
+
+Interactive Elements
+Smooth transitions (0.3s cubic-bezier)
+Hover state transformations
+Scale adjustments for focus states
+
+											
+
+Expandable bento grid cards with full-screen functionality. Here's how to basically implement this interactive feature -
+Expansion Animation:
+function expandCard(card) {
+    card.classList.add('expanded');
+    card.style.position = 'fixed';
+    card.style.top = '0';
+    card.style.left = '0';
+    card.style.width = '100vw';
+    card.style.height = '100vh';
+    card.style.zIndex = '1000';
+}
+
+
+Glass Morphism Effect:
+.expanded-card {
+    background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.02) 100%
+    );
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+Close Button:
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 45px;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+Accessibility Considerations
+Add appropriate ARIA attributes to make the expandable cards accessible
+Implement keyboard navigation (Esc key to close)
+Manage focus states when cards expand and collapse
+Include proper animation timing for smooth transitions
+Best Practices
+Maintain the original card position in the grid when collapsed
+Use smooth transitions for a polished user experience
+Implement proper scroll management when cards are expanded
+Ensure the expanded state is responsive across different screen sizes
+Consider adding a subtle background overlay when cards are expanded
+
+
+For design context, here are some of Sparq's branding elements:
+
+Primary Colors: 
+- PMS 185 (Outlaw Red) Bold, energetic red that embodies the Outlaw archetype
+Signals disruption and revolution in gaming.
+- PMS 2736 (Tech Purple) Deep, rich purple that suggests technological sophistication. Bridges the Magician and Creator archetypes. Communicates innovation and future-forward thinking.
+
+Secondary Colors:
+- PMS 298 (Future Blue) Bright, digital blue that reinforces the tech aspect. Suggests trustworthiness and reliability, Perfect for UI elements and data visualization. Complements both primary colors effectively.
+- PMS 354 (Digital Green) Fresh, modern green that suggests innovation. Represents growth and the platform's scalability. Works well for success states and progress indicators. Balances the more aggressive primary colors.
+- PMS 1585 (Energy Orange) Vibrant orange that captures the Jester's playfulness. Brings warmth and accessibility to the brand. Great for UI elements and calls-to-action. Represents the fun aspect of sports gaming.
+
+Accent Colors:
+- PMS 115 (Accent Gold) Premium metallic tone for achievements and rewards. Adds value to the Web3/blockchain aspects. Perfect for highlighting special features. Creates moments of celebration.
+- PMS 246 (Accent Magenta) Unexpected pop of color for key moments. Reinforces the disruptive nature of the brand. Great for highlighting innovation features. Adds energy to promotional stuff.
+
+Primary Font:
+- Halvar Breit (or something similar)
+
+Logos:
+Sparq Logo (icon) - represented in the uploaded files as “sparqIcon.png”
+Sparq Logo (typeface) - represented in the uploaded files as “sparqTypeface.png”
+
+Design Images to be used on website:
+Softball character image - represented in the uploaded files as “softballPlayer.png”
+Basketball character image - represented in the uploaded files as “basketballPlayer.png”
+
+
+Grid Architecture Specification
+Base Layout
+css
+.bento-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 24px;
+    padding: 32px;
+    background-color: #1a1a2e;
+    min-height: 100vh;
+}
+
+/* Card Base Styles */
+.bento-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Specific Card Layouts */
+.card-1 { grid-area: 1 / 1 / 2 / 2; }
+.card-2 { grid-area: 1 / 2 / 2 / 4; }
+.card-3 { grid-area: 1 / 4 / 2 / 5; }
+.card-4 { grid-area: 1 / 4 / 3 / 5; }
+.card-5 { grid-area: 2 / 1 / 3 / 2; }
+.card-6 { grid-area: 3 / 1 / 4 / 2; }
+.card-7 { grid-area: 3 / 2 / 4 / 3; }
+.card-8 { grid-area: 3 / 3 / 4 / 4; }
+.card-9 { grid-area: 2 / 4 / 4 / 5; }
+.card-10 { 
+    grid-area: 2 / 2 / 3 / 4;
+    background: var(--outlaw-red);
+    border-radius: 50%;
+}
+Card Specifications
+Card 1 - AI Chat Interface
+css
+.card-1 {
+    background: linear-gradient(145deg, rgba(39, 40, 184, 0.1), rgba(39, 40, 184, 0.05));
+    border-radius: 24px;
+    backdrop-filter: blur(8px);
+}
+Card 2 - Sparqverse Portal
+css
+.card-2 {
+    background: linear-gradient(145deg, rgba(185, 0, 0, 0.1), rgba(185, 0, 0, 0.05));
+    border-radius: 32px 32px 24px 24px;
+}
+[Continued implementation details for each card, including hover states, animations, and texture overlays...]
+Functionality Implementation
+Expandable Card System
+javascript
+const expandCard = (cardId) => {
+    const card = document.getElementById(cardId);
+    card.classList.add('expanded');
+    card.style.position = 'fixed';
+    card.style.top = '0';
+    card.style.left = '0';
+    card.style.width = '100vw';
+    card.style.height = '100vh';
+    card.style.zIndex = '1000';
+    // Add transition animation
+    card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+}
+News Carousel System
+javascript
+class NewsCarousel {
+    constructor() {
+        this.currentIndex = 0;
+        this.updateInterval = 5000; // 5 seconds
+        this.headlines = [];
+        this.init();
+    }
+
+    async init() {
+        this.headlines = await fetchNews();
+        this.startRotation();
+    }
+
+    startRotation() {
+        setInterval(() => {
+            this.currentIndex = (this.currentIndex + 1) % this.headlines.length;
+            this.updateDisplay();
+        }, this.updateInterval);
+    }
+}
+[Additional implementation details for each card's unique functionality...]
+
+
+
+
+Key technical requirements:
+-Responsive grid layout with specific card positioning
+-Interactive card expansion system
+-Integration with multiple APIs (Perplexity, NCAA, Discord)
+-Custom texture overlays and animations
+-Glass morphism effects
+-Real-time data updates
+-3D rendering capabilities via Spline
+
+This vision combines the best elements of classic gaming interfaces with innovative AI-driven features, creating a unique digital experience that positions Sparq as a revolutionary force in sports gaming.The bento grid format serves as a foundation for this bold vision, but breaks traditional constraints through dynamic interactions, AI integration, and immersive 3D elements. This creates a website that's not just a showcase, but a demonstration of Sparq's technological prowess and gaming expertise.
+
+
