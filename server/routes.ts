@@ -1,32 +1,80 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { db } from "@db";
-import { betaSignups } from "@db/schema";
+import { betaSignups, adminUsers } from "@db/schema";
 import { eq } from "drizzle-orm";
+import session from "express-session";
+import { requireAdmin, adminSessionMiddleware } from "./middleware/auth";
+import bcrypt from "bcryptjs";
+import MemoryStore from "memorystore";
+
+const SessionStore = MemoryStore(session);
 
 export function registerRoutes(app: Express): Server {
+  // Session setup
+  app.use(session({
+    store: new SessionStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    secret: process.env.SESSION_SECRET || 'dev-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' }
+  }));
+
+  app.use(adminSessionMiddleware);
+
+  // Admin auth routes
+  app.post("/api/admin/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+
+      const admin = await db.query.adminUsers.findFirst({
+        where: eq(adminUsers.username, username)
+      });
+
+      if (!admin || !await bcrypt.compare(password, admin.password)) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      req.session.adminUser = { id: admin.id, username: admin.username };
+      res.json({ message: "Logged in successfully" });
+    } catch (error) {
+      console.error("Admin login error:", error);
+      res.status(500).json({ message: "Login failed" });
+    }
+  });
+
+  app.post("/api/admin/logout", requireAdmin, (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Logout error:", err);
+        return res.status(500).json({ message: "Logout failed" });
+      }
+      res.json({ message: "Logged out successfully" });
+    });
+  });
+
   // Beta signup endpoint
   app.post("/api/beta-signup", async (req, res) => {
     try {
       const { email, subscribe } = req.body;
-      
-      // Check if email already exists
+
       const existing = await db.query.betaSignups.findFirst({
         where: eq(betaSignups.email, email)
       });
-      
+
       if (existing) {
         return res.status(400).json({ 
           message: "Email already registered for beta" 
         });
       }
-      
-      // Insert new signup
+
       await db.insert(betaSignups).values({
         email,
         subscribed: subscribe
       });
-      
+
       res.status(200).json({ 
         message: "Successfully signed up for beta" 
       });
@@ -35,6 +83,19 @@ export function registerRoutes(app: Express): Server {
       res.status(500).json({ 
         message: "Failed to sign up for beta" 
       });
+    }
+  });
+
+  // Protected admin endpoints
+  app.get("/api/admin/beta-signups", requireAdmin, async (req, res) => {
+    try {
+      const signups = await db.query.betaSignups.findMany({
+        orderBy: (betaSignups, { desc }) => [desc(betaSignups.createdAt)]
+      });
+      res.json(signups);
+    } catch (error) {
+      console.error("Error fetching beta signups:", error);
+      res.status(500).json({ message: "Failed to fetch beta signups" });
     }
   });
 
