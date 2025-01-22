@@ -101,7 +101,7 @@ export function BentoGrid() {
           >
             <GameNews />
           </Card>
-          <Card className="bento-card h-72 mb-4">
+          <Card className="bento-card h-[576px] mb-4">
             <ThreeViewer />
           </Card>
           <Card 
