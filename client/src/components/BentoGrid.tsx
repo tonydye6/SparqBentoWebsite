@@ -63,7 +63,22 @@ export function BentoGrid() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent p-4 md:p-8">
+    <div className="min-h-screen bg-transparent">
+      {/* Header Card */}
+      <motion.div
+        className="bento-card header-card mx-auto mb-6 p-4"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="flex items-center justify-between">
+          <img src="/sparqIcon.png" alt="Sparq Games Logo" className="h-12" />
+          <div className="flex items-center gap-4">
+            <button className="text-white hover:text-gray-300 transition-colors">About</button>
+            <button className="text-white hover:text-gray-300 transition-colors">Contact</button>
+          </div>
+        </div>
+      </motion.div>
+
       <div className="bento-grid">
         <motion.div
           className="bento-card card-1"
@@ -113,6 +128,34 @@ export function BentoGrid() {
           <JoinUs />
         </motion.div>
 
+        {/* UCLA Card */}
+        <motion.div
+          className="bento-card image-card"
+          whileHover={{ scale: 1.02 }}
+        >
+          <div className="h-full flex items-center justify-center p-4">
+            <img
+              src="/ucla.png"
+              alt="UCLA"
+              className="w-full h-full object-contain"
+            />
+          </div>
+        </motion.div>
+
+        {/* LA Rams Card */}
+        <motion.div
+          className="bento-card image-card"
+          whileHover={{ scale: 1.02 }}
+        >
+          <div className="h-full flex items-center justify-center p-4">
+            <img
+              src="/rams.png"
+              alt="LA Rams"
+              className="w-full h-full object-contain"
+            />
+          </div>
+        </motion.div>
+
         <motion.div
           className="bento-card card-7"
           whileHover={{ scale: 1.02 }}
@@ -127,6 +170,27 @@ export function BentoGrid() {
           onClick={() => handleCardClick("team")}
         >
           <TeamCarousel />
+        </motion.div>
+
+        {/* Players Card */}
+        <motion.div
+          className="bento-card image-card"
+          whileHover={{ scale: 1.02 }}
+        >
+          <div className="h-full flex items-center justify-center">
+            <div className="flex w-full h-full">
+              <img
+                src="/basketballPlayer.png"
+                alt="Basketball Player"
+                className="w-1/2 h-full object-contain"
+              />
+              <img
+                src="/softballPlayer.png"
+                alt="Softball Player"
+                className="w-1/2 h-full object-contain"
+              />
+            </div>
+          </div>
         </motion.div>
 
         <motion.div
