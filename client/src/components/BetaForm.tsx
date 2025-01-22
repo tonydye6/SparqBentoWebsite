@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
+import { PixelPattern } from "./PixelPattern";
 
 const betaSignupSchema = z.object({
   email: z.string().email(),
@@ -56,7 +57,10 @@ export function BetaForm({ expanded }: BetaFormProps) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      <div className="absolute inset-0 pointer-events-none opacity-30">
+        <PixelPattern className="w-full h-full" />
+      </div>
       <div>
         <h3 className="text-lg font-semibold mb-2">Join Sparq's Beta</h3>
         <p className="text-sm text-muted-foreground">
