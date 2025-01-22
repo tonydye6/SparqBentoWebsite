@@ -88,7 +88,7 @@ export function BentoGrid() {
             <BetaForm />
           </Card>
           <Card 
-            className="bento-card h-54 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[270px] mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("ai-chat")}
           >
             <AiChat />
@@ -97,7 +97,7 @@ export function BentoGrid() {
 
         <div className="flex-1">
           <Card 
-            className="bento-card h-36 mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
+            className="bento-card h-[180px] mb-4 cursor-pointer transition-transform hover:scale-[1.02]"
             onClick={() => handleCardClick("news")}
           >
             <GameNews />
