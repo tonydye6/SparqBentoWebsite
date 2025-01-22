@@ -24,6 +24,8 @@
   }
 }
 
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&family=Chakra+Petch:wght@600&display=swap');
+
 @layer components {
   .bento-card {
     @apply rounded-2xl overflow-hidden relative;
@@ -37,8 +39,23 @@
   }
 
   .bento-card h1, .bento-card h2, .bento-card h3, .bento-card h4 {
-    @apply font-bold;
+    font-family: 'Chakra Petch', sans-serif;
+    @apply font-semibold tracking-tight;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    letter-spacing: -0.02em;
+  }
+
+  .bento-card p, .bento-card span {
+    font-family: 'Space Grotesk', sans-serif;
+    @apply leading-relaxed;
+  }
+
+  .bento-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1), transparent 60%);
+    pointer-events: none;
   }
 
   .bento-card p, .bento-card span {
