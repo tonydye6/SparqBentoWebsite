@@ -91,7 +91,8 @@ export function BentoGrid() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#4E2FE6] p-6"> {/* Tech Purple PMS 2736 */} {/* Tech Purple PMS 2736 */} {/* Tech Purple background */}
+    <div className="min-h-screen bg-[#4E2FE6] dark:bg-[#1a1a2e] p-6">
+      <ThemeToggle /> {/* Tech Purple PMS 2736 */} {/* Tech Purple PMS 2736 */} {/* Tech Purple background */}
       <div className="flex gap-5 max-w-[1600px] mx-auto">
         <div className="flex-1">
           <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
