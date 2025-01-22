@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Image from 'next/image'; // Added import for Next.js Image component
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { ThreeViewer } from "./ThreeViewer";
 import { AiChat } from "./AiChat";
