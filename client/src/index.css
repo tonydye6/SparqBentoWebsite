@@ -32,6 +32,17 @@
     border: 1px solid rgba(255, 255, 255, 0.15);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .bento-card h1, .bento-card h2, .bento-card h3, .bento-card h4 {
+    @apply font-bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  .bento-card p, .bento-card span {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   .ai-chat-card {
