@@ -28,6 +28,9 @@ type ExpandedCard =
   | "team"
   | "discord"
   | "3d"
+  | "mission"
+  | "vision"
+  | "values"
   | null;
 
 const MagneticCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -181,6 +184,50 @@ export function BentoGrid() {
         return <DiscordWidget />;
       case "3d":
         return <ThreeViewer />;
+      case "mission":
+        return (
+          <div className="p-6 space-y-4">
+            <h2 className="text-2xl font-bold">Our Mission</h2>
+            <p className="text-lg">Revolutionize sports gaming through innovation, creating immersive and authentic experiences that bring athletes and fans closer to the games they love.</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Push the boundaries of sports gaming technology</li>
+              <li>Create authentic and engaging experiences</li>
+              <li>Connect athletes and fans in meaningful ways</li>
+            </ul>
+          </div>
+        );
+      case "vision":
+        return (
+          <div className="p-6 space-y-4">
+            <h2 className="text-2xl font-bold">Our Vision</h2>
+            <p className="text-lg">Create the future of interactive sports entertainment where every player can experience the thrill and excitement of their favorite sports in unprecedented ways.</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Lead the evolution of sports gaming</li>
+              <li>Bridge the gap between virtual and real sports</li>
+              <li>Empower athletes and fans through technology</li>
+            </ul>
+          </div>
+        );
+      case "values":
+        return (
+          <div className="p-6 space-y-4">
+            <h2 className="text-2xl font-bold">Our Values</h2>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-xl font-semibold">Innovation</h3>
+                <p>Constantly pushing boundaries and embracing new technologies</p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold">Community</h3>
+                <p>Building strong connections between players, athletes, and fans</p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold">Excellence</h3>
+                <p>Striving for the highest quality in everything we do</p>
+              </div>
+            </div>
+          </div>
+        );
       default:
         return null;
     }
@@ -311,19 +358,31 @@ export function BentoGrid() {
       </motion.div>
 
       {/* Cards 13-15: Mission/Vision/Values */}
-      <motion.div className="bento-card card-13">
+      <motion.div 
+        className="bento-card card-13 cursor-pointer"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("mission")}
+      >
         <div className="p-4">
           <h3 className="font-semibold mb-2">Mission</h3>
           <p className="text-sm text-white/80">Revolutionize sports gaming through innovation</p>
         </div>
       </motion.div>
-      <motion.div className="bento-card card-14">
+      <motion.div 
+        className="bento-card card-14 cursor-pointer"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("vision")}
+      >
         <div className="p-4">
           <h3 className="font-semibold mb-2">Vision</h3>
           <p className="text-sm text-white/80">Create the future of interactive sports entertainment</p>
         </div>
       </motion.div>
-      <motion.div className="bento-card card-15">
+      <motion.div 
+        className="bento-card card-15 cursor-pointer"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("values")}
+      >
         <div className="p-4">
           <h3 className="font-semibold mb-2">Values</h3>
           <p className="text-sm text-white/80">Innovation, Community, Excellence</p>
