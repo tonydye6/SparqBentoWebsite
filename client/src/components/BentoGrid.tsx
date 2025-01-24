@@ -378,7 +378,6 @@ export function BentoGrid() {
         onClick={() => handleCardClick("values")}
       >
         <h3 className="text-4xl font-bold transform -rotate-90">Values</h3>
-        </div>
       </motion.div>
 
       <AnimatePresence>
