@@ -288,13 +288,33 @@ export function BentoGrid() {
         <ThreeViewer />
       </motion.div>
 
-      {/* Card 6: Team Showcase */}
+      {/* Card 6: Video Teaser */}
       <motion.div
-        className="bento-card card-6"
+        className="bento-card card-6 relative overflow-hidden"
         whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("team")}
       >
-        <TeamCarousel />
+        <video
+          className="w-full h-full object-cover"
+          src="/teaser_1.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+        <Button
+          variant="secondary"
+          size="icon"
+          className="absolute top-4 right-4 backdrop-blur-sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            const video = e.currentTarget.parentElement?.querySelector('video');
+            if (video) {
+              video.muted = !video.muted;
+            }
+          }}
+        >
+          <Volume2 className="h-4 w-4" />
+        </Button>
       </motion.div>
 
       {/* Card 7: Join Us */}
