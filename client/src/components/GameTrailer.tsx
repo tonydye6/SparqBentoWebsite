@@ -69,7 +69,16 @@ export function GameTrailer({ title, videoUrl, thumbnailUrl }: GameTrailerProps)
         muted={isMuted}
         playsInline
         poster={thumbnailUrl}
-        onClick={togglePlay}
+        onClick={(e) => {
+          e.preventDefault();
+          if (videoElement) {
+            if (videoElement.paused) {
+              videoElement.play();
+            } else {
+              videoElement.pause();
+            }
+          }
+        }}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       >
