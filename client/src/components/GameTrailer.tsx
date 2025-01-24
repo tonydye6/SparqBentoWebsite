@@ -64,11 +64,12 @@ export function GameTrailer({ title, videoUrl, thumbnailUrl }: GameTrailerProps)
 
       <video
         ref={(el) => setVideoElement(el)}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover cursor-pointer"
         loop
         muted={isMuted}
         playsInline
         poster={thumbnailUrl}
+        onClick={togglePlay}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       >
