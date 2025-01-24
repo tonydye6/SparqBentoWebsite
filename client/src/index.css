@@ -29,7 +29,7 @@
 
 @layer components {
   .bento-grid {
-    @apply grid grid-cols-12 grid-rows-8 gap-6 p-4 min-h-screen bg-gray-900;
+    @apply grid grid-cols-12 grid-rows-10 gap-6 p-4 min-h-screen bg-gray-900;
   }
 
   .bento-card {
@@ -44,8 +44,6 @@
     will-change: transform, opacity, background-color;
     color: white;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    min-height: 0; /* Allow cards to shrink */
-    height: 100%; /* Fill the grid cell height */
   }
 
   @keyframes fadeIn {
@@ -59,22 +57,22 @@
     }
   }
 
-  /* Grid positions with adjusted row spans */
+  /* Grid positions based on the new layout */
   .card-1 { @apply col-start-4 col-span-9 row-span-1; }
-  .card-2 { @apply col-start-1 col-span-3 row-span-1; }
-  .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-4; }
-  .card-4 { @apply col-start-9 col-span-4 row-start-8; }
-  .card-5 { @apply col-start-9 col-span-4 row-start-4 row-span-4; }
-  .card-6 { @apply col-start-4 col-span-5 row-start-2 row-span-1; }
-  .card-7 { @apply col-start-4 col-span-5 row-start-7 row-span-2; }
-  .card-8 { @apply col-start-4 col-span-3 row-start-4 row-span-3; }
-  .card-9 { @apply col-start-7 col-span-2 row-start-5 row-span-2; }
-  .card-10 { @apply col-start-4 col-span-3 row-start-3; }
-  .card-11 { @apply col-start-7 col-span-2 row-start-3 row-span-2; }
-  .card-12 { @apply col-start-9 col-span-4 row-start-2 row-span-2; }
-  .card-13 { @apply col-start-1 col-span-1 row-start-7 row-span-2; }
-  .card-14 { @apply col-start-2 col-span-1 row-start-7 row-span-2; }
-  .card-15 { @apply col-start-3 col-span-1 row-start-7 row-span-2; }
+  .card-2 { @apply col-start-1 col-span-3 row-span-2; }
+  .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-5; }
+  .card-4 { @apply col-start-9 col-span-4 row-start-10; }
+  .card-5 { @apply col-start-9 col-span-4 row-start-5 row-span-5; }
+  .card-6 { @apply col-start-4 col-span-5 row-start-2 row-span-2; }
+  .card-7 { @apply col-start-4 col-span-5 row-start-9 row-span-2; }
+  .card-8 { @apply col-start-4 col-span-3 row-start-5 row-span-4; }
+  .card-9 { @apply col-start-7 col-span-2 row-start-6 row-span-3; }
+  .card-10 { @apply col-start-4 col-span-3 row-start-4; }
+  .card-11 { @apply col-start-7 col-span-2 row-start-4 row-span-2; }
+  .card-12 { @apply col-start-9 col-span-4 row-start-2 row-span-3; }
+  .card-13 { @apply col-start-1 col-span-1 row-start-8 row-span-3; }
+  .card-14 { @apply col-start-2 col-span-1 row-start-8 row-span-3; }
+  .card-15 { @apply col-start-3 col-span-1 row-start-8 row-span-3; }
 
   /* Card theme colors */
   .ai-chat-card {
@@ -111,7 +109,6 @@
     background: #FF6B1C !important;
     border-color: rgba(255, 107, 28, 0.3);
   }
-
   .small-card {
     @apply mb-4 h-[64px] rounded-xl border-2 border-slate-400/10 bg-neutral-100 p-4 dark:bg-neutral-900;
   }
