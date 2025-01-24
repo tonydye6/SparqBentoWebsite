@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Users, Send, Lightbulb } from "lucide-react";
 
@@ -20,7 +21,15 @@ const openings: JobPosting[] = [
   }
 ];
 
-export function JoinUs() {
+export function JoinUs({ expanded = false }) {
+  if (!expanded) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <h2 className="text-4xl font-bold text-center">Join the Sparq Uprising!</h2>
+      </div>
+    );
+  }
+
   return (
     <div className="h-full p-4 flex flex-col">
       <div className="flex items-center gap-2 mb-4">
