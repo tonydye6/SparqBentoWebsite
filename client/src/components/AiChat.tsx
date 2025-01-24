@@ -11,7 +11,9 @@ interface Message {
 }
 
 export function AiChat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    { role: 'assistant', content: 'Hi! Ask me anything about games, sports, or Sparq!' }
+  ]);
   const [input, setInput] = useState('');
 
   const chatMutation = useMutation({

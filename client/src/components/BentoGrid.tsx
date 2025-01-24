@@ -300,11 +300,13 @@ export function BentoGrid() {
 
       {/* Card 12: AI Chat */}
       <motion.div
-        className="bento-card card-12 ai-chat-card"
+        className="bento-card card-12 ai-chat-card p-4"
         whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("ai-chat")}
       >
-        <AboutUs title="AI Chat" variant="secondary" />
+        <h2 className="text-2xl font-bold text-center mb-4">We love AI! Ask about games, sports, or anything at all</h2>
+        <div className="h-[calc(100%-4rem)]">
+          <AiChat />
+        </div>
       </motion.div>
 
       {/* Cards 13-15: Mission/Vision/Values */}
