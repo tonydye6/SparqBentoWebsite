@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MouseTrail } from "./MouseTrail";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { AboutUs } from "./AboutUs";
 import { GameNews } from "./GameNews";
 import { AiChat } from "./AiChat";
