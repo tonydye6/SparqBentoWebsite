@@ -359,33 +359,25 @@ export function BentoGrid() {
 
       {/* Cards 13-15: Mission/Vision/Values */}
       <motion.div 
-        className="bento-card card-13 cursor-pointer"
+        className="bento-card card-13 cursor-pointer flex items-center justify-center"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("mission")}
       >
-        <div className="p-4">
-          <h3 className="font-semibold mb-2">Mission</h3>
-          <p className="text-sm text-white/80">Revolutionize sports gaming through innovation</p>
-        </div>
+        <h3 className="text-4xl font-bold transform -rotate-90">Mission</h3>
       </motion.div>
       <motion.div 
-        className="bento-card card-14 cursor-pointer"
+        className="bento-card card-14 cursor-pointer flex items-center justify-center"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("vision")}
       >
-        <div className="p-4">
-          <h3 className="font-semibold mb-2">Vision</h3>
-          <p className="text-sm text-white/80">Create the future of interactive sports entertainment</p>
-        </div>
+        <h3 className="text-4xl font-bold transform -rotate-90">Vision</h3>
       </motion.div>
       <motion.div 
-        className="bento-card card-15 cursor-pointer"
+        className="bento-card card-15 cursor-pointer flex items-center justify-center"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("values")}
       >
-        <div className="p-4">
-          <h3 className="font-semibold mb-2">Values</h3>
-          <p className="text-sm text-white/80">Innovation, Community, Excellence</p>
+        <h3 className="text-4xl font-bold transform -rotate-90">Values</h3>
         </div>
       </motion.div>
 
