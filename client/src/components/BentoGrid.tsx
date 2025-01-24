@@ -12,7 +12,7 @@ import { ThreeViewer } from "./ThreeViewer";
 import { BetaForm } from "./BetaForm";
 import { BentoCardModal } from "./BentoCardModal";
 import { Trophy, Star, Users } from "lucide-react";
-import { useBadgeStore, BADGES } from "@/lib/badges";
+import { useBadgeStore, BADGES, type Badge } from "@/lib/badges";
 import { BadgeDisplay } from "./badges/BadgeDisplay";
 import { BadgeNotification } from "./badges/BadgeNotification";
 
@@ -28,13 +28,6 @@ type ExpandedCard =
   | "discord"
   | "3d"
   | null;
-
-type Badge = {
-  id: string;
-  name: string;
-  description: string;
-};
-
 
 const MagneticCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -102,7 +95,11 @@ export function BentoGrid() {
   const checkExplorerBadge = () => {
     if (visitedSections.current.size >= 5 && !hasBadge(BADGES.EXPLORER.id)) {
       awardBadge(BADGES.EXPLORER.id);
-      setRecentBadge(BADGES.EXPLORER);
+      setRecentBadge({
+        ...BADGES.EXPLORER,
+        earned: true,
+        earnedAt: new Date(),
+      });
     }
   };
 
@@ -117,25 +114,41 @@ export function BentoGrid() {
         case 'discord':
           if (!hasBadge(BADGES.SOCIAL.id)) {
             awardBadge(BADGES.SOCIAL.id);
-            setRecentBadge(BADGES.SOCIAL);
+            setRecentBadge({
+              ...BADGES.SOCIAL,
+              earned: true,
+              earnedAt: new Date(),
+            });
           }
           break;
         case 'beta':
           if (!hasBadge(BADGES.EARLY_ADOPTER.id)) {
             awardBadge(BADGES.EARLY_ADOPTER.id);
-            setRecentBadge(BADGES.EARLY_ADOPTER);
+            setRecentBadge({
+              ...BADGES.EARLY_ADOPTER,
+              earned: true,
+              earnedAt: new Date(),
+            });
           }
           break;
         case 'about':
           if (!hasBadge(BADGES.CURIOUS_MIND.id)) {
             awardBadge(BADGES.CURIOUS_MIND.id);
-            setRecentBadge(BADGES.CURIOUS_MIND);
+            setRecentBadge({
+              ...BADGES.CURIOUS_MIND,
+              earned: true,
+              earnedAt: new Date(),
+            });
           }
           break;
         case 'team':
           if (!hasBadge(BADGES.TEAM_PLAYER.id)) {
             awardBadge(BADGES.TEAM_PLAYER.id);
-            setRecentBadge(BADGES.TEAM_PLAYER);
+            setRecentBadge({
+              ...BADGES.TEAM_PLAYER,
+              earned: true,
+              earnedAt: new Date(),
+            });
           }
           break;
       }
