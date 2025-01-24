@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 export function BadgeDisplay() {
   const { badges } = useBadgeStore();
-  
+
   const earnedCount = useMemo(() => 
     badges.filter(badge => badge.earned).length, 
     [badges]
@@ -25,7 +25,7 @@ export function BadgeDisplay() {
         <Button 
           variant="outline" 
           size="icon"
-          className="fixed bottom-4 right-4 h-12 w-12 rounded-full shadow-lg"
+          className="fixed bottom-4 right-4 h-12 w-12 rounded-full shadow-lg bg-primary/20 hover:bg-primary/30 backdrop-blur-sm z-50"
         >
           <Medal className="h-6 w-6" />
           {earnedCount > 0 && (
@@ -37,7 +37,7 @@ export function BadgeDisplay() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Achievements</DialogTitle>
+          <DialogTitle>Your Achievements</DialogTitle>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           {badges.map((badge) => (

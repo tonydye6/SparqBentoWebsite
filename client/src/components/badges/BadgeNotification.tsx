@@ -29,7 +29,7 @@ export function BadgeNotification({ badge, onClose }: BadgeNotificationProps) {
         <div className="grid gap-1">
           <ToastTitle className="text-white flex items-center gap-2">
             <span className="text-2xl">{badge.icon}</span>
-            Badge Unlocked!
+            Achievement Unlocked!
           </ToastTitle>
           <ToastDescription className="text-white/90">
             {badge.name} - {badge.description}
@@ -37,7 +37,7 @@ export function BadgeNotification({ badge, onClose }: BadgeNotificationProps) {
         </div>
         <ToastClose />
       </Toast>
-      <ToastViewport />
+      <ToastViewport className="fixed top-4 right-4 flex flex-col gap-2 w-[420px] max-w-[100vw] m-0 z-[100] outline-none" />
     </ToastProvider>
   );
 }
