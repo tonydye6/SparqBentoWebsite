@@ -366,7 +366,7 @@ export function BentoGrid() {
         <img 
           src="/footbalPlayer.png" 
           alt="Football Player"
-          className="absolute w-auto h-full object-cover opacity-50"
+          className="absolute w-auto h-full object-cover opacity-60 -left-5"
         />
         <h3 className="text-4xl font-bold transform -rotate-90 relative z-10">Mission</h3>
       </motion.div>
@@ -378,7 +378,7 @@ export function BentoGrid() {
         <img 
           src="/softballPlayer.png" 
           alt="Softball Player"
-          className="absolute w-auto h-full object-cover opacity-60"
+          className="absolute w-auto h-full object-cover opacity-60 -left-2.5"
         />
         <h3 className="text-4xl font-bold transform -rotate-90 relative z-10">Vision</h3>
       </motion.div>
