@@ -189,11 +189,11 @@ export function BentoGrid() {
     <div className="bento-grid">
       {/* Card 2: Join Beta */}
       <motion.div
-        className="bento-card card-2 beta-card"
+        className="bento-card card-2 beta-card flex items-center justify-center"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("beta")}
       >
-        <BetaForm />
+        <h2 className="text-2xl font-bold text-white">Join Beta</h2>
       </motion.div>
 
       {/* Card 1: Title Bar */}
