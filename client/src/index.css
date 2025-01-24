@@ -29,21 +29,12 @@
 
 @layer components {
   .bento-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1.5rem;
-    padding: 1.5rem;
-    max-width: 1800px;
-    margin: 0 auto;
+    @apply grid grid-cols-12 grid-rows-10 gap-5 p-6 max-w-[1800px] mx-auto;
+    min-height: calc(100vh - 2rem);
   }
 
   .header-card {
-    width: calc(100% - 20px);
-    max-width: 1780px;
-    height: 90px;
-    padding: 0 2rem;
-    margin-top: 20px;
-    margin-bottom: 1.5rem;
+    @apply col-span-9 col-start-4;
   }
 
   .bento-card {
@@ -72,139 +63,22 @@
     }
   }
 
-  /* Feature card (3D Viewer) */
-  .feature-card {
-    grid-column: span 2;
-    grid-row: span 2;
-    height: 480px;
-    animation-delay: 0.1s;
-  }
-
-  /* Other card variations */
-  .card-1 {
-    grid-column: span 1;
-    grid-row: span 2;
-    height: 480px;
-    animation-delay: 0.2s;
-  }
-
-  .card-2 {
-    grid-column: span 1;
-    grid-row: span 1;
-    height: 220px;
-    animation-delay: 0.3s;
-  }
-
-  .card-3 {
-    grid-column: span 1;
-    grid-row: span 2;
-    height: 480px;
-    animation-delay: 0.4s;
-  }
-
-  .card-4 {
-    grid-column: span 1;
-    grid-row: span 1;
-    height: 220px;
-    animation-delay: 0.5s;
-  }
-
-  .card-5 {
-    grid-column: span 1;
-    grid-row: span 1;
-    height: 220px;
-    animation-delay: 0.6s;
-  }
-
-  .card-6 {
-    grid-column: span 1;
-    grid-row: span 2;
-    height: 480px;
-    animation-delay: 0.7s;
-  }
-
-  .card-7 {
-    grid-column: span 1;
-    grid-row: span 1;
-    height: 220px;
-    animation-delay: 0.8s;
-  }
-
-  .card-8 {
-    grid-column: span 2;
-    grid-row: span 2;
-    height: 480px;
-    animation-delay: 0.9s;
-  }
-
-  .card-9 {
-    grid-column: span 1;
-    grid-row: span 1;
-    height: 220px;
-    animation-delay: 1s;
-  }
-
-  .image-card {
-    grid-column: span 1;
-    grid-row: span 1;
-    height: 220px;
-    animation-delay: 0.5s;
-  }
-
-  /* New card styles */
-  .stats-card, .athlete-card, .community-card {
-    grid-column: span 1;
-    grid-row: span 1;
-    height: 220px;
-    animation-delay: 0.6s;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 1280px) {
-    .bento-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .feature-card {
-      grid-column: span 3;
-    }
-
-    .card-8 {
-      grid-column: span 2;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .bento-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .feature-card {
-      grid-column: span 2;
-    }
-
-    .card-1, .card-3, .card-6 {
-      grid-column: span 1;
-      height: 380px;
-    }
-
-    .card-8 {
-      grid-column: span 2;
-      height: 380px;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .bento-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .bento-card {
-      grid-column: span 1 !important;
-      height: auto !important;
-      min-height: 280px;
-    }
-  }
+  /* Grid positions based on the new layout */
+  .card-1 { @apply col-span-9 col-start-4; }
+  .card-2 { @apply col-span-3 row-span-2 col-start-1; }
+  .card-3 { @apply col-span-3 row-span-5 col-start-1 row-start-3; }
+  .card-4 { @apply col-span-4 col-start-9 row-start-10; }
+  .card-5 { @apply col-span-4 row-span-5 col-start-9 row-start-5; }
+  .card-6 { @apply col-span-5 row-span-2 col-start-4 row-start-2; }
+  .card-7 { @apply col-span-5 row-span-2 col-start-4 row-start-9; }
+  .card-8 { @apply col-span-3 row-span-4 col-start-4 row-start-5; }
+  .card-9 { @apply col-span-2 row-span-3 col-start-7 row-start-6; }
+  .card-10 { @apply col-span-3 col-start-4 row-start-4; }
+  .card-11 { @apply col-span-2 row-span-2 col-start-7 row-start-4; }
+  .card-12 { @apply col-span-4 row-span-3 col-start-9 row-start-2; }
+  .card-13 { @apply row-span-3 col-start-1 row-start-8; }
+  .card-14 { @apply row-span-3 col-start-2 row-start-8; }
+  .card-15 { @apply row-span-3 col-start-3 row-start-8; }
 
   /* Card theme colors */
   .ai-chat-card {
@@ -251,7 +125,6 @@
     background: linear-gradient(135deg, #42B4E6 0%, #4E2FE6 100%) !important;
     border-color: rgba(66, 180, 230, 0.3);
   }
-
   .small-card {
     @apply mb-4 h-[64px] rounded-xl border-2 border-slate-400/10 bg-neutral-100 p-4 dark:bg-neutral-900;
   }

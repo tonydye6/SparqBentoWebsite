@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { MouseTrail } from "./MouseTrail";
 import { Card } from "@/components/ui/card";
 import { AboutUs } from "./AboutUs";
@@ -109,7 +109,6 @@ export function BentoGrid() {
       visitedSections.current.add(card);
       checkExplorerBadge();
 
-      // Award specific badges based on section visits
       switch (card) {
         case 'discord':
           if (!hasBadge(BADGES.SOCIAL.id)) {
@@ -189,13 +188,13 @@ export function BentoGrid() {
   return (
     <div className="min-h-screen bg-transparent">
       <MouseTrail />
-      {/* Header Card */}
+
       <motion.div
-        className="bento-card header-card mx-auto mb-6 p-4"
+        className="bento-card card-1"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between p-4">
           <img src="/sparqIcon.png" alt="Sparq Games Logo" className="h-16" />
           <h1 className="text-2xl font-bold text-white">Break Free. Play Future</h1>
           <img src="/sparqIcon.png" alt="Sparq Games Logo" className="h-16" />
@@ -203,186 +202,109 @@ export function BentoGrid() {
       </motion.div>
 
       <div className="bento-grid">
-        {/* AI Chat */}
-        <motion.div
-          className="bento-card card-1"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("ai-chat")}
-        >
-          <AboutUs title="AI Chat" variant="secondary" />
-        </motion.div>
-
-        {/* Sparqverse */}
         <motion.div
           className="bento-card card-2"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("sparqverse")}
-        >
-          <AboutUs />
-        </motion.div>
-
-        {/* UCLA Card */}
-        <motion.div
-          className="bento-card image-card"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="h-full flex items-center justify-center p-4">
-            <img
-              src="/footbalPlayer.png"
-              alt="Football Player"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </motion.div>
-
-        {/* Stats Card */}
-        <motion.div
-          className="bento-card stats-card"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="h-full p-4 flex flex-col justify-center">
-            <div className="flex items-center gap-2 mb-2">
-              <Trophy className="w-5 h-5 text-yellow-400" />
-              <h3 className="font-semibold">Game Stats</h3>
-            </div>
-            <div className="space-y-2">
-              <p className="text-sm"><span className="font-bold">1M+</span> Active Players</p>
-              <p className="text-sm"><span className="font-bold">50+</span> Universities</p>
-              <p className="text-sm"><span className="font-bold">10+</span> Sports</p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* News */}
-        <motion.div
-          className="bento-card card-4"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("news")}
-        >
-          <GameNews />
-        </motion.div>
-
-        {/* 3D Viewer - Now in the middle */}
-        <motion.div
-          className="bento-card feature-card"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("3d")}
-        >
-          <ThreeViewer />
-        </motion.div>
-
-        {/* About Us */}
-        <motion.div
-          className="bento-card card-5"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("about")}
-        >
-          <AboutUs variant="secondary" />
-        </motion.div>
-
-        {/* Featured Athletes Card */}
-        <motion.div
-          className="bento-card athlete-card"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="h-full p-4 flex flex-col">
-            <div className="flex items-center gap-2 mb-2">
-              <Star className="w-5 h-5 text-primary" />
-              <h3 className="font-semibold">Featured Athletes</h3>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-sm text-muted-foreground">
-                  Discover rising stars in college sports
-                </p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Beta Form */}
-        <motion.div
-          className="bento-card card-3"
           whileHover={{ scale: 1.02 }}
           onClick={() => handleCardClick("beta")}
         >
           <BetaForm />
         </motion.div>
 
-        {/* Join Us */}
+        <motion.div
+          className="bento-card card-3"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("discord")}
+        >
+          <DiscordWidget />
+        </motion.div>
+
+        <motion.div
+          className="bento-card card-4 character-card"
+          whileHover={{ scale: 1.02 }}
+        >
+          {/* Placeholder for character selection */}
+        </motion.div>
+
+        <motion.div
+          className="bento-card card-5"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("3d")}
+        >
+          <ThreeViewer />
+        </motion.div>
+
         <motion.div
           className="bento-card card-6"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("join")}
-        >
-          <JoinUs />
-        </motion.div>
-
-        {/* Community Stats Card */}
-        <motion.div
-          className="bento-card community-card"
-          whileHover={{ scale: 1.02 }}
-        >
-          <div className="h-full p-4 flex flex-col">
-            <div className="flex items-center gap-2 mb-2">
-              <Users className="w-5 h-5 text-blue-400" />
-              <h3 className="font-semibold">Community</h3>
-            </div>
-            <div className="flex-1 flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-2xl font-bold mb-1">50K+</p>
-                <p className="text-sm text-muted-foreground">Active Players</p>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* School Spotlight */}
-        <motion.div
-          className="bento-card card-7"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("school")}
-        >
-          <SchoolSpotlight />
-        </motion.div>
-
-        {/* Team Carousel */}
-        <motion.div
-          className="bento-card card-8"
           whileHover={{ scale: 1.02 }}
           onClick={() => handleCardClick("team")}
         >
           <TeamCarousel />
         </motion.div>
 
-        {/* Players Card */}
         <motion.div
-          className="bento-card image-card"
+          className="bento-card card-7"
           whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("join")}
         >
-          <div className="h-full flex items-center justify-center">
-            <div className="flex w-full h-full">
-              <img
-                src="/basketballPlayer.png"
-                alt="Basketball Player"
-                className="w-1/2 h-full object-contain"
-              />
-              <img
-                src="/softballPlayer.png"
-                alt="Softball Player"
-                className="w-1/2 h-full object-contain"
-              />
-            </div>
-          </div>
+          <JoinUs />
         </motion.div>
 
-        {/* Discord */}
         <motion.div
-          className="bento-card card-9"
+          className="bento-card card-8"
           whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("discord")}
+          onClick={() => handleCardClick("school")}
         >
-          <DiscordWidget />
+          <SchoolSpotlight />
+        </motion.div>
+
+        <motion.div
+          className="bento-card card-9 social-card"
+          whileHover={{ scale: 1.02 }}
+        >
+          {/* Placeholder for social links */}
+        </motion.div>
+
+        <motion.div
+          className="bento-card card-10"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("sparqverse")}
+        >
+          <AboutUs />
+        </motion.div>
+
+        <motion.div
+          className="bento-card card-11"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("about")}
+        >
+          <AboutUs variant="secondary" />
+        </motion.div>
+
+        <motion.div
+          className="bento-card card-12"
+          whileHover={{ scale: 1.02 }}
+          onClick={() => handleCardClick("ai-chat")}
+        >
+          <AboutUs title="AI Chat" variant="secondary" />
+        </motion.div>
+
+        <motion.div className="bento-card card-13">
+          <div className="p-4">
+            <h3 className="font-semibold mb-2">Mission</h3>
+            <p className="text-sm text-white/80">Revolutionize sports gaming through innovation</p>
+          </div>
+        </motion.div>
+        <motion.div className="bento-card card-14">
+          <div className="p-4">
+            <h3 className="font-semibold mb-2">Vision</h3>
+            <p className="text-sm text-white/80">Create the future of interactive sports entertainment</p>
+          </div>
+        </motion.div>
+        <motion.div className="bento-card card-15">
+          <div className="p-4">
+            <h3 className="font-semibold mb-2">Values</h3>
+            <p className="text-sm text-white/80">Innovation, Community, Excellence</p>
+          </div>
         </motion.div>
       </div>
 

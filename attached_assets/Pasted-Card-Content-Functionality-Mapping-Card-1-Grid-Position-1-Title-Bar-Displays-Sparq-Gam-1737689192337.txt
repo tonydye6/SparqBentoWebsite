@@ -1,0 +1,98 @@
+Card Content & Functionality Mapping:
+
+Card #1 (Grid Position 1) - Title Bar
+- Displays Sparq Games logo
+- Dark mode toggle switch
+- Minimize/maximize grid button
+- Position: Top banner spanning main content area
+
+Card #2 (Grid Position 2) - Join Beta
+- Beta signup form
+- Email input field
+- Submit button with hover effects
+- Success/error message display
+- Expandable on click for full registration form
+
+Card #3 (Grid Position 3) - Discord Live Chat
+- Embedded Discord widget
+- Real-time chat display
+- Server status indicator
+- Auto-scroll functionality
+- Height: Spans multiple rows for better chat visibility
+
+Card #4 (Grid Position 4) - Choose Character
+- Character selection interface
+- Clickable character thumbnails
+- Preview animation on hover
+- Character stats/description on select
+- Position: Bottom right section
+
+Card #5 (Grid Position 5) - Spline 3D Viewport
+- Interactive 3D character model
+- Rotation controls
+- Zoom functionality
+- Loading animation
+- Position: Tall right-side card
+
+Card #6 (Grid Position 6) - Team
+- Team member carousel
+- Auto-rotating profiles
+- LinkedIn integration
+- Experience logos
+- Manual navigation arrows
+
+Card #7 (Grid Position 7) - Join Us
+- Current job openings
+- Application form trigger
+- Company culture highlights
+- Contact information
+- Position: Lower center section
+
+Card #8 (Grid Position 8) - School Spotlight
+- University partner showcase
+- School logo display
+- Team mascot integration
+- School colors theming
+- Position: Center-left tall card
+
+Card #9 (Grid Position 9) - Social Links
+- Social media icons
+- Hover animations
+- Click tracking
+- Share functionality
+- Position: Center column
+
+Card #10 (Grid Position 10) - Sparqverse
+- Gaming ecosystem overview
+- Interactive elements
+- Expandable content
+- Animation effects
+- Position: Center section
+
+Card #11 (Grid Position 11) - Our Story
+- Company history
+- Mission statement
+- Vision highlights
+- Animated transitions
+- Position: Center-right section
+
+Card #12 (Grid Position 12) - AI Chat
+- Perplexity AI integration
+- Chat interface
+- Message history
+- Loading states
+- Position: Upper right section
+
+Cards #13-15 (Grid Positions 13-15) - Mission/Vision/Values
+- Three narrow columns
+- Animated on scroll
+- Icon illustrations
+- Hover effects
+- Position: Bottom left section
+
+Special Features:
+- Each card uses glass-morphism effect with rgba(255, 255, 255, 0.1) background
+- Card borders: 1px solid rgba(255, 255, 255, 0.2)
+- Hover effects: Subtle scale transform and shadow increase
+- Loading states: Skeleton screens with shimmer effect
+- Responsive behavior: Cards stack vertically on mobile breakpoints
