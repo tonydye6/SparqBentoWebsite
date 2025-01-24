@@ -12,19 +12,29 @@ import { ThreeViewer } from "./ThreeViewer";
 import { BetaForm } from "./BetaForm";
 import { BentoCardModal } from "./BentoCardModal";
 import { Trophy, Star, Users } from "lucide-react";
+import { useBadgeStore, BADGES } from "@/lib/badges";
+import { BadgeDisplay } from "./badges/BadgeDisplay";
+import { BadgeNotification } from "./badges/BadgeNotification";
 
-type ExpandedCard = 
-  | "ai-chat" 
-  | "sparqverse" 
-  | "beta" 
-  | "news" 
-  | "about" 
-  | "join" 
-  | "school" 
-  | "team" 
-  | "discord" 
-  | "3d" 
+type ExpandedCard =
+  | "ai-chat"
+  | "sparqverse"
+  | "beta"
+  | "news"
+  | "about"
+  | "join"
+  | "school"
+  | "team"
+  | "discord"
+  | "3d"
   | null;
+
+type Badge = {
+  id: string;
+  name: string;
+  description: string;
+};
+
 
 const MagneticCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -85,9 +95,51 @@ const MagneticCard: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 export function BentoGrid() {
   const [expandedCard, setExpandedCard] = useState<ExpandedCard>(null);
+  const [recentBadge, setRecentBadge] = useState<Badge | null>(null);
+  const visitedSections = useRef(new Set<string>());
+  const { awardBadge, hasBadge } = useBadgeStore();
+
+  const checkExplorerBadge = () => {
+    if (visitedSections.current.size >= 5 && !hasBadge(BADGES.EXPLORER.id)) {
+      awardBadge(BADGES.EXPLORER.id);
+      setRecentBadge(BADGES.EXPLORER);
+    }
+  };
 
   const handleCardClick = (card: ExpandedCard) => {
     setExpandedCard(card);
+    if (card) {
+      visitedSections.current.add(card);
+      checkExplorerBadge();
+
+      // Award specific badges based on section visits
+      switch (card) {
+        case 'discord':
+          if (!hasBadge(BADGES.SOCIAL.id)) {
+            awardBadge(BADGES.SOCIAL.id);
+            setRecentBadge(BADGES.SOCIAL);
+          }
+          break;
+        case 'beta':
+          if (!hasBadge(BADGES.EARLY_ADOPTER.id)) {
+            awardBadge(BADGES.EARLY_ADOPTER.id);
+            setRecentBadge(BADGES.EARLY_ADOPTER);
+          }
+          break;
+        case 'about':
+          if (!hasBadge(BADGES.CURIOUS_MIND.id)) {
+            awardBadge(BADGES.CURIOUS_MIND.id);
+            setRecentBadge(BADGES.CURIOUS_MIND);
+          }
+          break;
+        case 'team':
+          if (!hasBadge(BADGES.TEAM_PLAYER.id)) {
+            awardBadge(BADGES.TEAM_PLAYER.id);
+            setRecentBadge(BADGES.TEAM_PLAYER);
+          }
+          break;
+      }
+    }
   };
 
   const handleCloseModal = () => {
@@ -332,6 +384,13 @@ export function BentoGrid() {
           </BentoCardModal>
         )}
       </AnimatePresence>
+      <BadgeDisplay />
+      {recentBadge && (
+        <BadgeNotification
+          badge={recentBadge}
+          onClose={() => setRecentBadge(null)}
+        />
+      )}
     </div>
   );
 }
