@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MouseTrail } from "./MouseTrail";
 import { Card } from "@/components/ui/card";
 import { AboutUs } from "./AboutUs";
@@ -165,7 +165,7 @@ export function BentoGrid() {
       case "sparqverse":
         return <AboutUs />;
       case "beta":
-        return <BetaForm />;
+        return <BetaForm expanded />;
       case "news":
         return <GameNews />;
       case "about":
@@ -186,9 +186,8 @@ export function BentoGrid() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent">
-      <MouseTrail />
-
+    <div className="bento-grid">
+      {/* Card 1: Title Bar */}
       <motion.div
         className="bento-card card-1"
         initial={{ opacity: 0, y: -20 }}
@@ -201,112 +200,132 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
-      <div className="bento-grid">
-        <motion.div
-          className="bento-card card-2"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("beta")}
-        >
-          <BetaForm />
-        </motion.div>
+      {/* Card 2: Join Beta */}
+      <motion.div
+        className="bento-card card-2"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("beta")}
+      >
+        <BetaForm />
+      </motion.div>
 
-        <motion.div
-          className="bento-card card-3"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("discord")}
-        >
-          <DiscordWidget />
-        </motion.div>
+      {/* Card 3: Discord Live Chat */}
+      <motion.div
+        className="bento-card card-3"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("discord")}
+      >
+        <DiscordWidget />
+      </motion.div>
 
-        <motion.div
-          className="bento-card card-4 character-card"
-          whileHover={{ scale: 1.02 }}
-        >
-          {/* Placeholder for character selection */}
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-5"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("3d")}
-        >
-          <ThreeViewer />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-6"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("team")}
-        >
-          <TeamCarousel />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-7"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("join")}
-        >
-          <JoinUs />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-8"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("school")}
-        >
-          <SchoolSpotlight />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-9 social-card"
-          whileHover={{ scale: 1.02 }}
-        >
-          {/* Placeholder for social links */}
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-10"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("sparqverse")}
-        >
-          <AboutUs />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-11"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("about")}
-        >
-          <AboutUs variant="secondary" />
-        </motion.div>
-
-        <motion.div
-          className="bento-card card-12"
-          whileHover={{ scale: 1.02 }}
-          onClick={() => handleCardClick("ai-chat")}
-        >
-          <AboutUs title="AI Chat" variant="secondary" />
-        </motion.div>
-
-        <motion.div className="bento-card card-13">
-          <div className="p-4">
-            <h3 className="font-semibold mb-2">Mission</h3>
-            <p className="text-sm text-white/80">Revolutionize sports gaming through innovation</p>
+      {/* Card 4: Choose Character */}
+      <motion.div
+        className="bento-card card-4"
+        whileHover={{ scale: 1.02 }}
+      >
+        <div className="p-4">
+          <h3 className="text-lg font-bold mb-2">Choose Your Character</h3>
+          <div className="flex justify-center items-center h-full">
+            {/* Character selection interface will go here */}
           </div>
-        </motion.div>
-        <motion.div className="bento-card card-14">
-          <div className="p-4">
-            <h3 className="font-semibold mb-2">Vision</h3>
-            <p className="text-sm text-white/80">Create the future of interactive sports entertainment</p>
+        </div>
+      </motion.div>
+
+      {/* Card 5: Spline 3D Viewport */}
+      <motion.div
+        className="bento-card card-5"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("3d")}
+      >
+        <ThreeViewer />
+      </motion.div>
+
+      {/* Card 6: Team Showcase */}
+      <motion.div
+        className="bento-card card-6"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("team")}
+      >
+        <TeamCarousel />
+      </motion.div>
+
+      {/* Card 7: Join Us */}
+      <motion.div
+        className="bento-card card-7"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("join")}
+      >
+        <JoinUs />
+      </motion.div>
+
+      {/* Card 8: School Spotlight */}
+      <motion.div
+        className="bento-card card-8"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("school")}
+      >
+        <SchoolSpotlight />
+      </motion.div>
+
+      {/* Card 9: Social Links */}
+      <motion.div
+        className="bento-card card-9"
+        whileHover={{ scale: 1.02 }}
+      >
+        <div className="p-4">
+          <h3 className="text-lg font-bold mb-4">Connect With Us</h3>
+          <div className="flex flex-col gap-4">
+            {/* Social links will go here */}
           </div>
-        </motion.div>
-        <motion.div className="bento-card card-15">
-          <div className="p-4">
-            <h3 className="font-semibold mb-2">Values</h3>
-            <p className="text-sm text-white/80">Innovation, Community, Excellence</p>
-          </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
+
+      {/* Card 10: Sparqverse */}
+      <motion.div
+        className="bento-card card-10"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("sparqverse")}
+      >
+        <AboutUs />
+      </motion.div>
+
+      {/* Card 11: Our Story */}
+      <motion.div
+        className="bento-card card-11"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("about")}
+      >
+        <AboutUs variant="secondary" />
+      </motion.div>
+
+      {/* Card 12: AI Chat */}
+      <motion.div
+        className="bento-card card-12 ai-chat-card"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("ai-chat")}
+      >
+        <AboutUs title="AI Chat" variant="secondary" />
+      </motion.div>
+
+      {/* Cards 13-15: Mission/Vision/Values */}
+      <motion.div className="bento-card card-13">
+        <div className="p-4">
+          <h3 className="font-semibold mb-2">Mission</h3>
+          <p className="text-sm text-white/80">Revolutionize sports gaming through innovation</p>
+        </div>
+      </motion.div>
+      <motion.div className="bento-card card-14">
+        <div className="p-4">
+          <h3 className="font-semibold mb-2">Vision</h3>
+          <p className="text-sm text-white/80">Create the future of interactive sports entertainment</p>
+        </div>
+      </motion.div>
+      <motion.div className="bento-card card-15">
+        <div className="p-4">
+          <h3 className="font-semibold mb-2">Values</h3>
+          <p className="text-sm text-white/80">Innovation, Community, Excellence</p>
+        </div>
+      </motion.div>
 
       <AnimatePresence>
         {expandedCard && (
@@ -319,6 +338,7 @@ export function BentoGrid() {
           </BentoCardModal>
         )}
       </AnimatePresence>
+
       <BadgeDisplay />
       {recentBadge && (
         <BadgeNotification
@@ -326,6 +346,8 @@ export function BentoGrid() {
           onClose={() => setRecentBadge(null)}
         />
       )}
+
+      <MouseTrail />
     </div>
   );
 }
