@@ -266,13 +266,13 @@ export function BentoGrid() {
         <DiscordWidget />
       </motion.div>
 
-      {/* Card 4: Choose Character */}
+      {/* Card 4: Connect With Us */}
       <motion.div
         className="bento-card card-4"
         whileHover={{ scale: 1.02 }}
       >
         <div className="p-4">
-          <h3 className="text-lg font-bold mb-2">Choose Your Character</h3>
+          <h3 className="text-lg font-bold mb-2">Connect With Us</h3>
           <div className="flex justify-center items-center h-full">
             {/* Character selection interface will go here */}
           </div>
@@ -315,17 +315,13 @@ export function BentoGrid() {
         <SchoolSpotlight />
       </motion.div>
 
-      {/* Card 9: Social Links */}
+      {/* Card 9: Team Showcase */}
       <motion.div
         className="bento-card card-9"
         whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("team")}
       >
-        <div className="p-4">
-          <h3 className="text-lg font-bold mb-4">Connect With Us</h3>
-          <div className="flex flex-col gap-4">
-            {/* Social links will go here */}
-          </div>
-        </div>
+        <TeamCarousel />
       </motion.div>
 
       {/* Card 10: Sparqverse */}
