@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 import { MouseTrail } from "./MouseTrail";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Volume2 } from "lucide-react";
 import { AboutUs } from "./AboutUs";
 import { GameNews } from "./GameNews";
 import { AiChat } from "./AiChat";
