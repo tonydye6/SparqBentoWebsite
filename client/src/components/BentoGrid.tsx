@@ -12,7 +12,6 @@ import { ThreeViewer } from "./ThreeViewer";
 import { BetaForm } from "./BetaForm";
 import { BentoCardModal } from "./BentoCardModal";
 import { Trophy, Star, Users } from "lucide-react";
-import { GameTrailer } from "./GameTrailer";
 
 type ExpandedCard = 
   | "ai-chat" 
@@ -206,19 +205,6 @@ export function BentoGrid() {
         >
           <ThreeViewer />
         </motion.div>
-
-        {/* Game Trailer */}
-        <motion.div
-          className="bento-card trailer-card"
-          whileHover={{ scale: 1.02 }}
-        >
-          <GameTrailer
-            title="Latest Game Trailer"
-            videoUrl="/game-trailer.mp4"
-            thumbnailUrl="/trailer-thumbnail.jpg"
-          />
-        </motion.div>
-
 
         {/* About Us */}
         <motion.div

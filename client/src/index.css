@@ -72,46 +72,6 @@
     }
   }
 
-  .bento-card::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      125deg,
-      rgba(255, 255, 255, 0.3),
-      rgba(255, 255, 255, 0.1) 30%,
-      rgba(255, 255, 255, 0) 50%
-    );
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .bento-card:hover {
-    transform: scale(1.02) translateZ(0);
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.1),
-      0 0 0 1px rgba(255, 255, 255, 0.1);
-  }
-
-  .bento-card:hover::before {
-    opacity: 1;
-  }
-
-  .bento-card h1, .bento-card h2, .bento-card h3, .bento-card h4 {
-    font-family: 'Chakra Petch', sans-serif;
-    @apply font-semibold tracking-tight;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-    letter-spacing: -0.02em;
-  }
-
-  .bento-card p, .bento-card span {
-    font-family: 'Space Grotesk', sans-serif;
-    @apply leading-relaxed;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-
   /* Feature card (3D Viewer) */
   .feature-card {
     grid-column: span 2;
@@ -199,22 +159,6 @@
     animation-delay: 0.6s;
   }
 
-  /* Add this with the other card styles */
-  .trailer-card {
-    grid-column: span 2;
-    grid-row: span 1;
-    height: 220px;
-    animation-delay: 0.4s;
-    overflow: hidden;
-  }
-
-  .trailer-card video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-
   /* Responsive adjustments */
   @media (max-width: 1280px) {
     .bento-grid {
@@ -264,32 +208,32 @@
 
   /* Card theme colors */
   .ai-chat-card {
-    background: #4E2FE6 !important; /* Tech Purple PMS 2736 - for AI/tech features */
+    background: #4E2FE6 !important;
     border-color: rgba(78, 47, 230, 0.3);
   }
 
   .image-card, .sparqverse-card {
-    background: #E51937 !important; /* Outlaw Red PMS 185 - for core brand visuals */
+    background: #E51937 !important;
     border-color: rgba(229, 25, 55, 0.3);
   }
 
   .beta-card, .join-card {
-    background: #FF6B1C !important; /* Energy Orange PMS 1585 - for calls to action */
+    background: #FF6B1C !important;
     border-color: rgba(255, 107, 28, 0.3);
   }
 
   .team-card {
-    background: #42B4E6 !important; /* Future Blue PMS 298 - for community elements */
+    background: #42B4E6 !important;
     border-color: rgba(66, 180, 230, 0.3);
   }
 
   .discord-card, .school-card {
-    background: #4E2FE6 !important; /* Tech Purple PMS 2736 */
+    background: #4E2FE6 !important;
     border-color: rgba(78, 47, 230, 0.3);
   }
 
   .news-card, .about-card {
-    background: #00FF7F !important; /* Digital Green PMS 354 - for informational content */
+    background: #00FF7F !important;
     border-color: rgba(0, 255, 127, 0.3);
   }
 
