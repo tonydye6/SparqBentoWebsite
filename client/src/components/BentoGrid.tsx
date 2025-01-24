@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MouseTrail } from "./MouseTrail";
 import { Card } from "@/components/ui/card";
 import { AboutUs } from "./AboutUs";
@@ -359,25 +359,40 @@ export function BentoGrid() {
 
       {/* Cards 13-15: Mission/Vision/Values */}
       <motion.div 
-        className="bento-card card-13 cursor-pointer flex items-center justify-center"
+        className="bento-card card-13 cursor-pointer flex items-center justify-center relative"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("mission")}
       >
-        <h3 className="text-4xl font-bold transform -rotate-90">Mission</h3>
+        <img 
+          src="/footbalPlayer.png" 
+          alt="Football Player"
+          className="absolute w-auto h-full object-cover opacity-50"
+        />
+        <h3 className="text-4xl font-bold transform -rotate-90 relative z-10">Mission</h3>
       </motion.div>
       <motion.div 
-        className="bento-card card-14 cursor-pointer flex items-center justify-center"
+        className="bento-card card-14 cursor-pointer flex items-center justify-center relative"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("vision")}
       >
-        <h3 className="text-4xl font-bold transform -rotate-90">Vision</h3>
+        <img 
+          src="/softballPlayer.png" 
+          alt="Softball Player"
+          className="absolute w-auto h-full object-cover opacity-60"
+        />
+        <h3 className="text-4xl font-bold transform -rotate-90 relative z-10">Vision</h3>
       </motion.div>
       <motion.div 
-        className="bento-card card-15 cursor-pointer flex items-center justify-center"
+        className="bento-card card-15 cursor-pointer flex items-center justify-center relative"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("values")}
       >
-        <h3 className="text-4xl font-bold transform -rotate-90">Values</h3>
+        <img 
+          src="/basketballPlayer.png" 
+          alt="Basketball Player"
+          className="absolute w-auto h-full object-cover opacity-40"
+        />
+        <h3 className="text-4xl font-bold transform -rotate-90 relative z-10">Values</h3>
       </motion.div>
 
       <AnimatePresence>
