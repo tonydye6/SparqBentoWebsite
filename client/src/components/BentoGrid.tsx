@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { MouseTrail } from "./MouseTrail";
 import { Card } from "@/components/ui/card";
 import { AboutUs } from "./AboutUs";
@@ -187,6 +187,15 @@ export function BentoGrid() {
 
   return (
     <div className="bento-grid">
+      {/* Card 2: Join Beta */}
+      <motion.div
+        className="bento-card card-2 beta-card"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("beta")}
+      >
+        <BetaForm />
+      </motion.div>
+
       {/* Card 1: Title Bar */}
       <motion.div
         className="bento-card card-1"
@@ -200,18 +209,9 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
-      {/* Card 2: Join Beta */}
-      <motion.div
-        className="bento-card card-2"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("beta")}
-      >
-        <BetaForm />
-      </motion.div>
-
       {/* Card 3: Discord Live Chat */}
       <motion.div
-        className="bento-card card-3"
+        className="bento-card card-3 discord-card"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("discord")}
       >
@@ -251,7 +251,7 @@ export function BentoGrid() {
 
       {/* Card 7: Join Us */}
       <motion.div
-        className="bento-card card-7"
+        className="bento-card card-7 join-card"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("join")}
       >
@@ -260,7 +260,7 @@ export function BentoGrid() {
 
       {/* Card 8: School Spotlight */}
       <motion.div
-        className="bento-card card-8"
+        className="bento-card card-8 school-card"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("school")}
       >
@@ -282,7 +282,7 @@ export function BentoGrid() {
 
       {/* Card 10: Sparqverse */}
       <motion.div
-        className="bento-card card-10"
+        className="bento-card card-10 sparqverse-card"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("sparqverse")}
       >
