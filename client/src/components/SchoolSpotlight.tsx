@@ -13,7 +13,7 @@ export function SchoolSpotlight() {
       <div className="flex-1 flex flex-col">
         <div className="flex-1 flex items-center justify-center">
           <img
-            src="/utahLogo.png"
+            src="/utes.png"
             alt="University of Utah"
             className="w-24 h-24 object-contain"
           />
