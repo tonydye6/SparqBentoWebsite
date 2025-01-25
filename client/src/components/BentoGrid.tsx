@@ -371,8 +371,7 @@ export function BentoGrid() {
         className="bento-card card-12 ai-chat-card p-4"
         whileHover={{ scale: 1.02 }}
       >
-        <h2 className="text-2xl font-bold text-center mb-4">We love AI! Ask about games, sports, or anything at all</h2>
-        <div className="h-[calc(100%-4rem)]">
+        <div className="h-full">
           <AiChat />
         </div>
       </motion.div>
