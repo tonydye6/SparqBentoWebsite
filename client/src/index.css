@@ -68,6 +68,21 @@
   .card-2 {
     @apply col-start-1 col-span-3 row-span-2;
     background: #00a19c !important;
+    position: relative;
+  }
+
+  .card-2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/ftcc.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.6;
+    pointer-events: none;
   }
 
   .card-3 {
