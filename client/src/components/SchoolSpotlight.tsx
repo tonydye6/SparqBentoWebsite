@@ -11,17 +11,14 @@ export function SchoolSpotlight() {
       </div>
 
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 flex items-center justify-center overflow-hidden">
+        <div className="flex-1 flex items-center justify-center overflow-hidden pt-5">
           <img
             src="/utes.png"
-            alt="University of Utah"
+            alt="Utah Utes"
             className="w-[400%] h-[400%] object-contain transform scale-150"
           />
         </div>
         <div className="mt-auto text-center">
-          <h4 className="text-lg font-semibold">
-            University of Utah
-          </h4>
           <p className="text-sm text-muted-foreground mt-2">
             Proud partner in the Sparq gaming ecosystem
           </p>
