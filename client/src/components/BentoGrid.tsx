@@ -361,7 +361,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("about")}
       >
-        <AboutUs variant="secondary" />
+        <AboutUs title="Our Story" variant="secondary" />
       </motion.div>
 
       {/* Card 12: AI Chat */}
