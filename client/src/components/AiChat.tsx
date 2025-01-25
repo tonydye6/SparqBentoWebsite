@@ -59,6 +59,9 @@ export function AiChat() {
         <MessageCircle className="w-5 h-5" />
         <h3 className="font-semibold">AI Assistant</h3>
       </div>
+      <div className="flex justify-center items-center mb-4">
+        <img src="/Skull(Red).png" alt="Red Skull" className="w-24 h-24 object-contain" />
+      </div>
 
       <ScrollArea className="flex-1 mb-4">
         <div className="space-y-4">
