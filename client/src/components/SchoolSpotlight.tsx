@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { School } from "lucide-react";
 
@@ -9,18 +10,22 @@ export function SchoolSpotlight() {
         <h3 className="font-semibold">School Spotlight</h3>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center">
-        <img
-          src="/utahLogo.png"
-          alt="University of Utah"
-          className="w-24 h-24 object-contain mb-4"
-        />
-        <h4 className="text-lg font-semibold text-center">
-          University of Utah
-        </h4>
-        <p className="text-sm text-muted-foreground text-center mt-2">
-          Proud partner in the Sparq gaming ecosystem
-        </p>
+      <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex items-center justify-center">
+          <img
+            src="/utahLogo.png"
+            alt="University of Utah"
+            className="w-24 h-24 object-contain"
+          />
+        </div>
+        <div className="mt-auto text-center">
+          <h4 className="text-lg font-semibold">
+            University of Utah
+          </h4>
+          <p className="text-sm text-muted-foreground mt-2">
+            Proud partner in the Sparq gaming ecosystem
+          </p>
+        </div>
       </div>
     </div>
   );
