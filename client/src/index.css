@@ -62,18 +62,6 @@
     background: #1e1e24 !important;
   }
 
-  .card-13 {
-    background: #ffd700 !important;
-  }
-
-  .card-14 {
-    background: #00f2ea !important;
-  }
-
-  .card-15 {
-    background: #ff3864 !important;
-  }
-
   @keyframes fadeIn {
     from {
       opacity: 0;
