@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,12 +9,12 @@
     /* Primary Colors */
     --primary-red: 351 100% 46%;    /* #eb0028 */
     --primary-teal: 179 100% 32%;   /* #00a19c */
-    
+
     /* Secondary Colors */
     --secondary-navy: 235 19% 21%;  /* #2b2d42 */
     --secondary-blue: 237 89% 60%;  /* #404bf2 */
     --secondary-dark: 240 11% 13%;  /* #1e1e24 */
-    
+
     /* Accent Colors */
     --accent-gold: 51 100% 50%;     /* #ffd700 */
     --accent-cyan: 180 100% 47%;    /* #00f2ea */
@@ -25,10 +27,16 @@
 
   body {
     @apply font-sans antialiased text-white min-h-screen;
+    font-family: 'Inter', sans-serif;
     background: radial-gradient(circle at top left, 
       hsl(var(--tech-purple) / 0.3),
       hsl(var(--outlaw-red) / 0.2)
     );
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    @apply font-bold tracking-tight;
   }
 }
 
@@ -51,31 +59,97 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
-  /* Primary Colors (60%) */
-  .card-1, .card-2, .card-3, .card-4, .card-5, .card-6 {
-    background: #eb0028 !important;
-  }
-  .card-7, .card-8 {
-    background: #00a19c !important;
+  /* Card-specific styles */
+  .card-1 { 
+    @apply col-start-4 col-span-9 row-span-1;
+    background: #2b2d42 !important; 
   }
 
-  /* Secondary Colors (30%) */
-  .card-9, .card-10, .card-11 {
-    background: #2b2d42 !important;
-  }
-  .card-12 {
-    background: #404bf2 !important;
+  .card-2 { @apply col-start-1 col-span-3 row-span-2; }
+
+  .card-3 { 
+    @apply col-start-1 col-span-3 row-start-3 row-span-5;
+    background: #2b2d42 !important; 
   }
 
-  /* Accent Colors (10%) */
-  .card-13 {
-    background: #ffd700 !important;
+  .card-4 { 
+    @apply col-start-9 col-span-4 row-start-10;
+    background: #00a19c !important; 
   }
-  .card-14 {
-    background: #00f2ea !important;
+
+  .card-5 { 
+    @apply col-start-9 col-span-4 row-start-5 row-span-5;
+    background: #404bf2 !important; 
   }
-  .card-15 {
-    background: #ff3864 !important;
+
+  .card-6 { 
+    @apply col-start-4 col-span-5 row-start-2 row-span-2;
+    background: #1e1e24 !important; 
+  }
+
+  .card-7 { 
+    @apply col-start-4 col-span-5 row-start-9 row-span-2;
+    background: #404bf2 !important; 
+  }
+
+  .card-8 { 
+    @apply col-start-4 col-span-3 row-start-5 row-span-4;
+    background: #404bf2 !important; 
+  }
+
+  .card-9 { @apply col-start-7 col-span-2 row-start-6 row-span-3; }
+
+  .card-10 { 
+    @apply col-start-4 col-span-3 row-start-4;
+    background: #2b2d42 !important; 
+  }
+
+  .card-11 { @apply col-start-7 col-span-2 row-start-4 row-span-2; }
+
+  .card-12 { 
+    @apply col-start-9 col-span-4 row-start-2 row-span-3;
+    background: #2b2d42 !important; 
+  }
+
+  .card-13 { 
+    @apply col-start-1 col-span-1 row-start-8 row-span-3;
+    background: #ffd700 !important; 
+  }
+
+  .card-14 { 
+    @apply col-start-2 col-span-1 row-start-8 row-span-3;
+    background: #00f2ea !important; 
+  }
+
+  .card-15 { 
+    @apply col-start-3 col-span-1 row-start-8 row-span-3;
+    background: #ff3864 !important; 
+  }
+
+  /* Typography styles */
+  .bento-card h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .bento-card h2 {
+    @apply text-2xl md:text-3xl lg:text-4xl;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .bento-card h3 {
+    @apply text-xl md:text-2xl;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .bento-card p {
+    @apply text-base md:text-lg leading-relaxed;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .bento-card .title-text {
+    @apply font-bold tracking-tight;
+    font-family: 'Space Grotesk', sans-serif;
   }
 
   @keyframes fadeIn {
@@ -87,61 +161,5 @@
       opacity: 1;
       transform: translateY(0);
     }
-  }
-
-  /* Grid positions based on the new layout */
-  .card-1 { @apply col-start-4 col-span-9 row-span-1; }
-  .card-2 { @apply col-start-1 col-span-3 row-span-2; }
-  .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-5; }
-  .card-4 { @apply col-start-9 col-span-4 row-start-10; }
-  .card-5 { @apply col-start-9 col-span-4 row-start-5 row-span-5; }
-  .card-6 { @apply col-start-4 col-span-5 row-start-2 row-span-2; }
-  .card-7 { @apply col-start-4 col-span-5 row-start-9 row-span-2; }
-  .card-8 { @apply col-start-4 col-span-3 row-start-5 row-span-4; }
-  .card-9 { @apply col-start-7 col-span-2 row-start-6 row-span-3; }
-  .card-10 { @apply col-start-4 col-span-3 row-start-4; }
-  .card-11 { @apply col-start-7 col-span-2 row-start-4 row-span-2; }
-  .card-12 { @apply col-start-9 col-span-4 row-start-2 row-span-3; }
-  .card-13 { @apply col-start-1 col-span-1 row-start-8 row-span-3; }
-  .card-14 { @apply col-start-2 col-span-1 row-start-8 row-span-3; }
-  .card-15 { @apply col-start-3 col-span-1 row-start-8 row-span-3; }
-
-  /* Card theme colors */
-  .ai-chat-card {
-    background: #00a19c !important;
-    border-color: rgba(0, 161, 156, 0.3);
-  }
-
-  .beta-card {
-    background: #eb0028 !important;
-    border-color: rgba(235, 0, 40, 0.3);
-  }
-
-  .team-card {
-    background: #404bf2 !important;
-    border-color: rgba(64, 75, 242, 0.3);
-  }
-
-  .discord-card {
-    background: #2b2d42 !important;
-    border-color: rgba(43, 45, 66, 0.3);
-  }
-
-  .school-card {
-    background: #00f2ea !important;
-    border-color: rgba(0, 242, 234, 0.3);
-  }
-
-  .sparqverse-card {
-    background: #eb0028 !important;
-    border-color: rgba(235, 0, 40, 0.3);
-  }
-
-  .join-card {
-    background: #ffd700 !important;
-    border-color: rgba(255, 215, 0, 0.3);
-  }
-  .small-card {
-    @apply mb-4 h-[64px] rounded-xl border-2 border-slate-400/10 bg-neutral-100 p-4 dark:bg-neutral-900;
   }
 }
