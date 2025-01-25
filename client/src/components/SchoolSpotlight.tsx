@@ -14,7 +14,7 @@ export function SchoolSpotlight() {
           <img
             src="/ustad.png"
             alt="USTAD"
-            className="absolute w-full h-full object-cover transform scale-[2.5]"
+            className="absolute w-full h-full object-cover transform scale-[2.5] opacity-10"
           />
           <img
             src="/utes.png"
