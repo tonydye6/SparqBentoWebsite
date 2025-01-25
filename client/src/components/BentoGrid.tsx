@@ -253,9 +253,6 @@ export function BentoGrid() {
         animate={{ opacity: 1, y: 0 }}
       >
         <div className="flex items-center justify-between p-4">
-          <img src="/sparqIcon.png" alt="Sparq Games Logo" className="h-16" />
-          <h1 className="text-2xl font-bold text-white">Break Free. Play Future</h1>
-          <img src="/sparqIcon.png" alt="Sparq Games Logo" className="h-16" />
         </div>
       </motion.div>
 
