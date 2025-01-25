@@ -17,8 +17,7 @@ export function AboutUs({ title = "Enter the Sparqverse", variant = 'primary' }:
         </p>
       ) : (
         <p className="text-white/80 mb-6">
-          Sparq Games is revolutionizing sports gaming through innovative AI technology,
-          creating immersive experiences that bring fans closer to the action.
+          A Vision Worth Founding
         </p>
       )}
 
