@@ -11,11 +11,16 @@ export function SchoolSpotlight() {
       </div>
 
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 flex items-center justify-center overflow-hidden pt-20">
+        <div className="flex-1 flex items-center justify-center overflow-hidden pt-20 relative">
+          <img
+            src="/ustad.png"
+            alt="USTAD"
+            className="absolute w-[400%] h-[400%] object-contain transform scale-150 opacity-15"
+          />
           <img
             src="/utes.png"
             alt="Utah Utes"
-            className="w-[400%] h-[400%] object-contain transform scale-150"
+            className="relative w-[400%] h-[400%] object-contain transform scale-150"
           />
         </div>
         <div className="mt-auto text-center">
