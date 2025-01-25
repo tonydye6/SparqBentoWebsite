@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { School } from "lucide-react";
 
@@ -15,7 +14,7 @@ export function SchoolSpotlight() {
           <img
             src="/ustad.png"
             alt="USTAD"
-            className="absolute w-[400%] h-[400%] object-contain transform scale-150 opacity-15"
+            className="absolute w-full h-full object-cover transform scale-[2.5]"
           />
           <img
             src="/utes.png"
