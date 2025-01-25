@@ -15,7 +15,7 @@ export function SchoolSpotlight() {
           <img
             src="/utes.png"
             alt="University of Utah"
-            className="w-full h-full object-contain"
+            className="w-[120%] h-[120%] object-contain"
           />
         </div>
         <div className="mt-auto text-center">
