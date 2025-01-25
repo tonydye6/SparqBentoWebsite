@@ -252,7 +252,12 @@ export function BentoGrid() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="flex items-center justify-between p-4">
+        <div className="flex items-center justify-center h-full w-full p-4">
+          <img 
+            src="/logo_1.png" 
+            alt="Sparq Logo" 
+            className="max-h-[90%] max-w-[90%] w-auto object-contain" 
+          />
         </div>
       </motion.div>
 
