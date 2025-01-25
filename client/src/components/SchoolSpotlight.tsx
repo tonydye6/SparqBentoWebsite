@@ -11,11 +11,11 @@ export function SchoolSpotlight() {
       </div>
 
       <div className="flex-1 flex flex-col">
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center p-4">
           <img
             src="/utes.png"
             alt="University of Utah"
-            className="w-24 h-24 object-contain"
+            className="w-full h-full object-contain"
           />
         </div>
         <div className="mt-auto text-center">
