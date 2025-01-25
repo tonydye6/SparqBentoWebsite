@@ -179,6 +179,11 @@
     font-family: 'Space Grotesk', sans-serif;
   }
 
+  .card-13 h3, .card-14 h3, .card-15 h3 {
+    @apply text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)];
+  }
+
+
   @keyframes fadeIn {
     from {
       opacity: 0;

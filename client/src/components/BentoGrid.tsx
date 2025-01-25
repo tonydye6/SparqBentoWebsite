@@ -387,7 +387,7 @@ export function BentoGrid() {
           alt="Football Player"
           className="absolute w-auto h-full object-cover opacity-50"
         />
-        <h3 className="text-4xl font-bold transform -rotate-90 relative z-10">Mission</h3>
+        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Mission</h3>
       </motion.div>
       <motion.div 
         className="bento-card card-14 cursor-pointer flex items-center justify-center relative"
@@ -399,7 +399,7 @@ export function BentoGrid() {
           alt="Softball Player"
           className="absolute w-auto h-full object-cover opacity-60"
         />
-        <h3 className="text-4xl font-bold transform -rotate-90 relative z-10">Vision</h3>
+        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Vision</h3>
       </motion.div>
       <motion.div 
         className="bento-card card-15 cursor-pointer flex items-center justify-center relative"
@@ -411,7 +411,7 @@ export function BentoGrid() {
           alt="Basketball Player"
           className="absolute w-auto h-full object-cover opacity-40"
         />
-        <h3 className="text-4xl font-bold transform -rotate-90 relative z-10">Values</h3>
+        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Values</h3>
       </motion.div>
 
       <AnimatePresence>
