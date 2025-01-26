@@ -36,64 +36,57 @@ type ExpandedCard =
   | "values"
   | null;
 
-const MagneticCard: React.FC<{ children: React.ReactNode; strength?: number; scale?: number }> = ({ children, strength = 25, scale = 1.02 }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
+const MagneticCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const ref = useRef<HTMLDivElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseX = useSpring(x, { stiffness: 150, damping: 15 });
-  const mouseY = useSpring(y, { stiffness: 150, damping: 15 });
+  const springConfig = { damping: 15, stiffness: 150 };
+  const springX = useSpring(x, springConfig);
+  const springY = useSpring(y, springConfig);
 
-  const rotateX = useTransform(mouseY, [-strength, strength], [5, -5]);
-  const rotateY = useTransform(mouseX, [-strength, strength], [-5, 5]);
+  const rotateX = useTransform(springY, [-50, 50], [10, -10]);
+  const rotateY = useTransform(springX, [-50, 50], [-10, 10]);
 
   useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const card = ref.current;
+      if (!card) return;
 
-    const updateMousePosition = (e: MouseEvent) => {
       const rect = card.getBoundingClientRect();
       const centerX = rect.x + rect.width / 2;
       const centerY = rect.y + rect.height / 2;
+      const deltaX = e.clientX - centerX;
+      const deltaY = e.clientY - centerY;
 
-      // Calculate distance from center
-      const distanceX = e.clientX - centerX;
-      const distanceY = e.clientY - centerY;
-
-      // Update gradient position
-      card.style.setProperty('--mouse-x', `${(e.clientX - rect.left) / rect.width * 100}%`);
-      card.style.setProperty('--mouse-y', `${(e.clientY - rect.top) / rect.height * 100}%`);
-
-      // Update magnetic effect
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
       const maxDistance = 400;
-      const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
       if (distance < maxDistance) {
         const factor = 1 - distance / maxDistance;
-        x.set(distanceX * factor * 0.2);
-        y.set(distanceY * factor * 0.2);
+        x.set(deltaX * factor * 0.2);
+        y.set(deltaY * factor * 0.2);
       } else {
         x.set(0);
         y.set(0);
       }
     };
 
-    window.addEventListener('mousemove', updateMousePosition);
-    return () => window.removeEventListener('mousemove', updateMousePosition);
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [x, y]);
 
   return (
     <motion.div
-      ref={cardRef}
+      ref={ref}
       style={{
-        x: mouseX,
-        y: mouseY,
+        x: springX,
+        y: springY,
         rotateX,
         rotateY,
         perspective: 1000,
       }}
-      whileHover={{ scale }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+      whileHover={{ scale: 1.02 }}
     >
       {children}
     </motion.div>
@@ -286,228 +279,222 @@ export function BentoGrid() {
   };
 
   return (
-    <div className="bento-grid" style={{ '--mouse-x': '50%', '--mouse-y': '50%' }}>
-      <MagneticCard strength={20} scale={1.03}>
-        <motion.div
-          className="bento-card card-2 beta-card flex items-center justify-center"
-          data-interactive="true"
-          onClick={() => handleCardClick("beta")}
-        >
-          <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2">
-            Join Beta Now!
-          </h2>
-        </motion.div>
-      </MagneticCard>
+    <div className="bento-grid">
+      {/* Card 2: Join Beta */}
+      <motion.div
+        className="bento-card card-2 beta-card flex items-center justify-center"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("beta")}
+      >
+        <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2">Join Beta Now!</h2>
+      </motion.div>
 
-      <MagneticCard>
-        <motion.div
-          className="bento-card card-1"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div className="flex items-center justify-center h-full w-full p-4">
-            <img
-              src="/logo_2.png"
-              alt="Sparq Logo"
-              className="max-h-[90%] max-w-[90%] w-auto object-contain"
-            />
-          </div>
-        </motion.div>
-      </MagneticCard>
-
-      <MagneticCard strength={30}>
-        <motion.div
-          className="bento-card card-3 discord-card"
-          onClick={() => handleCardClick("discord")}
-        >
-          <DiscordWidget />
-        </motion.div>
-      </MagneticCard>
-
-      <MagneticCard>
-        <motion.div
-          className="bento-card card-4"
-        >
-          <div className="flex flex-col h-full">
-            <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Connect With Us</h3>
-            <div className="flex-1 flex justify-center items-center gap-8 p-4">
-              <a
-                href="https://www.instagram.com/sparqgames"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon"
-              >
-                <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  <path d="M3 16V8C3 5.23858 5.23858 3 8 3H16C18.7614 3 21 5.23858 21 8V16C21 18.7614 18.7614 21 16 21H8C5.23858 21 3 18.7614 3 16Z" stroke="currentColor" strokeWidth="2" />
-                  <path d="M17.5 6.51L17.51 6.49889" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
-              <a
-                href="https://x.com/sparqgames"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon"
-              >
-                <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19.7778 3L12.5556 11.9444L21 21H17.4444L11.3889 14.5L4.55556 21H3L10.6667 11.4722L2.55556 3H6.11111L11.7222 8.94444L18.1111 3H19.7778ZM18.2222 19.5L7.22222 4.27778H5.33333L16.3889 19.5H18.2222Z" fill="currentColor" />
-                </svg>
-              </a>
-              <a
-                href="https://www.tiktok.com/@sparqgames"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-icon"
-              >
-                <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19 9.5V15C19 18.866 15.866 22 12 22C8.13401 22 5 18.866 5 15C5 11.134 8.13401 8 12 8V11C9.79086 11 8 12.7909 8 15C8 17.2091 9.79086 19 12 19C14.2091 19 16 17.2091 16 15V2H19C19 2 19 2.5 19 3C19 5.20914 20.7909 7 23 7V9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </motion.div>
-      </MagneticCard>
-
-      <MagneticCard strength={15}>
-        <motion.div
-          className="bento-card card-5"
-          onClick={() => handleCardClick("3d")}
-        >
-          <ThreeViewer />
-        </motion.div>
-      </MagneticCard>
-
-      <MagneticCard>
-        <motion.div
-          className="bento-card card-6 relative overflow-hidden"
-        >
-          <video
-            className="w-full h-full object-cover"
-            src="/teaser_1.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
+      {/* Card 1: Title Bar */}
+      <motion.div
+        className="bento-card card-1"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <div className="flex items-center justify-center h-full w-full p-4">
+          <img 
+            src="/logo_2.png" 
+            alt="Sparq Logo" 
+            className="max-h-[90%] max-w-[90%] w-auto object-contain" 
           />
-          <Button
-            variant="secondary"
-            size="icon"
-            className="absolute top-4 right-4 backdrop-blur-sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              const video = e.currentTarget.parentElement?.querySelector('video');
-              if (video) {
-                video.muted = !video.muted;
-              }
-            }}
-          >
-            <Volume2 className="h-4 w-4" />
-          </Button>
-        </motion.div>
-      </MagneticCard>
+        </div>
+      </motion.div>
 
-      <MagneticCard strength={25}>
-        <motion.div
-          className="bento-card card-7 join-card overflow-hidden"
-          onClick={() => handleCardClick("join")}
-        >
-          <JoinUs />
-        </motion.div>
-      </MagneticCard>
+      {/* Card 3: Discord Live Chat */}
+      <motion.div
+        className="bento-card card-3 discord-card"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("discord")}
+      >
+        <DiscordWidget />
+      </motion.div>
 
-      <MagneticCard>
-        <motion.div
-          className="bento-card card-8 school-card"
-          onClick={() => handleCardClick("school")}
-        >
-          <SchoolSpotlight />
-        </motion.div>
-      </MagneticCard>
-
-      <MagneticCard strength={10}>
-        <motion.div
-          className="bento-card card-9"
-          onClick={() => handleCardClick("team")}
-        >
-          <div className="flex flex-col h-full">
-            <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Meet Our Team</h3>
-            <div className="flex-1">
-              <TeamCarousel />
-            </div>
+      {/* Card 4: Connect With Us */}
+      <motion.div
+        className="bento-card card-4"
+        whileHover={{ scale: 1.02 }}
+      >
+        <div className="flex flex-col h-full">
+          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Connect With Us</h3>
+          <div className="flex-1 flex justify-center items-center gap-8 p-4">
+            <a 
+              href="https://www.instagram.com/sparqgames" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="social-icon"
+            >
+              <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M3 16V8C3 5.23858 5.23858 3 8 3H16C18.7614 3 21 5.23858 21 8V16C21 18.7614 18.7614 21 16 21H8C5.23858 21 3 18.7614 3 16Z" stroke="currentColor" strokeWidth="2"/>
+                <path d="M17.5 6.51L17.51 6.49889" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
+            <a 
+              href="https://x.com/sparqgames" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="social-icon"
+            >
+              <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19.7778 3L12.5556 11.9444L21 21H17.4444L11.3889 14.5L4.55556 21H3L10.6667 11.4722L2.55556 3H6.11111L11.7222 8.94444L18.1111 3H19.7778ZM18.2222 19.5L7.22222 4.27778H5.33333L16.3889 19.5H18.2222Z" fill="currentColor"/>
+              </svg>
+            </a>
+            <a 
+              href="https://www.tiktok.com/@sparqgames" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="social-icon"
+            >
+              <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 9.5V15C19 18.866 15.866 22 12 22C8.13401 22 5 18.866 5 15C5 11.134 8.13401 8 12 8V11C9.79086 11 8 12.7909 8 15C8 17.2091 9.79086 19 12 19C14.2091 19 16 17.2091 16 15V2H19C19 2 19 2.5 19 3C19 5.20914 20.7909 7 23 7V9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </a>
           </div>
-        </motion.div>
-      </MagneticCard>
+        </div>
+      </motion.div>
 
-      <MagneticCard>
-        <motion.div
-          className="bento-card card-10 news-card"
+      {/* Card 5: Spline 3D Viewport */}
+      <motion.div
+        className="bento-card card-5"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("3d")}
+      >
+        <ThreeViewer />
+      </motion.div>
+
+      {/* Card 6: Video Teaser */}
+      <motion.div
+        className="bento-card card-6 relative overflow-hidden"
+        whileHover={{ scale: 1.02 }}
+      >
+        <video
+          className="w-full h-full object-cover"
+          src="/teaser_1.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+        <Button
+          variant="secondary"
+          size="icon"
+          className="absolute top-4 right-4 backdrop-blur-sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            const video = e.currentTarget.parentElement?.querySelector('video');
+            if (video) {
+              video.muted = !video.muted;
+            }
+          }}
         >
-          <div className="h-full">
-            <NewsCarousel />
+          <Volume2 className="h-4 w-4" />
+        </Button>
+      </motion.div>
+
+      {/* Card 7: Join Us */}
+      <motion.div
+        className="bento-card card-7 join-card overflow-hidden"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("join")}
+      >
+        <JoinUs />
+      </motion.div>
+
+      {/* Card 8: School Spotlight */}
+      <motion.div
+        className="bento-card card-8 school-card"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("school")}
+      >
+        <SchoolSpotlight />
+      </motion.div>
+
+      {/* Card 9: Team Showcase */}
+      <motion.div
+        className="bento-card card-9"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("team")}
+      >
+        <div className="flex flex-col h-full">
+          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Meet Our Team</h3>
+          <div className="flex-1">
+            <TeamCarousel />
           </div>
-        </motion.div>
-      </MagneticCard>
+        </div>
+      </motion.div>
 
-      <MagneticCard strength={18}>
-        <motion.div
-          className="bento-card card-11"
-          onClick={() => handleCardClick("about")}
-        >
-          <div className="flex items-center justify-center h-full">
-            <h3 className="text-4xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">The Sparq Story</h3>
-          </div>
-        </motion.div>
-      </MagneticCard>
+      {/* Card 10: Word Around Town */}
+      <motion.div
+        className="bento-card card-10 news-card"
+        whileHover={{ scale: 1.02 }}
+      >
+        <div className="h-full">
+          <NewsCarousel />
+        </div>
+      </motion.div>
 
-      <MagneticCard>
-        <motion.div
-          className="bento-card card-12 ai-chat-card p-4"
-        >
-          <div className="h-full">
-            <AiChat />
-          </div>
-        </motion.div>
-      </MagneticCard>
+      {/* Card 11: The Sparq Story */}
+      <motion.div
+        className="bento-card card-11"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("about")}
+      >
+        <div className="flex items-center justify-center h-full">
+          <h3 className="text-4xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">The Sparq Story</h3>
+        </div>
+      </motion.div>
 
-      <MagneticCard strength={22}>
-        <motion.div
-          className="bento-card card-13 cursor-pointer flex items-center justify-center relative"
-          onClick={() => handleCardClick("mission")}
-        >
-          <img
-            src="/footbalPlayer.png"
-            alt="Football Player"
-            className="absolute w-auto h-full object-cover opacity-50"
-          />
-          <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Mission</h3>
-        </motion.div>
-      </MagneticCard>
-      <MagneticCard strength={28}>
-        <motion.div
-          className="bento-card card-14 cursor-pointer flex items-center justify-center relative"
-          onClick={() => handleCardClick("vision")}
-        >
-          <img
-            src="/softballPlayer.png"
-            alt="Softball Player"
-            className="absolute w-auto h-full object-cover opacity-60"
-          />
-          <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Vision</h3>
-        </motion.div>
-      </MagneticCard>
-      <MagneticCard strength={35}>
-        <motion.div
-          className="bento-card card-15 cursor-pointer flex items-center justify-center relative"
-          onClick={() => handleCardClick("values")}
-        >
-          <img
-            src="/basketballPlayer.png"
-            alt="Basketball Player"
-            className="absolute w-auto h-full object-cover opacity-40"
-          />
-          <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Values</h3>
-        </motion.div>
-      </MagneticCard>
+      {/* Card 12: AI Chat */}
+      <motion.div
+        className="bento-card card-12 ai-chat-card p-4"
+        whileHover={{ scale: 1.02 }}
+      >
+        <div className="h-full">
+          <AiChat />
+        </div>
+      </motion.div>
+
+      {/* Cards 13-15: Mission/Vision/Values */}
+      <motion.div 
+        className="bento-card card-13 cursor-pointer flex items-center justify-center relative"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("mission")}
+      >
+        <img 
+          src="/footbalPlayer.png" 
+          alt="Football Player"
+          className="absolute w-auto h-full object-cover opacity-50"
+        />
+        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Mission</h3>
+      </motion.div>
+      <motion.div 
+        className="bento-card card-14 cursor-pointer flex items-center justify-center relative"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("vision")}
+      >
+        <img 
+          src="/softballPlayer.png" 
+          alt="Softball Player"
+          className="absolute w-auto h-full object-cover opacity-60"
+        />
+        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Vision</h3>
+      </motion.div>
+      <motion.div 
+        className="bento-card card-15 cursor-pointer flex items-center justify-center relative"
+        whileHover={{ scale: 1.02 }}
+        onClick={() => handleCardClick("values")}
+      >
+        <img 
+          src="/basketballPlayer.png" 
+          alt="Basketball Player"
+          className="absolute w-auto h-full object-cover opacity-40"
+        />
+        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Values</h3>
+      </motion.div>
 
       <AnimatePresence>
         {expandedCard && (

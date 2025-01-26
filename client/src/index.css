@@ -5,20 +5,20 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-     /* Primary Colors */
-     --primary-red: 351 100% 46%;    /* #eb0028 */
-     --primary-teal: 179 100% 32%;   /* #00a19c */
+ :root {
+    /* Primary Colors */
+    --primary-red: 351 100% 46%;    /* #eb0028 */
+    --primary-teal: 179 100% 32%;   /* #00a19c */
 
-     /* Secondary Colors */
-     --secondary-navy: 235 19% 21%;  /* #2b2d42 */
-     --secondary-blue: 237 89% 60%;  /* #404bf2 */
-     --secondary-dark: 240 11% 13%;  /* #1e1e24 */
+    /* Secondary Colors */
+    --secondary-navy: 235 19% 21%;  /* #2b2d42 */
+    --secondary-blue: 237 89% 60%;  /* #404bf2 */
+    --secondary-dark: 240 11% 13%;  /* #1e1e24 */
 
-     /* Accent Colors */
-     --accent-gold: 51 100% 50%;     /* #ffd700 */
-     --accent-cyan: 180 100% 47%;    /* #00f2ea */
-     --accent-pink: 345 100% 61%;    /* #ff3864 */
+    /* Accent Colors */
+    --accent-gold: 51 100% 50%;     /* #ffd700 */
+    --accent-cyan: 180 100% 47%;    /* #00f2ea */
+    --accent-pink: 345 100% 61%;    /* #ff3864 */
   }
 
   * {
@@ -60,40 +60,28 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
     animation: fadeIn 0.6s ease forwards;
-    will-change: transform, opacity, background-color, box-shadow;
+    will-change: transform, opacity, background-color;
     color: white;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
+/* Override for cards 3 and 12 */
+.card-3, .card-12 {
+    background: rgba(30, 30, 36, 0.95) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
   .bento-card:hover {
-    transform: translateZ(0) scale(1.02);
     box-shadow: 
-      inset 4px 4px 8px rgba(255, 255, 255, 0.25),
-      inset -4px -4px 8px rgba(0, 0, 0, 0.5),
-      16px 16px 32px rgba(0, 0, 0, 0.4),
-      -16px -16px 32px rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
+      inset 4px 4px 8px rgba(255, 255, 255, 0.2),
+      inset -4px -4px 8px rgba(0, 0, 0, 0.45),
+      12px 12px 20px rgba(0, 0, 0, 0.3),
+      -12px -12px 20px rgba(255, 255, 255, 0.12);
+    transform: translateZ(0) scale(1.02);
   }
 
-  .bento-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(255, 255, 255, 0.1) 0%,
-      transparent 50%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-
-  .bento-card:hover::after {
-    opacity: 1;
-  }
-
-  /* Card Grid Layout */
+  /* Primary Colors (60%) */
   .card-1 {
     @apply col-start-4 col-span-9 row-span-1;
     background: #eb0028 !important;
@@ -102,13 +90,26 @@
   .card-2 {
     @apply col-start-1 col-span-3 row-span-2;
     background: #00a19c !important;
+    position: relative;
+  }
+
+  .card-2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/ftcc.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.6;
+    pointer-events: none;
   }
 
   .card-3 {
     @apply col-start-1 col-span-3 row-start-3 row-span-5;
-    background: rgba(30, 30, 36, 0.95) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    background: #eb0028 !important;
   }
 
   .card-4 {
@@ -126,6 +127,17 @@
     background: #00a19c !important;
   }
 
+  .card-8 {
+    @apply col-start-4 col-span-3 row-start-5 row-span-4;
+    background: #eb0028 !important;
+  }
+
+  .card-10 {
+    @apply col-start-4 col-span-3 row-start-4;
+    background: #00a19c !important;
+  }
+
+  /* Secondary Colors (30%) */
   .card-7 {
     @apply col-start-4 col-span-5 row-start-9 row-span-2;
     background: #2b2d42 !important;
@@ -155,19 +167,9 @@
     );
   }
 
-  .card-8 {
-    @apply col-start-4 col-span-3 row-start-5 row-span-4;
-    background: #eb0028 !important;
-  }
-
   .card-9 {
     @apply col-start-7 col-span-2 row-start-6 row-span-3;
     background: #1e1e24 !important;
-  }
-
-  .card-10 {
-    @apply col-start-4 col-span-3 row-start-4;
-    background: #00a19c !important;
   }
 
   .card-11 {
@@ -175,11 +177,11 @@
     background: #2b2d42 !important;
   }
 
+
+  /* Accent Colors (10%) */
   .card-12 {
     @apply col-start-9 col-span-4 row-start-2 row-span-3;
-    background: rgba(30, 30, 36, 0.95) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+    background: #2b2d42 !important;
   }
 
   .card-13 {
@@ -197,18 +199,7 @@
     background: #00f2ea !important;
   }
 
-  /* Add a subtle pulse animation for interactive cards */
-  @keyframes subtle-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.005); }
-    100% { transform: scale(1); }
-  }
-
-  .bento-card[data-interactive="true"] {
-    animation: subtle-pulse 3s ease-in-out infinite;
-  }
-
-  /* Typography */
+  /* Typography styles */
   .bento-card h1 {
     @apply text-4xl md:text-5xl lg:text-6xl;
     font-family: 'Space Grotesk', sans-serif;
@@ -227,6 +218,15 @@
   .bento-card p {
     @apply text-base md:text-lg leading-relaxed;
     font-family: 'Inter', sans-serif;
+  }
+
+  .bento-card .title-text {
+    @apply font-bold tracking-tight;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  .card-13 h3, .card-14 h3, .card-15 h3 {
+    @apply text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)];
   }
 
   .social-icon {
