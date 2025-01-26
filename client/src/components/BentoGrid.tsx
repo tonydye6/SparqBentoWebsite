@@ -292,7 +292,7 @@ export function BentoGrid() {
             alt="Background Pattern"
             className="w-full h-full object-cover opacity-60"
             onError={(e) => {
-              e.currentTarget.src = '/images/fallback.png';
+              e.currentTarget.style.display = 'none';
               console.error('Error loading image:', e);
             }}
           />
@@ -391,17 +391,32 @@ export function BentoGrid() {
             playsInline
             poster="/images/teaser_1_poster.jpg"
             onError={(e) => {
+              const video = e.currentTarget;
+              video.style.display = 'none';
+              const fallback = document.createElement('div');
+              fallback.className = 'w-full h-full flex items-center justify-center bg-gray-900';
+              fallback.innerHTML = `
+                <div class="text-center p-4">
+                  <p class="text-white mb-2">Video playback is not available</p>
+                  <a href="/videos/teaser_1.mp4" class="text-blue-400 hover:text-blue-300">
+                    Download video instead
+                  </a>
+                </div>
+              `;
+              video.parentNode?.appendChild(fallback);
               console.error('Error loading video:', e);
             }}
           >
             <source src="/videos/teaser_1.mp4" type="video/mp4" />
             <source src="/videos/teaser_1.webm" type="video/webm" />
-            <p className="text-center p-4">
-              Your browser doesn't support HTML5 video.
-              <a href="/videos/teaser_1.mp4" className="text-blue-400 hover:text-blue-300 ml-2">
-                Download the video instead
-              </a>
-            </p>
+            <div className="w-full h-full flex items-center justify-center bg-gray-900">
+              <div className="text-center p-4">
+                <p className="text-white mb-2">Your browser doesn't support HTML5 video</p>
+                <a href="/videos/teaser_1.mp4" className="text-blue-400 hover:text-blue-300">
+                  Download video instead
+                </a>
+              </div>
+            </div>
           </video>
         </div>
         <Button
