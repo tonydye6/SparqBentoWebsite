@@ -286,7 +286,14 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("beta")}
       >
-        <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2">Join Beta Now!</h2>
+        <div className="absolute inset-0">
+          <img 
+            src="/ftcc.png"
+            alt="Background Pattern"
+            className="w-full h-full object-cover opacity-60"
+          />
+        </div>
+        <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2 relative z-10">Join Beta Now!</h2>
       </motion.div>
 
       {/* Card 1: Title Bar */}
@@ -378,6 +385,7 @@ export function BentoGrid() {
           loop
           muted
           playsInline
+          poster="/teaser_1_poster.jpg"
         />
         <Button
           variant="secondary"
