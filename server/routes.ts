@@ -109,7 +109,7 @@ function startNewsRefresh() {
 }
 
 export function registerRoutes(app: Express): Server {
-  // Session setup
+  // Session setup with secure settings for Reserved VM
   app.use(session({
     store: new SessionStore({
       checkPeriod: 86400000 // prune expired entries every 24h
@@ -119,7 +119,8 @@ export function registerRoutes(app: Express): Server {
     saveUninitialized: false,
     cookie: { 
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+      maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      sameSite: 'lax'
     }
   }));
 
@@ -160,17 +161,6 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // Scheduled task endpoint - can be called by a cron job
-  app.post("/api/news/refresh", async (req, res) => {
-    try {
-      const items = await fetchLatestNews();
-      res.json(items);
-    } catch (error) {
-      console.error("Error refreshing news:", error);
-      res.status(500).json({ message: "Failed to refresh news" });
-    }
-  });
-
   // Chat endpoint with rate limiting
   app.post("/api/chat", chatLimiter, async (req, res) => {
     try {
@@ -201,7 +191,7 @@ export function registerRoutes(app: Express): Server {
             ...req.body.messages.slice(-4)  // Keep conversation context manageable
           ],
           temperature: 0.7,
-          max_tokens: 150,
+          max_tokens: 150,  // Longer responses
           stream: false
         })
       });
@@ -271,15 +261,47 @@ export function registerRoutes(app: Express): Server {
     });
   });
 
-
-  // Scheduled task endpoint - can be called by a cron job
-  app.post("/api/news/refresh", async (req, res) => {
+  // Beta signups endpoint
+  app.post("/api/beta-signup", async (req, res) => {
     try {
-      const items = await fetchLatestNews();
-      res.json(items);
+      const { email, subscribe } = req.body;
+
+      const existing = await db.query.betaSignups.findFirst({
+        where: eq(betaSignups.email, email)
+      });
+
+      if (existing) {
+        return res.status(400).json({ 
+          message: "Email already registered for beta" 
+        });
+      }
+
+      await db.insert(betaSignups).values({
+        email,
+        subscribed: subscribe
+      });
+
+      res.status(200).json({ 
+        message: "Successfully signed up for beta" 
+      });
     } catch (error) {
-      console.error("Error refreshing news:", error);
-      res.status(500).json({ message: "Failed to refresh news" });
+      console.error("Beta signup error:", error);
+      res.status(500).json({ 
+        message: "Failed to sign up for beta" 
+      });
+    }
+  });
+
+  // Protected admin endpoints
+  app.get("/api/admin/beta-signups", requireAdmin, async (req, res) => {
+    try {
+      const signups = await db.query.betaSignups.findMany({
+        orderBy: [desc(betaSignups.createdAt)]
+      });
+      res.json(signups);
+    } catch (error) {
+      console.error("Error fetching beta signups:", error);
+      res.status(500).json({ message: "Failed to fetch beta signups" });
     }
   });
 
@@ -344,111 +366,18 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // Beta signups endpoint
-  app.post("/api/beta-signup", async (req, res) => {
-    try {
-      const { email, subscribe } = req.body;
 
-      const existing = await db.query.betaSignups.findFirst({
-        where: eq(betaSignups.email, email)
-      });
-
-      if (existing) {
-        return res.status(400).json({ 
-          message: "Email already registered for beta" 
-        });
-      }
-
-      await db.insert(betaSignups).values({
-        email,
-        subscribed: subscribe
-      });
-
-      res.status(200).json({ 
-        message: "Successfully signed up for beta" 
-      });
-    } catch (error) {
-      console.error("Beta signup error:", error);
-      res.status(500).json({ 
-        message: "Failed to sign up for beta" 
-      });
+  // Cleanup function for graceful shutdown
+  const cleanup = () => {
+    if (newsRefreshInterval) {
+      clearInterval(newsRefreshInterval);
     }
-  });
+    console.log('Cleaning up resources...');
+  };
 
-  // Protected admin endpoints
-  app.get("/api/admin/beta-signups", requireAdmin, async (req, res) => {
-    try {
-      const signups = await db.query.betaSignups.findMany({
-        orderBy: [desc(betaSignups.createdAt)]
-      });
-      res.json(signups);
-    } catch (error) {
-      console.error("Error fetching beta signups:", error);
-      res.status(500).json({ message: "Failed to fetch beta signups" });
-    }
-  });
-
-  // Perplexity AI chat endpoint with rate limiting
-  app.post("/api/chat", chatLimiter, async (req, res) => {
-    try {
-      if (!process.env.PERPLEXITY_API_KEY) {
-        throw new Error("Perplexity API key not configured");
-      }
-
-      const systemMessage = {
-        role: "system",
-        content: `You are Sparq Games' AI assistant. You should:
-        - Provide knowledgeable responses about sports, gaming, and Sparq Games
-        - Be friendly and enthusiastic while maintaining professionalism
-        - Keep responses concise but informative (2-3 sentences)
-        - Focus on Sparq's mission of revolutionizing sports gaming through innovation
-        - When unsure, be honest and suggest contacting the Sparq team directly`
-      };
-
-      const response = await fetch("https://api.perplexity.ai/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "llama-3.1-sonar-small-128k-online",
-          messages: [
-            systemMessage,
-            ...req.body.messages.slice(-4)  // Keep conversation context manageable
-          ],
-          temperature: 0.7, // Slightly more creative
-          max_tokens: 150,  // Longer responses
-          stream: false
-        })
-      });
-
-      if (!response.ok) {
-        const error = await response.text();
-        console.error("Perplexity API error:", error);
-
-        if (response.status === 429) {
-          return res.status(429).json({ 
-            message: "We've reached our chat limit. Please try again in a few minutes." 
-          });
-        }
-
-        throw new Error(`API Error: ${error}`);
-      }
-
-      const data = await response.json();
-      res.json(data);
-    } catch (error) {
-      console.error("Chat error:", error);
-
-      const statusCode = error.message.includes("Rate limit exceeded") ? 429 : 500;
-      const message = statusCode === 429 
-        ? "We've reached our chat limit. Please try again in a few minutes."
-        : "Unable to process your message right now. Please try again.";
-
-      res.status(statusCode).json({ message });
-    }
-  });
+  // Handle process termination
+  process.on('SIGTERM', cleanup);
+  process.on('SIGINT', cleanup);
 
   const httpServer = createServer(app);
 
