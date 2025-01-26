@@ -243,7 +243,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("beta")}
       >
-        <h2 className="text-[8rem] font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center px-4">Join Beta Now!</h2>
+        <h2 className="text-[6vw] md:text-[5vw] lg:text-[4vw] font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2">Join Beta Now!</h2>
       </motion.div>
 
       {/* Card 1: Title Bar */}
