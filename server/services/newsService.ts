@@ -37,13 +37,42 @@ export async function fetchLatestNews(): Promise<SelectNewsItem[]> {
       });
     }
 
-    const items = await db.query.newsItems.findMany({
+    let items = await db.query.newsItems.findMany({
       where: eq(newsItems.active, true),
       orderBy: (newsItems, { desc }) => [desc(newsItems.createdAt)]
     });
 
     if (!items.length) {
-      throw new Error('No news items found');
+      // Insert default news items
+      const defaultNews = [
+        {
+          title: "AI Integration Revolutionizes Player Development",
+          url: "https://example.com/ai-sports",
+          category: "AI Gaming",
+          active: true
+        },
+        {
+          title: "Latest NIL Changes Impact College Athletes",
+          url: "https://example.com/nil-update",
+          category: "NIL",
+          active: true
+        },
+        {
+          title: "Web3 Gaming Platform Launches New Features",
+          url: "https://example.com/web3-gaming",
+          category: "Web3",
+          active: true
+        }
+      ];
+
+      for (const news of defaultNews) {
+        await db.insert(newsItems).values(news);
+      }
+
+      items = await db.query.newsItems.findMany({
+        where: eq(newsItems.active, true),
+        orderBy: (newsItems, { desc }) => [desc(newsItems.createdAt)]
+      });
     }
 
     return items;
