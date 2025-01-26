@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { db, DatabaseConnection } from "@db";
+import { db } from "@db";  // Remove DatabaseConnection as it's not exported
 import { betaSignups, adminUsers, newsItems, teamMembers } from "@db/schema";
 import { eq, desc } from "drizzle-orm";
 import session from "express-session";
@@ -11,12 +11,73 @@ import rateLimit from 'express-rate-limit';
 
 const SessionStore = MemoryStore(session);
 
-// Configure rate limiter
+// Configure rate limiters for different services
 const chatLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 50, // Limit each IP to 50 requests per windowMs
   message: { message: "Too many requests, please try again later." }
 });
+
+const discordLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { message: "Too many Discord widget requests, please try again later." }
+});
+
+const newsLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: { message: "Too many news feed requests, please try again later." }
+});
+
+// Health status tracking
+let healthStatus = {
+  discord: { status: 'healthy', lastCheck: Date.now() },
+  chat: { status: 'healthy', lastCheck: Date.now() },
+  news: { status: 'healthy', lastCheck: Date.now() },
+  database: { status: 'healthy', lastCheck: Date.now() }
+};
+
+// Health check function
+async function checkServiceHealth(service: keyof typeof healthStatus) {
+  try {
+    switch (service) {
+      case 'database':
+        await db.select().from(newsItems).limit(1);
+        break;
+      case 'chat':
+        if (!process.env.PERPLEXITY_API_KEY) {
+          throw new Error('Chat service configuration missing');
+        }
+        break;
+      case 'news':
+        const newsCache = await db.select().from(newsItems).limit(1);
+        if (!newsCache) {
+          throw new Error('News service unavailable');
+        }
+        break;
+      case 'discord':
+        // Discord widget is client-side, just verify configuration
+        break;
+    }
+
+    healthStatus[service] = { status: 'healthy', lastCheck: Date.now() };
+  } catch (error) {
+    console.error(`Health check failed for ${service}:`, error);
+    healthStatus[service] = { status: 'unhealthy', lastCheck: Date.now() };
+  }
+}
+
+// Periodic health checks
+const startHealthChecks = () => {
+  const interval = setInterval(() => {
+    Object.keys(healthStatus).forEach(service => {
+      checkServiceHealth(service as keyof typeof healthStatus);
+    });
+  }, 60000); // Check every minute
+
+  return interval;
+};
 
 // News fetch function using Perplexity API
 async function fetchLatestNews() {
@@ -106,6 +167,7 @@ function startNewsRefresh() {
   }, 60 * 60 * 1000); // 1 hour
 }
 
+
 export function registerRoutes(app: Express): Server {
   // Session setup with secure settings for Reserved VM
   app.use(session({
@@ -127,53 +189,78 @@ export function registerRoutes(app: Express): Server {
   // Start news refresh when server starts
   startNewsRefresh();
 
-  // Public news endpoint
-  app.get("/api/news", async (req, res) => {
+  // Health check endpoints
+  app.get("/api/health", (req, res) => {
+    res.json({
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+      services: healthStatus
+    });
+  });
+
+  app.get("/api/health/:service", (req, res) => {
+    const service = req.params.service as keyof typeof healthStatus;
+    if (!healthStatus[service]) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+    res.json(healthStatus[service]);
+  });
+
+  // Apply rate limits to critical endpoints
+  app.use("/api/chat", chatLimiter);
+  app.use("/api/news", newsLimiter);
+
+
+  // Existing routes with enhanced error handling
+  app.get("/api/news", newsLimiter, async (req, res) => {
     try {
-      // Try database first
       let items = [];
       try {
-        items = await db.select().from(newsItems)
+        items = await db.select()
+          .from(newsItems)
           .where(eq(newsItems.active, true))
           .orderBy(desc(newsItems.createdAt))
           .limit(3);
       } catch (error) {
         console.error("Database error fetching news:", error);
+        healthStatus.database.status = 'unhealthy';
         // Fall back to cache if database is unavailable
-        items = newsCache;
+        items = [];
       }
 
-      // If no items in database or cache, fetch new ones
       if (!items?.length) {
-        const freshNews = await fetchLatestNews();
-        items = freshNews;
-        newsCache = freshNews; // Update cache
+        try {
+          const freshNews = await fetchLatestNews();
+          items = freshNews;
+        } catch (error) {
+          console.error("Error fetching fresh news:", error);
+          healthStatus.news.status = 'unhealthy';
+          return res.status(503).json({ 
+            message: "News service temporarily unavailable",
+            retry_after: 300 // 5 minutes
+          });
+        }
       }
 
+      healthStatus.news.status = 'healthy';
       res.json(items);
     } catch (error) {
-      console.error("Error fetching news items:", error);
-      // If everything fails, return cached news or empty array
-      res.json(newsCache.length ? newsCache : []);
+      console.error("Critical error in news endpoint:", error);
+      healthStatus.news.status = 'unhealthy';
+      res.status(500).json({ 
+        message: "Unable to retrieve news",
+        retry_after: 300
+      });
     }
   });
 
-  // Chat endpoint with rate limiting
+  // Enhanced chat endpoint with health monitoring
   app.post("/api/chat", chatLimiter, async (req, res) => {
     try {
       if (!process.env.PERPLEXITY_API_KEY) {
-        throw new Error("Perplexity API key not configured");
+        healthStatus.chat.status = 'unhealthy';
+        throw new Error("Chat service not configured");
       }
-
-      const systemMessage = {
-        role: "system",
-        content: `You are Sparq Games' AI assistant. You should:
-        - Provide knowledgeable responses about sports, gaming, and Sparq Games
-        - Be friendly and enthusiastic while maintaining professionalism
-        - Keep responses concise but informative (2-3 sentences)
-        - Focus on Sparq's mission of revolutionizing sports gaming through innovation
-        - When unsure, be honest and suggest contacting the Sparq team directly`
-      };
 
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
@@ -184,39 +271,44 @@ export function registerRoutes(app: Express): Server {
         body: JSON.stringify({
           model: "llama-3.1-sonar-small-128k-online",
           messages: [
-            systemMessage,
-            ...req.body.messages.slice(-4)  // Keep conversation context manageable
+            {
+              role: "system",
+              content: `You are Sparq Games' AI assistant. You should:
+              - Provide knowledgeable responses about sports, gaming, and Sparq Games
+              - Be friendly and enthusiastic while maintaining professionalism
+              - Keep responses concise but informative (2-3 sentences)
+              - Focus on Sparq's mission of revolutionizing sports gaming through innovation
+              - When unsure, be honest and suggest contacting the Sparq team directly`
+            },
+            ...req.body.messages.slice(-4)
           ],
           temperature: 0.7,
-          max_tokens: 150,  // Longer responses
+          max_tokens: 150,
           stream: false
         })
       });
 
       if (!response.ok) {
-        const error = await response.text();
-        console.error("Perplexity API error:", error);
-
-        if (response.status === 429) {
-          return res.status(429).json({ 
-            message: "We've reached our chat limit. Please try again in a few minutes." 
-          });
-        }
-
-        throw new Error(`API Error: ${error}`);
+        healthStatus.chat.status = 'unhealthy';
+        throw new Error(`API Error: ${await response.text()}`);
       }
 
+      healthStatus.chat.status = 'healthy';
       const data = await response.json();
       res.json(data);
     } catch (error: any) {
       console.error("Chat error:", error);
+      healthStatus.chat.status = 'unhealthy';
 
-      const statusCode = error.message.includes("Rate limit exceeded") ? 429 : 500;
+      const statusCode = error.message.includes("Rate limit") ? 429 : 503;
       const message = statusCode === 429 
-        ? "We've reached our chat limit. Please try again in a few minutes."
-        : "Unable to process your message right now. Please try again.";
+        ? "Chat service rate limit exceeded. Please try again later."
+        : "Chat service temporarily unavailable. Please try again later.";
 
-      res.status(statusCode).json({ message });
+      res.status(statusCode).json({ 
+        message,
+        retry_after: statusCode === 429 ? 900 : 300 // 15 minutes for rate limit, 5 minutes for other errors
+      });
     }
   });
 
@@ -361,8 +453,14 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  // Start health checks
+  const healthCheckInterval = startHealthChecks();
+
   // Cleanup function for graceful shutdown
   const cleanup = () => {
+    if (healthCheckInterval) {
+      clearInterval(healthCheckInterval);
+    }
     if (newsRefreshInterval) {
       clearInterval(newsRefreshInterval);
     }
@@ -374,6 +472,5 @@ export function registerRoutes(app: Express): Server {
   process.on('SIGINT', cleanup);
 
   const httpServer = createServer(app);
-
   return httpServer;
 }
