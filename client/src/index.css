@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 @layer base {
- :root {
+  :root {
     /* Primary Colors */
     --primary-red: 351 100% 46%;    /* #eb0028 */
     --primary-teal: 179 100% 32%;   /* #00a19c */
@@ -43,6 +43,44 @@
 @layer components {
   .bento-grid {
     @apply grid grid-cols-12 grid-rows-10 gap-6 p-4 min-h-screen bg-black;
+
+    @media only screen and (max-width: 600px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      grid-auto-flow: row;
+
+      .bento-card {
+        grid-column: 1 / -1 !important;
+        height: auto;
+        min-height: 200px;
+      }
+
+      /* Ensure specific cards maintain proper aspect ratios */
+      .card-1 {
+        height: 80px;
+      }
+
+      .card-5 {
+        height: 400px;
+      }
+
+      .card-6 {
+        height: 300px;
+      }
+
+      /* Stack mission/vision/values cards */
+      .card-13, .card-14, .card-15 {
+        height: 150px;
+        h3 {
+          transform: none !important;
+        }
+      }
+
+      /* Ensure chat interface remains accessible */
+      .card-12 {
+        height: 400px;
+      }
+    }
   }
 
   .bento-card {
@@ -65,8 +103,8 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
-/* Override for cards 3 and 12 */
-.card-3, .card-12 {
+  /* Override for cards 3 and 12 */
+  .card-3, .card-12 {
     background: rgba(30, 30, 36, 0.95) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
