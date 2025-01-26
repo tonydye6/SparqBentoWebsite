@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 
 export function TeamCard() {
   const [isHovered, setIsHovered] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = () => {
@@ -10,6 +12,7 @@ export function TeamCard() {
       videoRef.current.muted = true;
       videoRef.current.play().catch(error => {
         console.error('Error playing video:', error);
+        setVideoError(true);
       });
     }
   };
@@ -45,6 +48,10 @@ export function TeamCard() {
           src="/teaser_1_poster.jpg"
           className="w-full h-full object-cover absolute inset-0"
           alt="Team Teaser Poster"
+          onError={() => {
+            console.error('Error loading poster image');
+            setImageError(true);
+          }}
         />
       )}
       <div className="relative z-20 w-full h-full flex items-center justify-center">
