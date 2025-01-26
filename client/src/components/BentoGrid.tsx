@@ -354,16 +354,11 @@ export function BentoGrid() {
 
       {/* Card 7: Join Us */}
       <motion.div
-        className="bento-card card-7 join-card"
+        className="bento-card card-7 join-card overflow-hidden"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("join")}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Join the Sparq</h3>
-          <div className="flex-1">
-            <JoinUs />
-          </div>
-        </div>
+        <JoinUs />
       </motion.div>
 
       {/* Card 8: School Spotlight */}
