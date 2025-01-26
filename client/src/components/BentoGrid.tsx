@@ -182,6 +182,12 @@ export function BentoGrid() {
             <p className="text-lg leading-relaxed">
               We understand the dedication it takes to be a college athlete. We all played. And looking forward, we saw the opportunity to give back when Name, Image and Likeness (NIL) rules were adopted in 2022. Sparq Games was established to help athletes build their own brand through a series of video games. That's why we did it. The success of Sparq means that thousands of college athletes - men and women - will profit from their names and images being featured in our broad range of sports-based mobile video games.
             </p>
+            <ul className="list-disc pl-6">
+              <li className="text-lg italic">
+                "Current estimated annual NIL deals stand at $750 million and are projected to reach $2.5 billion by '26."<br/>
+                <span className="text-sm">- Opendorse/NIL Daily - July 2, 2024</span>
+              </li>
+            </ul>
           </div>
         );
       case "join":
