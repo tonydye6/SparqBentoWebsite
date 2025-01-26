@@ -1,0 +1,91 @@
+Image: /janh.png
+Name: Jan Horsfall
+Position: CEO / BOD Chair
+Logos: Turbine Games, Lycos /lycos.png
+Bio: Ran marketing at Valvoline and then at tech juggernaut, Lycos. Had the fastest IPO in NASDAQ history, stock price surge of 3,000%, and sold for $4.5 billion. CEO roles at Gemini (acquired by Novo Networks), Gelazzi (bought by Big Freeze), Universal (sold to PetroChoice). Served as the CMO at Turbine Games (acquired by Warner Bros). On NorthWestern's board (NASDAQ: NWE) and recently completed work at MIT Sloan CSAIL (Comp Sci AI Lab) studying AI: Implications for Business Strategy.
+Linkedin Profile: https://www.linkedin.com/in/janhorsfall/
+Image: /tonyd.png
+Name: Tony Dye
+Position: President / BOD - HR Comm. Chair
+Logos: Cincinnati Bengals /bengals.png, UCLA Bruins /ucla.png 
+Bio: Former UCLA student-athlete and team MVP who went on to play in the NFL for the Cincinnati Bengals and Oakland Raiders. Has two brothers in the NFL. Passionate about athletics, Web3, blockchain apps, and gaming. Focus is on building games which help athletes capitalize on their name, image, & likeness.
+Linkedin Profile: https://www.linkedin.com/in/tony-dye-0a0836113/
+Image: /seane.png
+Name: Sean Embree
+Position: BOD - Governance Committee Chair
+Logos: Colorado Buffaloes /buffs.png
+Bio: Second startup he's founded. On the '90 national champion CU Buffs. Brings 27 years of coaching experience at HS, college, pro levels. Won eight titles as a player and coach. Bloodline includes father, John, who played for the Denver Broncos, and brother, Jon, who is the Assistant Coach for the Miami Dolphins. Nephews coach for the KC Chiefs and the New England Patriots, respectively.
+Linkedin Profile: https://www.linkedin.com/in/sean-embree-a9698366/
+Image: /markr.png
+Name: Mark Rogers
+Position: BOD - Finance Committee Chair
+Logos: Princeton /prince.png, Georgia Law /gl.png
+Bio: Met co-founder Sean Embree when they were sons of Denver Bronco players. Starred as a wide receiver at Princeton. Joined his firm after graduating cum laude from the Georgia School of Law. Graduate of Princeton University with an AB in Politics. Practices in Virginia, Maryland, Colorado and District of Columbia.
+Linkedin Profile: https://www.linkedin.com/in/mark-rogers-982bb7124/
+Image: /jeffreys.png
+Name: Jeffrey Steefel
+Position: SVP - Games
+Logos: Disney /dis.png, WotC /wiz.png
+Bio: Game-industry thought leader who headed franchises at 7th Level, Turbine, Sony, Warner Bros., Disney, Wizards/Hasbro. Created original IP for Disney, The Lord of the Rings, Dungeons & Dragons, Magic: The Gathering, Monty Python, and Bandai. Developer of single and multiplayer games across numerous genres.
+Linkedin Profile: https://www.linkedin.com/in/jeffrey-steefel-97380/
+Image: /daniela.png
+Name: Daniel "DA" Algattas
+Position: Director - AI Projects & Technology
+Logos: Colorado State /csu.png, UCLA /ucla.png
+Bio: QB at UCLA and Colorado State who created some of the most innovative apps used in college football coaching circles. Has an outstanding combination of skills mixing athletics and computer science. Developed apps for the Google and Apple stores and has applied AI across a myriad of computer applications.
+Linkedin Profile: https://www.linkedin.com/in/danielalgattas/
+Image: /robv.png
+Name: Rob Vogel
+Position: SVP - University & Player Relationships
+Logos: J5 Partners /j5.png, The Bonam Group /bng.png
+Bio: Founder of J5 Partners, a sports business solutions firm. Uses 30 years of sports  experience and leverages his network of sports decision-makers to drive business. Worked with brands such as JPMorgan Chase, FedEx, BofA, Honda, General Mills, Heineken, US Bank, IBM, Universal Studios and sports properties including the NFL, NBA, NHL, ACC, Big 12, Ohio State, Miami, UNC and UT.
+Linkedin Profile: https://www.linkedin.com/in/robvogelj5partners/
+Image: /chaseh.png
+Name: Chase Huber
+Position: SVP - User Acquisition
+Logos: Turbine /turb.png, Warner Bros /wb.png
+Bio: Visionary and strategic growth architect with two decades of experience in  transformative initiatives and fostering product-led growth across diverse sectors including gaming, tech, entertainment. Proven expertise at notable firms such as Workhuman, Liberty Mutual, Warner Bros. Games, and Digitas. He embodies a data-driven and collaborative leadership approach.  Studied AI at Cal Berkeley.
+Linkedin Profile: https://www.linkedin.com/in/chase-huber-132b033/ 
+Image: /davido.png
+Name: David Ortiz
+Position: Advisory Board Member
+Logos: EA Sports /eas.png, Activision/Blizzard /ab.png
+Bio: 20+ years of experience in gaming. Deep expertise in coming up with innovative ideas and building world class teams. Generated $2.5 billion in revenue from products he has been involved in developing. Built blockbuster teams at sector leaders like Microsoft/Activision, EA Sports, Sony, and Warner Brothers.
+Linkedin Profile: https://www.linkedin.com/in/david-ortiz-9b79a41/
+Image: /michellek.png
+Name: Michelle Kahle
+Position: Advisory Board Member
+Logos: Valvoline /val.png
+Bio: Initiative-taking, digital thought leader known for driving results with deep expertise in website development, UX design, content strategy, CRM, and integrated digital media marketing. A dedicated team leader with a focus on solutions and achieving business objectives. Expert in Sales Force applications and company integration.
+Linkedin Profile: https://www.linkedin.com/in/mfbronson/
+Image: /craiga.png
+Name: Craig Alexander
+Position: Advisory Board Member
+Logos: EA /ear.png, Warner Bros /wb.png
+Bio: Oversaw development for the Lord of the Rings Online (second highest-rated MMO ever, multiple Game of the Year awards), Dungeons & Dragons Online (first F2P MMO in North America/EU).  Helped facilitate the sale of Turbine to Warner Bros. Expert in premium F2P online games and pioneering game business models.
+Linkedin Profile: https://www.linkedin.com/in/craig-alexander-2a46/
+Image: /jone.png
+Name: Jon Embree
+Position: Advisory Board Member
+Logos: Colorado Buffaloes /buffs.png, Miami Dolphins /dolphins.png
+Bio: A seasoned football coach with extensive experience at both the collegiate and professional levels. Currently serving as the Assistant Head Coach and Tight Ends Coach for the Miami Dolphins, Jon brings a wealth of knowledge in athlete development and team management to Sparq Games.
+Linkedin Profile: https://www.miamidolphins.com/team/coaches-roster/jon-embree
+Image: /adamm.png
+Name: Adam Mersky
+Position: Advisory Board Member
+Logos: Warner Bros /wb.png, Turbine /turb.png
+Bio: Over 30 years in digital marketing, a connected, seasoned leader dedicated to helping video game brands find and amplify their unique voices. Has deep industry experience with globally recognized gaming IPs and has created campaigns that engage and resonate with large-scale, diverse gaming audiences. Expertise in social media, online media, and event marketing.
+Linkedin Profile: https://www.linkedin.com/in/adammersky/
+Image: /jimd.png
+Name: Jim Drewry
+Position: Advisory Board Member
+Logos: Warner Bros /wb.png, Gamer Sensei /gs.png
+Bio: Gaming and tech exec successfully applying data-driven product principles to consumer and B2B technology businesses. An innovator who identifies novel opportunities to improve outcomes and executes to deliver results. Skilled at building high-functioning teams and inspiring top performance.
+Linkedin Profile: https://www.linkedin.com/in/jimdrewry/
+Image: /markc.png
+Name: Mark Coughlin
+Position: Advisory Board Member
+Logos: Valvoline /val.png, Envy Gaming /envy.png
+Bio: Sports marketing maven and Esports pioneer who led the negotiation strategies for Fortune 500 companies in sponsorship, IP, media, celebrity endorsement, and personal services. Developed and negotiated over $2 billion of marketing program investments for some of the largest sports-related brands, including Sprint Nextel, BMW, Ford, and Sunoco.
+Linkedin Profile: https://www.linkedin.com/in/mark-coughlin-17b7222/
+
