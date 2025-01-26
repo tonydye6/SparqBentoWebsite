@@ -85,7 +85,7 @@ export function NewsCarousel() {
 
   return (
     <div className="h-full p-4 flex flex-col">
-      <Card className="flex-1 p-4 bg-black/20">
+      <Card className="flex-1 p-4 bg-black/20 border-0">
         <div className="h-full flex flex-col">
           <div className="flex items-center gap-2 mb-4">
             <Newspaper className="w-5 h-5" />
