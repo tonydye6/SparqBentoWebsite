@@ -37,12 +37,18 @@ export async function fetchLatestNews(): Promise<SelectNewsItem[]> {
       });
     }
 
-    return await db.query.newsItems.findMany({
+    const items = await db.query.newsItems.findMany({
       where: eq(newsItems.active, true),
       orderBy: (newsItems, { desc }) => [desc(newsItems.createdAt)]
     });
+
+    if (!items.length) {
+      throw new Error('No news items found');
+    }
+
+    return items;
   } catch (error) {
     console.error('Error fetching news:', error);
-    throw error;
+    throw new Error('Failed to fetch news items');
   }
 }

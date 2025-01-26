@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,30 +27,31 @@ export function NewsCarousel() {
     queryKey: ['news'],
     queryFn: fetchNews,
     refetchInterval: 24 * 60 * 60 * 1000, // Refresh every 24 hours
+    retry: 3
   });
 
   useEffect(() => {
+    if (news.length === 0) return;
+    
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % Math.max(0, news.length));
+      setCurrentIndex((prev) => (prev + 1) % news.length);
     }, 5000);
 
     return () => clearInterval(interval);
   }, [news.length]);
 
   const nextNews = () => {
-    setCurrentIndex((prev) => 
-      (prev + 1) % news.length
-    );
+    setCurrentIndex((prev) => (prev + 1) % Math.max(1, news.length));
   };
 
   const prevNews = () => {
     setCurrentIndex((prev) => 
-      (prev - 1 + news.length) % news.length
+      (prev - 1 + Math.max(1, news.length)) % Math.max(1, news.length)
     );
   };
 
   const openArticle = (article: NewsItem) => {
-    if (article.url) {
+    if (article?.url) {
       window.open(article.url, '_blank');
     }
   };
@@ -57,46 +59,53 @@ export function NewsCarousel() {
   if (isLoading) {
     return (
       <div className="h-full p-4 flex items-center justify-center">
-        <p>Loading news...</p>
+        <Card className="p-4 bg-black/20">
+          <h3 className="font-semibold text-xl mb-4">Word Around Town</h3>
+          <p>Loading news...</p>
+        </Card>
       </div>
     );
   }
 
-  if (error) {
+  if (error || news.length === 0) {
     return (
-      <div className="h-full p-4 flex items-center justify-center">
-        <p>Error loading news</p>
+      <div className="h-full p-4">
+        <Card className="h-full p-4 bg-black/20">
+          <div className="flex items-center gap-2 mb-4">
+            <Newspaper className="w-5 h-5" />
+            <h3 className="font-semibold">Word Around Town</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Check back later for the latest updates in gaming and sports.
+          </p>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="h-full p-4 flex flex-col">
-      <div className="flex items-center gap-2 mb-4">
-        <Newspaper className="w-5 h-5" />
-        <h3 className="font-semibold">Word Around Town</h3>
-      </div>
-
-      <div className="flex-1 space-y-2">
-        {news.map((article, index) => (
-          <Card 
-            key={article.id}
-            className={`p-3 bg-black/20 cursor-pointer hover:bg-black/30 transition-colors transform ${
-              index === currentIndex ? 'scale-105' : 'scale-100'
-            }`}
-            onClick={() => openArticle(article)}
-          >
-            <div className="flex items-start justify-between">
-              <div>
-                <p className="text-sm font-medium mb-1">{article.title}</p>
-                <span className="text-xs text-muted-foreground">
-                  {article.category} • {new Date(article.createdAt).toLocaleDateString()}
-                </span>
-              </div>
+      <Card className="flex-1 p-4 bg-black/20">
+        <div className="h-full flex flex-col">
+          <div className="flex items-center gap-2 mb-4">
+            <Newspaper className="w-5 h-5" />
+            <h3 className="font-semibold">Word Around Town</h3>
+          </div>
+          {news[currentIndex] && (
+            <div 
+              className="cursor-pointer" 
+              onClick={() => openArticle(news[currentIndex])}
+            >
+              <span className="text-xs font-medium text-primary mb-2 block">
+                {news[currentIndex].category}
+              </span>
+              <h4 className="text-lg font-semibold mb-2">
+                {news[currentIndex].title}
+              </h4>
             </div>
-          </Card>
-        ))}
-      </div>
+          )}
+        </div>
+      </Card>
 
       <div className="flex justify-between mt-4">
         <Button variant="ghost" size="icon" onClick={prevNews}>
