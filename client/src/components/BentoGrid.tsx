@@ -282,9 +282,8 @@ export function BentoGrid() {
   return (
     <div className="bento-grid">
       {/* Card 2: Join Beta */}
-      <motion.div
-        className="bento-card card-2 beta-card flex items-center justify-center relative overflow-hidden"
-        whileHover={{ scale: 1.02 }}
+      <div
+        className="bento-card card-2 beta-card flex items-center justify-center relative overflow-hidden cursor-pointer"
         onClick={() => handleCardClick("beta")}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-carbon/80 to-carbon/40" />
@@ -296,7 +295,7 @@ export function BentoGrid() {
           }}
         />
         <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2 relative z-10">Join Beta Now!</h2>
-      </motion.div>
+      </div>
 
       {/* Card 1: Title Bar */}
       <motion.div
