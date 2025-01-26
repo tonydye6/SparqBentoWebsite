@@ -209,7 +209,7 @@ export function TeamCarousel() {
       </div>
 
       <Card className="flex-1 p-4 bg-black/20 flex flex-col items-center">
-        <Avatar className="w-20 h-20 mb-4">
+        <Avatar className="w-40 h-40 mb-4">
           <AvatarImage src={member.photo} alt={member.name} />
           <AvatarFallback>
             {member.name.split(' ').map(n => n[0]).join('')}
