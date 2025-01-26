@@ -384,12 +384,12 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
-      {/* Card 10: Sparqverse */}
+      {/* Card 10: Word Around Town */}
       <motion.div
-        className="bento-card card-10 sparqverse-card"
+        className="bento-card card-10 news-card"
         whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("sparqverse")}
       >
+        <NewsCarousel />
       </motion.div>
 
       {/* Card 11: Our Story */}
