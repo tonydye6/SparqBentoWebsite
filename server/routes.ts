@@ -168,6 +168,9 @@ function startNewsRefresh() {
 
 
 export function registerRoutes(app: Express): Server {
+  // Configure trust proxy for Reserved VM environment
+  app.set('trust proxy', true);
+
   // Session configuration optimized for Reserved VM
   app.use(session({
     store: new SessionStore({
@@ -176,7 +179,7 @@ export function registerRoutes(app: Express): Server {
     secret: process.env.SESSION_SECRET || 'dev-secret-key',
     resave: false,
     saveUninitialized: false,
-    cookie: { 
+    cookie: {
       secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
       sameSite: 'lax'
@@ -207,6 +210,7 @@ export function registerRoutes(app: Express): Server {
 
   // Apply rate limits to critical endpoints
   app.use("/api/chat", chatLimiter);
+  app.use("/api/discord", discordLimiter);
   app.use("/api/news", newsLimiter);
 
 
@@ -234,7 +238,7 @@ export function registerRoutes(app: Express): Server {
         } catch (error) {
           console.error("Error fetching fresh news:", error);
           healthStatus.news.status = 'unhealthy';
-          return res.status(503).json({ 
+          return res.status(503).json({
             message: "News service temporarily unavailable",
             retry_after: 300 // 5 minutes
           });
@@ -246,7 +250,7 @@ export function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error("Critical error in news endpoint:", error);
       healthStatus.news.status = 'unhealthy';
-      res.status(500).json({ 
+      res.status(500).json({
         message: "Unable to retrieve news",
         retry_after: 300
       });
@@ -300,11 +304,11 @@ export function registerRoutes(app: Express): Server {
       healthStatus.chat.status = 'unhealthy';
 
       const statusCode = error.message.includes("Rate limit") ? 429 : 503;
-      const message = statusCode === 429 
+      const message = statusCode === 429
         ? "Chat service rate limit exceeded. Please try again later."
         : "Chat service temporarily unavailable. Please try again later.";
 
-      res.status(statusCode).json({ 
+      res.status(statusCode).json({
         message,
         retry_after: statusCode === 429 ? 900 : 300 // 15 minutes for rate limit, 5 minutes for other errors
       });
@@ -361,8 +365,8 @@ export function registerRoutes(app: Express): Server {
         .then(results => results[0]);
 
       if (existing) {
-        return res.status(400).json({ 
-          message: "Email already registered for beta" 
+        return res.status(400).json({
+          message: "Email already registered for beta"
         });
       }
 
@@ -371,13 +375,13 @@ export function registerRoutes(app: Express): Server {
         subscribed: subscribe
       });
 
-      res.status(200).json({ 
-        message: "Successfully signed up for beta" 
+      res.status(200).json({
+        message: "Successfully signed up for beta"
       });
     } catch (error) {
       console.error("Beta signup error:", error);
-      res.status(500).json({ 
-        message: "Failed to sign up for beta" 
+      res.status(500).json({
+        message: "Failed to sign up for beta"
       });
     }
   });
