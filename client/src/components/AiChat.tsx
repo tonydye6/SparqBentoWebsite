@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, AlertCircle } from 'lucide-react';
+import { MessageCircle, AlertCircle, SendHorizonal } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
@@ -13,7 +13,7 @@ interface Message {
 
 export function AiChat() {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hi! Ask me anything about games, sports, or Sparq!' }
+    { role: 'assistant', content: 'Hi! Ask me anything about Sparq Games, sports, or gaming!' }
   ]);
   const [input, setInput] = useState('');
   const { toast } = useToast();
@@ -24,11 +24,7 @@ export function AiChat() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [
-            { role: 'system', content: 'You are a helpful assistant for Sparq Games.' },
-            ...messages,
-            { role: 'user', content: message }
-          ]
+          messages: messages.concat({ role: 'user', content: message })
         })
       });
 
@@ -42,29 +38,34 @@ export function AiChat() {
     onError: (error: Error) => {
       toast({
         variant: "destructive",
-        title: "Error",
+        title: "Chat Error",
         description: error.message,
-        duration: 3000
+        duration: 5000
       });
 
       // Remove the failed message from the chat
       setMessages(prev => prev.slice(0, -1));
     },
     onSuccess: (data) => {
+      if (!data.choices?.[0]?.message?.content) {
+        throw new Error('Invalid response from chat service');
+      }
+
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: data.choices[0].message.content }
+        { role: 'assistant', content: data.choices[0].message.content.trim() }
       ]);
     }
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    const trimmedInput = input.trim();
+    if (!trimmedInput || chatMutation.isPending) return;
 
     // Optimistically add user message
-    setMessages(prev => [...prev, { role: 'user', content: input }]);
-    chatMutation.mutate(input);
+    setMessages(prev => [...prev, { role: 'user', content: trimmedInput }]);
+    chatMutation.mutate(trimmedInput);
     setInput('');
   };
 
@@ -72,7 +73,7 @@ export function AiChat() {
     <div className="flex flex-col h-full">
       <div className="flex justify-center items-center gap-2 mb-4">
         <MessageCircle className="w-5 h-5" />
-        <h3 className="font-heading font-semibold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+        <h3 className="font-heading text-xl font-semibold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
           Sparq Assistant
         </h3>
       </div>
@@ -84,22 +85,25 @@ export function AiChat() {
         />
       </div>
 
-      <ScrollArea className="flex-1 mb-4">
+      <ScrollArea className="flex-1 mb-4 pr-4">
         <div className="space-y-4">
           {messages.map((msg, i) => (
             <div
               key={i}
-              className={`p-2 rounded ${
+              className={`p-3 rounded-lg ${
                 msg.role === 'user' 
-                  ? 'bg-primary/10 ml-4' 
+                  ? 'bg-primary/10 ml-4 border border-primary/20' 
                   : 'bg-muted mr-4'
               }`}
             >
-              {msg.content}
+              <div className={`text-sm ${msg.role === 'user' ? 'text-primary' : 'text-foreground'}`}>
+                {msg.role === 'user' ? 'You' : 'Sparq Assistant'}
+              </div>
+              <div className="mt-1">{msg.content}</div>
               {chatMutation.isPending && i === messages.length - 1 && (
                 <div className="mt-2 flex items-center text-sm text-muted-foreground">
                   <AlertCircle className="w-4 h-4 mr-2 animate-pulse" />
-                  Processing...
+                  Thinking...
                 </div>
               )}
             </div>
@@ -121,7 +125,7 @@ export function AiChat() {
           size="icon"
           className="hover:bg-primary/20"
         >
-          <MessageCircle className="w-4 h-4" />
+          <SendHorizonal className="w-4 h-4" />
         </Button>
       </form>
     </div>

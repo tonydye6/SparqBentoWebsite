@@ -221,6 +221,16 @@ export function registerRoutes(app: Express): Server {
         throw new Error("Perplexity API key not configured");
       }
 
+      const systemMessage = {
+        role: "system",
+        content: `You are Sparq Games' AI assistant. You should:
+- Provide knowledgeable responses about sports, gaming, and Sparq Games
+- Be friendly and enthusiastic while maintaining professionalism
+- Keep responses concise but informative (2-3 sentences)
+- Focus on Sparq's mission of revolutionizing sports gaming through innovation
+- When unsure, be honest and suggest contacting the Sparq team directly`
+      };
+
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
         headers: {
@@ -229,9 +239,12 @@ export function registerRoutes(app: Express): Server {
         },
         body: JSON.stringify({
           model: "llama-3.1-sonar-small-128k-online",
-          messages: req.body.messages,
-          temperature: 0.2,
-          max_tokens: 150,
+          messages: [
+            systemMessage,
+            ...req.body.messages.slice(-4)  // Keep conversation context manageable
+          ],
+          temperature: 0.7, // Slightly more creative
+          max_tokens: 150,  // Longer responses
           stream: false
         })
       });
@@ -242,11 +255,11 @@ export function registerRoutes(app: Express): Server {
 
         if (response.status === 429) {
           return res.status(429).json({ 
-            message: "Rate limit exceeded. Please try again later." 
+            message: "We've reached our chat limit. Please try again in a few minutes." 
           });
         }
 
-        throw new Error(`Perplexity API request failed: ${error}`);
+        throw new Error(`API Error: ${error}`);
       }
 
       const data = await response.json();
@@ -256,8 +269,8 @@ export function registerRoutes(app: Express): Server {
 
       const statusCode = error.message.includes("Rate limit exceeded") ? 429 : 500;
       const message = statusCode === 429 
-        ? "Rate limit exceeded. Please try again later."
-        : "Failed to process chat request";
+        ? "We've reached our chat limit. Please try again in a few minutes."
+        : "Unable to process your message right now. Please try again.";
 
       res.status(statusCode).json({ message });
     }
