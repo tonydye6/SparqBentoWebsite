@@ -200,7 +200,7 @@ export function BentoGrid() {
           </div>
         );
       case "join":
-        return <JoinUs />;
+        return <JoinUs expanded={true} />;
       case "school":
         return <SchoolSpotlight />;
       case "team":
