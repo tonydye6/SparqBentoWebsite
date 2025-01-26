@@ -78,6 +78,17 @@
       .card-14 { --card-order: 14; height: 150px; }
       .card-15 { --card-order: 15; height: 150px; }
 
+      /* Reset positioning for all cards */
+      .bento-card {
+        position: static;
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        border: none;
+        margin-bottom: 20px;
+      }
+
       /* Fix mission/vision/values cards rotation */
       .card-13, .card-14, .card-15 {
         h3 {
@@ -90,6 +101,22 @@
 
   .bento-card {
     @apply rounded-2xl overflow-hidden relative;
+    background: rgba(30, 30, 36, 0.75);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    box-shadow: 
+      inset 3px 3px 6px rgba(255, 255, 255, 0.15),
+      inset -3px -3px 6px rgba(0, 0, 0, 0.4),
+      8px 8px 16px rgba(0, 0, 0, 0.25),
+      -8px -8px 16px rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    transform: translateZ(0);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    animation: fadeIn 0.6s ease forwards;
+    will-change: transform, opacity, background-color;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 
     @media only screen and (max-width: 600px) {
       border: none;
@@ -99,88 +126,125 @@
       min-height: fit-content;
       margin-bottom: 20px;
       transform: none !important;
-      backdrop-filter: none !important;
-      -webkit-backdrop-filter: none !important;
-      background: var(--card-bg) !important;
     }
   }
 
   /* Primary Colors (60%) */
   .card-1 {
     @apply col-start-4 col-span-9 row-span-1;
-    --card-bg: #eb0028;
+    background: #eb0028 !important;
   }
 
   .card-2 {
     @apply col-start-1 col-span-3 row-span-2;
-    --card-bg: #00a19c;
+    background: #00a19c !important;
+    position: relative;
+  }
+
+  .card-2::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/ftcc.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.6;
+    pointer-events: none;
   }
 
   .card-3 {
     @apply col-start-1 col-span-3 row-start-3 row-span-5;
-    --card-bg: #eb0028;
+    background: #eb0028 !important;
   }
 
   .card-4 {
     @apply col-start-9 col-span-4 row-start-10;
-    --card-bg: #00a19c;
+    background: #00a19c !important;
   }
 
   .card-5 {
     @apply col-start-9 col-span-4 row-start-5 row-span-5;
-    --card-bg: #eb0028;
+    background: #eb0028 !important;
   }
 
   .card-6 {
     @apply col-start-4 col-span-5 row-start-2 row-span-2;
-    --card-bg: #00a19c;
+    background: #00a19c !important;
   }
 
   .card-8 {
     @apply col-start-4 col-span-3 row-start-5 row-span-4;
-    --card-bg: #eb0028;
+    background: #eb0028 !important;
   }
 
   .card-10 {
     @apply col-start-4 col-span-3 row-start-4;
-    --card-bg: #00a19c;
+    background: #00a19c !important;
   }
 
   /* Secondary Colors (30%) */
   .card-7 {
     @apply col-start-4 col-span-5 row-start-9 row-span-2;
-    --card-bg: #2b2d42;
+    background: #2b2d42 !important;
+    position: relative;
+  }
+
+  .card-7::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(
+      45deg,
+      rgba(43, 45, 66, 0.9),
+      rgba(30, 30, 36, 0.9)
+    );
+    pointer-events: none;
+  }
+
+  .card-7:hover::before {
+    background-image: linear-gradient(
+      45deg,
+      rgba(43, 45, 66, 0.8),
+      rgba(30, 30, 36, 0.8)
+    );
   }
 
   .card-9 {
     @apply col-start-7 col-span-2 row-start-6 row-span-3;
-    --card-bg: #ffd700;
+    background: #ffd700 !important;
   }
 
   .card-11 {
     @apply col-start-7 col-span-2 row-start-4 row-span-2;
-    --card-bg: #2b2d42;
+    background: #2b2d42 !important;
   }
+
 
   /* Accent Colors (10%) */
   .card-12 {
     @apply col-start-9 col-span-4 row-start-2 row-span-3;
-    --card-bg: #2b2d42;
+    background: #2b2d42 !important;
   }
 
   .card-13 {
     @apply col-start-1 col-span-1 row-start-8 row-span-3;
-    --card-bg: #ff3864;
+    background: #ff3864 !important;
   }
 
   .card-14 {
     @apply col-start-2 col-span-1 row-start-8 row-span-3;
-    --card-bg: #ffd700;
+    background: #ffd700 !important;
   }
 
   .card-15 {
     @apply col-start-3 col-span-1 row-start-8 row-span-3;
-    --card-bg: #00f2ea;
+    background: #00f2ea !important;
   }
 
   /* Typography styles */
