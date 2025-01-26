@@ -29,11 +29,11 @@ export function AiChat() {
           ]
         })
       });
-      
+
       if (!response.ok) {
         throw new Error('Chat request failed');
       }
-      
+
       return response.json();
     },
     onSuccess: (data) => {
@@ -57,7 +57,7 @@ export function AiChat() {
     <div className="flex flex-col h-full">
       <div className="flex justify-center items-center gap-2 mb-4">
         <MessageCircle className="w-5 h-5" />
-        <h3 className="font-semibold">Sparq Assistant</h3>
+        <h3 className="font-semibold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Sparq Assistant</h3>
       </div>
       <div className="flex justify-center items-center mb-4">
         <img src="/Skull(Red).png" alt="Red Skull" className="w-24 h-24 object-contain" />
