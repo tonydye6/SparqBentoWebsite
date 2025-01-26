@@ -53,13 +53,11 @@ export function JoinUs({ expanded = false }) {
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Current Openings</h3>
         <div className="grid gap-4">
-          {openings.map((job, index) => (
-            <div key={index} className="p-4 rounded-lg bg-white/5 backdrop-blur-sm">
-              <h4 className="text-lg font-semibold">{job.title}</h4>
-              <p className="text-sm text-white/80">{job.department} • {job.location}</p>
-              <p className="mt-2">{job.description}</p>
-            </div>
-          ))}
+          <div className="p-4 rounded-lg bg-white/5 backdrop-blur-sm">
+            <h4 className="text-lg font-semibold">Chief Technology Officer</h4>
+            <p className="text-sm text-white/80">Executive • Colorado Springs</p>
+            <p className="mt-2">To be hired by 3/1/2025</p>
+          </div>
         </div>
       </div>
 
