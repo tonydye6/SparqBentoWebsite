@@ -7,8 +7,20 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Serve static files from client/public directory
-app.use(express.static(path.join(process.cwd(), 'client', 'public')));
+// Serve static files from client/public directory with explicit MIME types
+app.use(express.static(path.join(process.cwd(), 'client', 'public'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.mp4')) {
+      res.setHeader('Content-Type', 'video/mp4');
+    } else if (filePath.endsWith('.webm')) {
+      res.setHeader('Content-Type', 'video/webm');
+    } else if (filePath.endsWith('.png')) {
+      res.setHeader('Content-Type', 'image/png');
+    } else if (filePath.endsWith('.jpg') || filePath.endsWith('.jpeg')) {
+      res.setHeader('Content-Type', 'image/jpeg');
+    }
+  }
+}));
 
 app.use((req, res, next) => {
   const start = Date.now();
