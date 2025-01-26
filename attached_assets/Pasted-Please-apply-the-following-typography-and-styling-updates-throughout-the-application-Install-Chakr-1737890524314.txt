@@ -1,0 +1,76 @@
+Please apply the following typography and styling updates throughout the application:
+Install Chakra Petch and Inter via Google Fonts
+Add these to the top of your globals.css or import them in _app.tsx:
+css
+@import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600&family=Inter:wght@400;600&display=swap');
+Tailwind Configuration
+If using Tailwind, extend the font families in tailwind.config.js:
+js
+module.exports = {
+  theme: {
+    extend: {
+      fontFamily: {
+        heading: ['Chakra Petch', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+      },
+      colors: {
+        textPrimary: '#FFFFFF',
+        textSecondary: '#E6E6E6',
+      },
+    },
+  },
+};
+Global Styles
+In globals.css or a similar global stylesheet, add:
+css
+html, body {
+  font-family: 'Inter', sans-serif;
+  color: var(--textSecondary, #E6E6E6);
+  background-color: #0A0A1E;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Chakra Petch', sans-serif;
+  color: var(--textPrimary, #FFFFFF);
+  text-shadow: 0 0 10px rgba(235, 0, 40, 0.3);
+  margin-bottom: 0.75em;
+}
+
+.heading-lg {
+  font-size: 2.5rem;
+  font-weight: 600;
+}
+.heading-md {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.heading-sm {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+p, span, li {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.cta-text {
+  color: #eb0028; /* Outlaw Red */
+  font-weight: 600;
+}
+
+.card-label {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+Apply Classes to Components
+Wherever you have titles or headings, add class names. For instance:
+jsx
+<h2 className="heading-md">Sparq Gaming Revolution</h2>
+<p>Your main text goes here.</p>
+<span className="cta-text">Join Us Now!</span>
+Please implement these typography and styling changes across all existing components to ensure consistent font usage, sizes, and colors for both headings and body text.
