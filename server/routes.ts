@@ -239,10 +239,6 @@ export function registerRoutes(app: Express): Server {
   });
 
   const httpServer = createServer(app);
-  return httpServer;
-}
-
-
   // Test Perplexity API endpoint
   app.get("/api/test-perplexity", async (req, res) => {
     try {
@@ -257,4 +253,7 @@ export function registerRoutes(app: Express): Server {
       res.status(500).json({ success: false, error: "Failed to connect to Perplexity API" });
     }
   });
+
+  return httpServer;
+}
 
