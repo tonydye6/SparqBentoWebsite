@@ -222,7 +222,7 @@ export function TeamCarousel() {
         <div className="flex gap-2 mb-2">
           {member.previousCompanies.map((company, i) => (
             <div key={i} className="flex items-center gap-1">
-              <img src={company.logo} alt={company.name} className="w-6 h-6 object-contain" />
+              <img src={company.logo} alt={company.name} className="w-12 h-12 object-contain" />
             </div>
           ))}
         </div>
