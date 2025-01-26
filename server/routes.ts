@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { db } from "@db";  // Remove DatabaseConnection as it's not exported
+import { db } from "@db";
 import { betaSignups, adminUsers, newsItems, teamMembers } from "@db/schema";
 import { eq, desc } from "drizzle-orm";
 import session from "express-session";
@@ -11,11 +11,10 @@ import rateLimit from 'express-rate-limit';
 
 const SessionStore = MemoryStore(session);
 
-// Configure rate limiters for different services
+// Rate limiter for high-concurrency endpoints
 const chatLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50, // Limit each IP to 50 requests per windowMs
-  message: { message: "Too many requests, please try again later." }
+  max: 100 // Increased for Reserved VM capacity
 });
 
 const discordLimiter = rateLimit({
@@ -169,7 +168,7 @@ function startNewsRefresh() {
 
 
 export function registerRoutes(app: Express): Server {
-  // Session setup with secure settings for Reserved VM
+  // Session configuration optimized for Reserved VM
   app.use(session({
     store: new SessionStore({
       checkPeriod: 86400000 // prune expired entries every 24h

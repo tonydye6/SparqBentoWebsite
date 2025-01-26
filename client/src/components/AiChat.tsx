@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, AlertCircle, SendHorizonal } from 'lucide-react';
+import { MessageCircle, AlertCircle, SendHorizonal, RefreshCcw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
@@ -17,6 +17,8 @@ export function AiChat() {
   ]);
   const [input, setInput] = useState('');
   const { toast } = useToast();
+  const [retryAttempt, setRetryAttempt] = useState(0);
+  const MAX_RETRIES = 3;
 
   const chatMutation = useMutation({
     mutationFn: async (message: string) => {
@@ -35,16 +37,33 @@ export function AiChat() {
 
       return response.json();
     },
-    onError: (error: Error) => {
-      toast({
-        variant: "destructive",
-        title: "Chat Error",
-        description: error.message,
-        duration: 5000
-      });
+    onError: async (error: Error) => {
+      console.error('Chat error:', error);
 
-      // Remove the failed message from the chat
-      setMessages(prev => prev.slice(0, -1));
+      if (retryAttempt < MAX_RETRIES) {
+        setRetryAttempt(prev => prev + 1);
+        toast({
+          title: "Retrying message",
+          description: "Attempting to resend your message...",
+          duration: 3000
+        });
+
+        // Retry the last message
+        const lastMessage = messages[messages.length - 1];
+        if (lastMessage.role === 'user') {
+          chatMutation.mutate(lastMessage.content);
+        }
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Chat Error",
+          description: error.message,
+          duration: 5000
+        });
+        // Remove the failed message from the chat
+        setMessages(prev => prev.slice(0, -1));
+        setRetryAttempt(0);
+      }
     },
     onSuccess: (data) => {
       if (!data.choices?.[0]?.message?.content) {
@@ -55,6 +74,7 @@ export function AiChat() {
         ...prev,
         { role: 'assistant', content: data.choices[0].message.content.trim() }
       ]);
+      setRetryAttempt(0);
     }
   });
 
@@ -67,6 +87,14 @@ export function AiChat() {
     setMessages(prev => [...prev, { role: 'user', content: trimmedInput }]);
     chatMutation.mutate(trimmedInput);
     setInput('');
+  };
+
+  const handleRetry = () => {
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessage.role === 'user') {
+      setRetryAttempt(0);
+      chatMutation.mutate(lastMessage.content);
+    }
   };
 
   return (
@@ -101,9 +129,22 @@ export function AiChat() {
               </div>
               <div className="mt-1">{msg.content}</div>
               {chatMutation.isPending && i === messages.length - 1 && (
-                <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                  <AlertCircle className="w-4 h-4 mr-2 animate-pulse" />
-                  Thinking...
+                <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
+                  <div className="flex items-center">
+                    <AlertCircle className="w-4 h-4 mr-2 animate-pulse" />
+                    Thinking...
+                  </div>
+                  {retryAttempt > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="flex items-center gap-1 text-xs"
+                      onClick={handleRetry}
+                    >
+                      <RefreshCcw className="w-3 h-3" />
+                      Retry ({MAX_RETRIES - retryAttempt + 1})
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
