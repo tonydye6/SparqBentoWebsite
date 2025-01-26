@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,9 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 interface NewsItem {
   id: number;
   title: string;
-  content: string;
+  url: string;
   category: 'NIL' | 'AI Gaming' | 'Web3';
-  url?: string;
   createdAt: string;
 }
 
@@ -24,8 +22,6 @@ async function fetchNews(): Promise<NewsItem[]> {
 
 export function NewsCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedArticle, setSelectedArticle] = useState<NewsItem | null>(null);
-  
   const { data: news = [], isLoading, error } = useQuery({
     queryKey: ['news'],
     queryFn: fetchNews,
@@ -34,7 +30,7 @@ export function NewsCarousel() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % Math.max(0, news.length - 2));
+      setCurrentIndex((prev) => (prev + 1) % Math.max(0, news.length));
     }, 5000);
 
     return () => clearInterval(interval);
@@ -42,17 +38,21 @@ export function NewsCarousel() {
 
   const nextNews = () => {
     setCurrentIndex((prev) => 
-      (prev + 1) % Math.max(0, news.length - 2)
+      (prev + 1) % news.length
     );
   };
 
   const prevNews = () => {
     setCurrentIndex((prev) => 
-      (prev - 1 + Math.max(0, news.length - 2)) % Math.max(0, news.length - 2)
+      (prev - 1 + news.length) % news.length
     );
   };
 
-  const visibleNews = news.slice(currentIndex, currentIndex + 3);
+  const openArticle = (article: NewsItem) => {
+    if (article.url) {
+      window.open(article.url, '_blank');
+    }
+  };
 
   if (isLoading) {
     return (
@@ -70,40 +70,6 @@ export function NewsCarousel() {
     );
   }
 
-  if (selectedArticle) {
-    return (
-      <div className="h-full p-4 flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Newspaper className="w-5 h-5" />
-            <h3 className="font-semibold">{selectedArticle.category}</h3>
-          </div>
-          <Button variant="ghost" onClick={() => setSelectedArticle(null)}>
-            Back
-          </Button>
-        </div>
-
-        <Card className="flex-1 p-4 bg-black/20 overflow-y-auto">
-          <h4 className="text-xl font-semibold mb-2">{selectedArticle.title}</h4>
-          <p className="text-sm text-muted-foreground mb-2">
-            {new Date(selectedArticle.createdAt).toLocaleDateString()}
-          </p>
-          <p className="text-sm">{selectedArticle.content}</p>
-          {selectedArticle.url && (
-            <a 
-              href={selectedArticle.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-blue-500 hover:underline mt-4 block"
-            >
-              Read more
-            </a>
-          )}
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="h-full p-4 flex flex-col">
       <div className="flex items-center gap-2 mb-4">
@@ -112,17 +78,19 @@ export function NewsCarousel() {
       </div>
 
       <div className="flex-1 space-y-2">
-        {visibleNews.map((news) => (
+        {news.map((article, index) => (
           <Card 
-            key={news.id}
-            className="p-3 bg-black/20 cursor-pointer hover:bg-black/30 transition-colors"
-            onClick={() => setSelectedArticle(news)}
+            key={article.id}
+            className={`p-3 bg-black/20 cursor-pointer hover:bg-black/30 transition-colors transform ${
+              index === currentIndex ? 'scale-105' : 'scale-100'
+            }`}
+            onClick={() => openArticle(article)}
           >
             <div className="flex items-start justify-between">
               <div>
-                <p className="text-sm font-medium mb-1">{news.title}</p>
+                <p className="text-sm font-medium mb-1">{article.title}</p>
                 <span className="text-xs text-muted-foreground">
-                  {news.category} • {new Date(news.createdAt).toLocaleDateString()}
+                  {article.category} • {new Date(article.createdAt).toLocaleDateString()}
                 </span>
               </div>
             </div>

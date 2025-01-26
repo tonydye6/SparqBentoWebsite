@@ -71,12 +71,33 @@ export function registerRoutes(app: Express): Server {
       const items = await db.query.newsItems.findMany({
         where: eq(newsItems.active, true),
         orderBy: [desc(newsItems.createdAt)],
-        limit: 10
+        limit: 3
       });
+
+      if (!items.length) {
+        await fetchLatestNews();
+        items = await db.query.newsItems.findMany({
+          where: eq(newsItems.active, true),
+          orderBy: [desc(newsItems.createdAt)],
+          limit: 3
+        });
+      }
+
       res.json(items);
     } catch (error) {
       console.error("Error fetching news items:", error);
       res.status(500).json({ message: "Failed to fetch news items" });
+    }
+  });
+
+  // Scheduled task endpoint - can be called by a cron job
+  app.post("/api/news/refresh", async (req, res) => {
+    try {
+      const items = await fetchLatestNews();
+      res.json(items);
+    } catch (error) {
+      console.error("Error refreshing news:", error);
+      res.status(500).json({ message: "Failed to refresh news" });
     }
   });
 
