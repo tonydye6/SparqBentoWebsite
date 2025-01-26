@@ -275,9 +275,9 @@ export function BentoGrid() {
         className="bento-card card-4"
         whileHover={{ scale: 1.02 }}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold mb-4 text-center p-4 bg-black/50">Connect With Us</h3>
-          <div className="flex justify-center items-center flex-1 p-4">
+        <div className="p-4">
+          <h3 className="text-lg font-bold mb-2">Connect With Us</h3>
+          <div className="flex justify-center items-center h-full">
             {/* Character selection interface will go here */}
           </div>
         </div>
@@ -345,10 +345,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("team")}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold mb-4 text-center p-4 bg-black/50">Our Team</h3>
-          <TeamCarousel />
-        </div>
+        <TeamCarousel />
       </motion.div>
 
       {/* Card 10: Sparqverse */}
@@ -357,10 +354,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("sparqverse")}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold mb-4 text-center p-4 bg-black/50">Sparqverse</h3>
-          <AboutUs />
-        </div>
+        <AboutUs />
       </motion.div>
 
       {/* Card 11: Our Story */}
@@ -369,10 +363,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("about")}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold mb-4 text-center p-4 bg-black/50">Our Story</h3>
-          <AboutUs variant="secondary" />
-        </div>
+        <AboutUs title="Our Story" variant="secondary" />
       </motion.div>
 
       {/* Card 12: AI Chat */}
