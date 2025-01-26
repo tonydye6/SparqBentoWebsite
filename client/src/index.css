@@ -169,7 +169,7 @@
 
   .card-9 {
     @apply col-start-7 col-span-2 row-start-6 row-span-3;
-    background: #1e1e24 !important;
+    background: #ffd700 !important;
   }
 
   .card-11 {
