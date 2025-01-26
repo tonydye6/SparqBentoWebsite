@@ -68,7 +68,7 @@ export function registerRoutes(app: Express): Server {
   // Public news endpoint
   app.get("/api/news", async (req, res) => {
     try {
-      const items = await db.query.newsItems.findMany({
+      let items = await db.query.newsItems.findMany({
         where: eq(newsItems.active, true),
         orderBy: [desc(newsItems.createdAt)],
         limit: 3
