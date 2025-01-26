@@ -1,5 +1,7 @@
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Users, Send, Lightbulb } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface JobPosting {
   title: string;
@@ -10,20 +12,23 @@ interface JobPosting {
 
 const openings: JobPosting[] = [
   {
-    title: "Senior Game Developer",
-    department: "Engineering",
-    location: "Remote",
-    description: "Lead development of next-gen sports gaming experiences using cutting-edge AI and blockchain technology. Must have experience with Unity/Unreal Engine and multiplayer game development."
-  },
-  {
-    title: "AI Engineer",
-    department: "AI/ML",
+    title: "Chief Technology Officer",
+    department: "Executive",
     location: "Colorado Springs",
-    description: "Develop and implement AI systems for player behavior analysis, game balancing, and dynamic content generation. Strong background in machine learning and game AI required."
+    description: "To be hired by 3/1/2025"
   }
 ];
 
 export function JoinUs({ expanded = false }) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type === "application/pdf") {
+      setSelectedFile(file);
+    }
+  };
+
   if (!expanded) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-4">
@@ -37,41 +42,58 @@ export function JoinUs({ expanded = false }) {
   }
 
   return (
-    <div className="h-full p-4 flex flex-col">
-      <div className="space-y-6">
-        <h3 className="text-2xl font-bold mb-4">Current Openings</h3>
-        <div className="space-y-4">
+    <div className="p-6 space-y-8">
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">Join Sparq Games</h2>
+        <p className="text-lg leading-relaxed">
+          Sparq's platform simplifies how games get built and marketed so that the employee owners and development partners focus on creativity instead of the tedious tasks that absorb game-building hours. Sparq is making games more fun by rewarding the best people in the business to truly do what they do best.
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold">Current Openings</h3>
+        <div className="grid gap-4">
           {openings.map((job, index) => (
-            <div
-              key={index}
-              className="p-4 rounded bg-black/20 backdrop-blur-sm"
-            >
-              <div className="font-medium text-lg mb-2">{job.title}</div>
-              <div className="text-sm text-accent-cyan mb-2">
-                {job.department} • {job.location}
-              </div>
-              <p className="text-sm text-white/80">{job.description}</p>
-              <button 
-                onClick={() => window.open('mailto:careers@sparqgames.com')}
-                className="mt-3 px-4 py-2 bg-accent-cyan/20 hover:bg-accent-cyan/30 text-white rounded-md transition-colors"
-              >
-                Apply Now
-              </button>
+            <div key={index} className="p-4 rounded-lg bg-white/5 backdrop-blur-sm">
+              <h4 className="text-lg font-semibold">{job.title}</h4>
+              <p className="text-sm text-white/80">{job.department} • {job.location}</p>
+              <p className="mt-2">{job.description}</p>
             </div>
           ))}
         </div>
+      </div>
 
-        <div className="mt-6 p-4 rounded bg-white/5 backdrop-blur-sm text-center">
-          <h4 className="font-medium mb-2">Don't see a perfect fit?</h4>
-          <p className="text-sm text-white/80 mb-3">We're always looking for talented individuals to join our team!</p>
-          <button 
-            onClick={() => window.open('mailto:careers@sparqgames.com?subject=General Job Inquiry')}
-            className="px-6 py-2 bg-primary-red hover:bg-primary-red/80 text-white rounded-md transition-colors"
+      <div className="space-y-4">
+        <h3 className="text-xl font-semibold">Submit Your Resume</h3>
+        <div className="flex gap-4 items-center">
+          <Input
+            type="file"
+            accept=".pdf"
+            onChange={handleFileChange}
+            className="max-w-sm"
+          />
+          <Button
+            onClick={() => {
+              // Handle resume submission
+              if (selectedFile) {
+                console.log("Resume submitted:", selectedFile.name);
+              }
+            }}
+            disabled={!selectedFile}
           >
-            Submit General Inquiry
-          </button>
+            Submit Resume
+          </Button>
         </div>
       </div>
+
+      <blockquote className="border-l-4 border-primary-red pl-4 py-2 my-6 italic">
+        <p className="text-lg">
+          "We're hiring - not firing - and making Sparq one of the best places to work. We defy the old approach to game building which destroyed employees and stifled creativity. When human beings love working in a modern, successful setting, they use their vast work experience to create the best games in the world. That's the key to creating fun for the gamer."
+        </p>
+        <footer className="mt-2 text-sm font-semibold">
+          - Jan Horsfall, CEO
+        </footer>
+      </blockquote>
     </div>
   );
 }
