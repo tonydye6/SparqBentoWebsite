@@ -207,7 +207,7 @@
   }
 
   .social-icon {
-    @apply text-white hover:text-accent-cyan transition-colors duration-300 hover:scale-110 transform;
+    @apply text-white hover:text-accent-cyan transition-all duration-300 hover:scale-125 transform;
   }
 
   @keyframes fadeIn {
