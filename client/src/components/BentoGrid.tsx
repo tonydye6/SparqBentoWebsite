@@ -176,7 +176,14 @@ export function BentoGrid() {
       case "news":
         return <GameNews />;
       case "about":
-        return <AboutUs variant="secondary" />;
+        return (
+          <div className="p-6 space-y-4">
+            <h2 className="text-2xl font-bold">The Sparq Story</h2>
+            <p className="text-lg leading-relaxed">
+              We understand the dedication it takes to be a college athlete. We all played. And looking forward, we saw the opportunity to give back when Name, Image and Likeness (NIL) rules were adopted in 2022. Sparq Games was established to help athletes build their own brand through a series of video games. That's why we did it. The success of Sparq means that thousands of college athletes - men and women - will profit from their names and images being featured in our broad range of sports-based mobile video games.
+            </p>
+          </div>
+        );
       case "join":
         return <JoinUs />;
       case "school":
