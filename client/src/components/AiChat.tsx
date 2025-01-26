@@ -3,7 +3,8 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, AlertCircle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -15,6 +16,7 @@ export function AiChat() {
     { role: 'assistant', content: 'Hi! Ask me anything about games, sports, or Sparq!' }
   ]);
   const [input, setInput] = useState('');
+  const { toast } = useToast();
 
   const chatMutation = useMutation({
     mutationFn: async (message: string) => {
@@ -31,10 +33,22 @@ export function AiChat() {
       });
 
       if (!response.ok) {
-        throw new Error('Chat request failed');
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to send message');
       }
 
       return response.json();
+    },
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+        duration: 3000
+      });
+
+      // Remove the failed message from the chat
+      setMessages(prev => prev.slice(0, -1));
     },
     onSuccess: (data) => {
       setMessages(prev => [
@@ -48,6 +62,7 @@ export function AiChat() {
     e.preventDefault();
     if (!input.trim()) return;
 
+    // Optimistically add user message
     setMessages(prev => [...prev, { role: 'user', content: input }]);
     chatMutation.mutate(input);
     setInput('');
@@ -57,10 +72,16 @@ export function AiChat() {
     <div className="flex flex-col h-full">
       <div className="flex justify-center items-center gap-2 mb-4">
         <MessageCircle className="w-5 h-5" />
-        <h3 className="font-semibold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Sparq Assistant</h3>
+        <h3 className="font-heading font-semibold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+          Sparq Assistant
+        </h3>
       </div>
       <div className="flex justify-center items-center mb-4">
-        <img src="/Skull(Red).png" alt="Red Skull" className="w-24 h-24 object-contain" />
+        <img 
+          src="/Skull(Red).png" 
+          alt="Red Skull" 
+          className="w-24 h-24 object-contain"
+        />
       </div>
 
       <ScrollArea className="flex-1 mb-4">
@@ -75,6 +96,12 @@ export function AiChat() {
               }`}
             >
               {msg.content}
+              {chatMutation.isPending && i === messages.length - 1 && (
+                <div className="mt-2 flex items-center text-sm text-muted-foreground">
+                  <AlertCircle className="w-4 h-4 mr-2 animate-pulse" />
+                  Processing...
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -86,11 +113,13 @@ export function AiChat() {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Ask about Sparq Games..."
           disabled={chatMutation.isPending}
+          className="bg-background/50"
         />
         <Button 
           type="submit"
           disabled={chatMutation.isPending}
           size="icon"
+          className="hover:bg-primary/20"
         >
           <MessageCircle className="w-4 h-4" />
         </Button>

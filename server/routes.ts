@@ -7,8 +7,16 @@ import session from "express-session";
 import { requireAdmin, adminSessionMiddleware } from "./middleware/auth";
 import bcrypt from "bcryptjs";
 import MemoryStore from "memorystore";
+import rateLimit from 'express-rate-limit';
 
 const SessionStore = MemoryStore(session);
+
+// Configure rate limiter
+const chatLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // Limit each IP to 50 requests per windowMs
+  message: { message: "Too many requests, please try again later." }
+});
 
 export function registerRoutes(app: Express): Server {
   // Session setup
@@ -206,9 +214,13 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // Perplexity AI chat endpoint
-  app.post("/api/chat", async (req, res) => {
+  // Perplexity AI chat endpoint with rate limiting
+  app.post("/api/chat", chatLimiter, async (req, res) => {
     try {
+      if (!process.env.PERPLEXITY_API_KEY) {
+        throw new Error("Perplexity API key not configured");
+      }
+
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
         headers: {
@@ -225,16 +237,29 @@ export function registerRoutes(app: Express): Server {
       });
 
       if (!response.ok) {
-        throw new Error("Perplexity API request failed");
+        const error = await response.text();
+        console.error("Perplexity API error:", error);
+
+        if (response.status === 429) {
+          return res.status(429).json({ 
+            message: "Rate limit exceeded. Please try again later." 
+          });
+        }
+
+        throw new Error(`Perplexity API request failed: ${error}`);
       }
 
       const data = await response.json();
       res.json(data);
     } catch (error) {
       console.error("Chat error:", error);
-      res.status(500).json({ 
-        message: "Failed to process chat request" 
-      });
+
+      const statusCode = error.message.includes("Rate limit exceeded") ? 429 : 500;
+      const message = statusCode === 429 
+        ? "Rate limit exceeded. Please try again later."
+        : "Failed to process chat request";
+
+      res.status(statusCode).json({ message });
     }
   });
 
@@ -256,4 +281,3 @@ export function registerRoutes(app: Express): Server {
 
   return httpServer;
 }
-
