@@ -225,17 +225,20 @@ export function BentoGrid() {
         return (
           <div className="p-6 space-y-6">
             <h2 className="text-2xl font-bold">Our Vision</h2>
-            <div className="space-y-4">
-              <p className="text-lg leading-relaxed">
-                Sparq is rapidly expanding, using our proprietary game publishing platform to launch up to a dozen sports-based mobile games over the next five years which combine our commitment to AI, our gamer fans, college athletes, and the top IP holders we work with - like hundreds of the top universities along with their logos, mascots, and trademarks.
-              </p>
-              <p className="text-lg leading-relaxed">
-                Sparq takes immense pride in showcasing college athletes from hundreds of top U.S. universities. They recognize the significance of this intellectual property, believing it to be among the most powerful in existence. Sparq's commitment is to provide a platform where this cherished heritage can be celebrated and displayed with pride for years to come.
-              </p>
-              <p className="text-lg leading-relaxed">
-                Sparq will be introducing our mobile games beginning in 2025. If you're interested in keeping tabs on Sparq and being a part of the fun as they reach out to the college sports gaming community, then please sign up for the beta. You'll see firsthand what they're building and they'll honor your feedback to make the games as fun as possible.
-              </p>
-            </div>
+            <ul className="list-disc pl-6 space-y-4">
+              <li className="text-lg leading-relaxed">
+                Become the world's leading sports mobile game publishing platform, renowned for innovation, creativity, fun, and financial success.
+              </li>
+              <li className="text-lg leading-relaxed">
+                Foster a community of passionate sports fans and gamers who share our values and enthusiasm.
+              </li>
+              <li className="text-lg leading-relaxed">
+                Revolutionize the way athletes engage with their fans, build their personal brand, and secure their financial future.
+              </li>
+              <li className="text-lg leading-relaxed">
+                Create a workplace that's a benchmark for happiness, creativity, and productivity in the gaming industry.
+              </li>
+            </ul>
           </div>
         );
       case "values":
