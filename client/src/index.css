@@ -210,7 +210,6 @@
     @apply text-white hover:text-accent-cyan transition-colors duration-300 hover:scale-110 transform;
   }
 
-
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -221,4 +220,3 @@
       transform: translateY(0);
     }
   }
-}
