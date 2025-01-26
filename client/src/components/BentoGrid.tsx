@@ -358,7 +358,12 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("join")}
       >
-        <JoinUs />
+        <div className="flex flex-col h-full">
+          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Join the Sparq</h3>
+          <div className="flex-1">
+            <JoinUs />
+          </div>
+        </div>
       </motion.div>
 
       {/* Card 8: School Spotlight */}
