@@ -179,8 +179,17 @@ export function BentoGrid() {
         return (
           <div className="p-6 space-y-4">
             <h2 className="text-2xl font-bold">The Sparq Story</h2>
-            <p className="text-lg leading-relaxed">
+            <p className="text-lg leading-relaxed mb-4">
               We understand the dedication it takes to be a college athlete. We all played. And looking forward, we saw the opportunity to give back when Name, Image and Likeness (NIL) rules were adopted in 2022. Sparq Games was established to help athletes build their own brand through a series of video games. That's why we did it. The success of Sparq means that thousands of college athletes - men and women - will profit from their names and images being featured in our broad range of sports-based mobile video games.
+            </p>
+            <p className="text-lg leading-relaxed mb-4">
+              Sparq is rapidly expanding, using our proprietary game publishing platform to launch up to a dozen sports-based mobile games over the next five years which combine our commitment to AI, our gamer fans, college athletes, and the top IP holders we work with - like hundreds of the top universities along with their logos, mascots, and trademarks.
+            </p>
+            <p className="text-lg leading-relaxed mb-4">
+              Sparq takes immense pride in showcasing college athletes from hundreds of top U.S. universities. They recognize the significance of this intellectual property, believing it to be among the most powerful in existence. Sparq's commitment is to provide a platform where this cherished heritage can be celebrated and displayed with pride for years to come.
+            </p>
+            <p className="text-lg leading-relaxed mb-4">
+              Sparq will be introducing our mobile games beginning in 2025. If you're interested in keeping tabs on Sparq and being a part of the fun as they reach out to the college sports gaming community, then please sign up for the beta. You'll see firsthand what they're building and they'll honor your feedback to make the games as fun as possible.
             </p>
             <ul className="list-disc pl-6">
               <li className="text-lg italic">
