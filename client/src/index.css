@@ -64,9 +64,9 @@
       /* Set order for each card */
       .card-1 { --card-order: 1; height: 80px; }
       .card-2 { --card-order: 2; }
-      .card-3 { --card-order: 3; height: 300px; }
+      .card-3 { display: none; } /* Hide on mobile */
       .card-4 { --card-order: 4; }
-      .card-5 { --card-order: 5; height: 400px; }
+      .card-5 { display: none; } /* Hide on mobile */
       .card-6 { --card-order: 6; height: 300px; }
       .card-7 { --card-order: 7; }
       .card-8 { --card-order: 8; }
@@ -78,6 +78,14 @@
       .card-14 { --card-order: 14; height: 150px; }
       .card-15 { --card-order: 15; height: 150px; }
 
+      /* Fix mission/vision/values cards rotation */
+      .card-13, .card-14, .card-15 {
+        h3 {
+          transform: none !important;
+          font-size: 2.5rem !important;
+        }
+      }
+
       /* Reset positioning for all cards */
       .bento-card {
         position: static;
@@ -88,14 +96,6 @@
         border: none;
         margin-bottom: 20px;
         transform: none !important;
-      }
-
-      /* Fix mission/vision/values cards rotation */
-      .card-13, .card-14, .card-15 {
-        h3 {
-          transform: none !important;
-          font-size: 2.5rem !important;
-        }
       }
     }
   }
