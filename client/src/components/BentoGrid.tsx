@@ -283,18 +283,20 @@ export function BentoGrid() {
     <div className="bento-grid">
       {/* Card 2: Join Beta */}
       <div
-        className="bento-card card-2 beta-card flex items-center justify-center relative overflow-hidden cursor-pointer"
+        className="bento-card card-2 beta-card relative overflow-hidden cursor-pointer z-10"
         onClick={() => handleCardClick("beta")}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-carbon/80 to-carbon/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-carbon/80 to-carbon/40 pointer-events-none" />
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center pointer-events-none"
           style={{
             backgroundImage: 'url("/ftcc.png")',
             opacity: 0.6,
           }}
         />
-        <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2 relative z-10">Join Beta Now!</h2>
+        <div className="flex items-center justify-center h-full relative">
+          <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2 pointer-events-none">Join Beta Now!</h2>
+        </div>
       </div>
 
       {/* Card 1: Title Bar */}
