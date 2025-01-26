@@ -29,8 +29,9 @@ export type SelectAdmin = typeof adminUsers.$inferSelect;
 export const newsItems = pgTable("news_items", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
-  description: text("description").notNull(),
-  category: text("category").notNull(), // 'AI' | 'Gaming' | 'NCAA'
+  content: text("content").notNull(),
+  category: text("category").notNull(), // 'NIL' | 'AI Gaming' | 'Web3'
+  url: text("url"),
   active: boolean("active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull()

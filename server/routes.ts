@@ -65,6 +65,21 @@ export function registerRoutes(app: Express): Server {
     });
   });
 
+  // Public news endpoint
+  app.get("/api/news", async (req, res) => {
+    try {
+      const items = await db.query.newsItems.findMany({
+        where: eq(newsItems.active, true),
+        orderBy: [desc(newsItems.createdAt)],
+        limit: 10
+      });
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching news items:", error);
+      res.status(500).json({ message: "Failed to fetch news items" });
+    }
+  });
+
   // Content management endpoints
   // News Items
   app.get("/api/admin/news", requireAdmin, async (req, res) => {
