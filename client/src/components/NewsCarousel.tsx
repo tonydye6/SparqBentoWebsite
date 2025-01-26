@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -32,7 +31,7 @@ export function NewsCarousel() {
 
   useEffect(() => {
     if (news.length === 0) return;
-    
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % news.length);
     }, 5000);
@@ -60,7 +59,10 @@ export function NewsCarousel() {
     return (
       <div className="h-full p-4 flex items-center justify-center">
         <Card className="p-4 bg-black/20">
-          <h3 className="font-semibold text-xl mb-4">Word Around Town</h3>
+          <div className="flex flex-col items-center gap-2 mb-4 w-full">
+            <Newspaper className="w-5 h-5" />
+            <h3 className="font-semibold text-center">Word Around Town</h3>
+          </div>
           <p>Loading news...</p>
         </Card>
       </div>
@@ -71,9 +73,9 @@ export function NewsCarousel() {
     return (
       <div className="h-full p-4">
         <Card className="h-full p-4 bg-black/20">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex flex-col items-center gap-2 mb-4 w-full">
             <Newspaper className="w-5 h-5" />
-            <h3 className="font-semibold">Word Around Town</h3>
+            <h3 className="font-semibold text-center">Word Around Town</h3>
           </div>
           <p className="text-sm text-muted-foreground">
             Check back later for the latest updates in gaming and sports.
@@ -87,9 +89,9 @@ export function NewsCarousel() {
     <div className="h-full p-4 flex flex-col">
       <Card className="flex-1 p-4 bg-black/20 border-0">
         <div className="h-full flex flex-col">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex flex-col items-center gap-2 mb-4 w-full">
             <Newspaper className="w-5 h-5" />
-            <h3 className="font-semibold">Word Around Town</h3>
+            <h3 className="font-semibold text-center">Word Around Town</h3>
           </div>
           {news[currentIndex] && (
             <div 
