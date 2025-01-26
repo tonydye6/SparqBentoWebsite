@@ -275,9 +275,9 @@ export function BentoGrid() {
         className="bento-card card-4"
         whileHover={{ scale: 1.02 }}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center bg-black/50 backdrop-blur-sm drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Connect With Us</h3>
-          <div className="flex-1 flex justify-center items-center p-4">
+        <div className="p-4">
+          <h3 className="text-lg font-bold mb-2">Connect With Us</h3>
+          <div className="flex justify-center items-center h-full">
             {/* Character selection interface will go here */}
           </div>
         </div>
@@ -345,12 +345,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("team")}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center bg-black/50 backdrop-blur-sm drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Meet Our Team</h3>
-          <div className="flex-1">
-            <TeamCarousel />
-          </div>
-        </div>
+        <TeamCarousel />
       </motion.div>
 
       {/* Card 10: Sparqverse */}
@@ -359,12 +354,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("sparqverse")}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center bg-black/50 backdrop-blur-sm drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Sparqverse</h3>
-          <div className="flex-1">
-            <AboutUs />
-          </div>
-        </div>
+        <AboutUs />
       </motion.div>
 
       {/* Card 11: Our Story */}
@@ -373,12 +363,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("about")}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center bg-black/50 backdrop-blur-sm drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Our Story</h3>
-          <div className="flex-1">
-            <AboutUs variant="secondary" />
-          </div>
-        </div>
+        <AboutUs title="Our Story" variant="secondary" />
       </motion.div>
 
       {/* Card 12: AI Chat */}
