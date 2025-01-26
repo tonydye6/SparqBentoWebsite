@@ -7,7 +7,6 @@ export function TeamCard() {
   const handleMouseEnter = () => {
     setIsHovered(true);
     if (videoRef.current) {
-      videoRef.current.muted = true;
       videoRef.current.play().catch(error => {
         console.error('Error playing video:', error);
       });
@@ -23,16 +22,15 @@ export function TeamCard() {
   };
 
   return (
-    <div
-      className="relative w-full h-full"
+    <div 
+      className="h-full relative"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-carbon/80 z-10" />
       {isHovered ? (
         <video
           ref={videoRef}
-          className="w-full h-full object-cover absolute inset-0"
+          className="w-full h-full object-cover"
           muted
           playsInline
           preload="auto"
@@ -43,11 +41,12 @@ export function TeamCard() {
       ) : (
         <img
           src="/teaser_1_poster.jpg"
-          className="w-full h-full object-cover absolute inset-0"
           alt="Team Teaser Poster"
+          className="w-full h-full object-cover"
         />
       )}
-      <div className="relative z-20 w-full h-full flex items-center justify-center">
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-carbon/80" />
+      <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center p-4">
           <h3 className="text-2xl font-bold mb-2">Sparq Gaming Revolution</h3>
           <p className="text-sm text-gray-200">Experience the future of college sports gaming</p>

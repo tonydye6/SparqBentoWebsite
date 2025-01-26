@@ -34,93 +34,109 @@
 }
 
 @layer components {
+  /* Card 6 specific overrides */
+  .card-6 {
+    transform-style: flat !important;
+    perspective: none !important;
+    transform: none !important;
+    transition: none !important;
+    position: static !important;
+    z-index: auto !important;
+    overflow: visible !important;
+  }
+
+  .card-6 video {
+    position: static !important;
+    z-index: 1 !important;
+  }
+
   .bento-grid {
     @apply grid grid-cols-12 grid-rows-10 gap-6 p-4 min-h-screen;
     background: var(--carbon);
+  }
 
-    @media only screen and (max-width: 600px) {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto;
-      grid-auto-flow: row;
-      gap: 20px;
-      padding: 20px;
+  @media only screen and (max-width: 600px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    grid-auto-flow: row;
+    gap: 20px;
+    padding: 20px;
 
-      .bento-card {
-        grid-column: 1 / -1 !important;
-        height: auto;
-        min-height: fit-content;
-        position: relative;
-        z-index: auto;
-        margin-bottom: 0;
-        order: var(--card-order);
-      }
-
-      /* Set order for each card */
-      .card-1 { --card-order: 1; height: 80px; }
-      .card-2 { --card-order: 2; }
-      .card-3 { display: none; } /* Hide on mobile */
-      .card-4 { --card-order: 4; }
-      .card-5 { display: none; } /* Hide on mobile */
-      .card-6 { --card-order: 6; height: 300px; }
-      .card-7 { --card-order: 7; }
-      .card-8 { --card-order: 8; }
-      .card-9 { --card-order: 9; }
-      .card-10 { --card-order: 10; }
-      .card-11 { --card-order: 11; }
-      .card-12 { --card-order: 12; height: 400px; }
-      .card-13 { --card-order: 13; height: 150px; }
-      .card-14 { --card-order: 14; height: 150px; }
-      .card-15 { --card-order: 15; height: 150px; }
-
-      /* Fix mission/vision/values cards rotation */
-      .card-13, .card-14, .card-15 {
-        h3 {
-          transform: none !important;
-          font-size: 2.5rem !important;
-        }
-      }
+    .bento-card {
+      grid-column: 1 / -1 !important;
+      height: auto;
+      min-height: fit-content;
+      position: relative;
+      z-index: auto;
+      margin-bottom: 0;
+      order: var(--card-order);
     }
 
-    /* Mobile-specific styles */
-    @media screen and (max-width: 768px) {
-      .flex {
-        display: block;
-        padding: 16px;
-      }
+    /* Set order for each card */
+    .card-1 { --card-order: 1; height: 80px; }
+    .card-2 { --card-order: 2; }
+    .card-3 { display: none; } /* Hide on mobile */
+    .card-4 { --card-order: 4; }
+    .card-5 { display: none; } /* Hide on mobile */
+    .card-6 { --card-order: 6; height: 300px; }
+    .card-7 { --card-order: 7; }
+    .card-8 { --card-order: 8; }
+    .card-9 { --card-order: 9; }
+    .card-10 { --card-order: 10; }
+    .card-11 { --card-order: 11; }
+    .card-12 { --card-order: 12; height: 400px; }
+    .card-13 { --card-order: 13; height: 150px; }
+    .card-14 { --card-order: 14; height: 150px; }
+    .card-15 { --card-order: 15; height: 150px; }
 
-      .flex-1 {
-        margin-bottom: 20px;
-      }
-
-      .bento-card {
-        position: static;
-        margin-bottom: 20px;
-        height: auto !important;
-        min-height: 200px;
+    /* Fix mission/vision/values cards rotation */
+    .card-13, .card-14, .card-15 {
+      h3 {
         transform: none !important;
-        clear: both;
-        z-index: 1;
+        font-size: 2.5rem !important;
       }
+    }
+  }
 
-      .motion-div {
-        position: static;
-        transform: none !important;
-      }
+  /* Mobile-specific styles */
+  @media screen and (max-width: 768px) {
+    .flex {
+      display: block;
+      padding: 16px;
+    }
 
-      .perspective-1000 {
-        transform-style: flat;
-        perspective: none;
-        margin-bottom: 20px;
-      }
+    .flex-1 {
+      margin-bottom: 20px;
+    }
 
-      .min-h-screen {
-        padding: 16px;
-      }
+    .bento-card {
+      position: static;
+      margin-bottom: 20px;
+      height: auto !important;
+      min-height: 200px;
+      transform: none !important;
+      clear: both;
+      z-index: 1;
+    }
 
-      .max-w-[1600px] {
-        padding: 0;
-        margin: 0;
-      }
+    .motion-div {
+      position: static;
+      transform: none !important;
+    }
+
+    .perspective-1000 {
+      transform-style: flat;
+      perspective: none;
+      margin-bottom: 20px;
+    }
+
+    .min-h-screen {
+      padding: 16px;
+    }
+
+    .max-w-[1600px] {
+      padding: 0;
+      margin: 0;
     }
   }
 

@@ -376,12 +376,9 @@ export function BentoGrid() {
       </motion.div>
 
       {/* Card 6: Video Teaser */}
-      <motion.div
-        className="bento-card card-6 relative overflow-hidden"
-        whileHover={{ scale: 1.02 }}
-      >
+      <div className="bento-card card-6 relative overflow-hidden">
         <TeamCard />
-      </motion.div>
+      </div>
 
       {/* Card 7: Join Us */}
       <motion.div
