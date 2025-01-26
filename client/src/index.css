@@ -78,17 +78,6 @@
       .card-14 { --card-order: 14; height: 150px; }
       .card-15 { --card-order: 15; height: 150px; }
 
-      /* Reset positioning for all cards */
-      .bento-card {
-        position: static;
-        top: auto;
-        left: auto;
-        right: auto;
-        bottom: auto;
-        border: none;
-        margin-bottom: 20px;
-      }
-
       /* Fix mission/vision/values cards rotation */
       .card-13, .card-14, .card-15 {
         h3 {
@@ -121,11 +110,19 @@
     @media only screen and (max-width: 600px) {
       border: none;
       box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       position: static;
+      top: auto;
+      left: auto;
+      right: auto;
+      bottom: auto;
       height: auto !important;
       min-height: fit-content;
       margin-bottom: 20px;
       transform: none !important;
+      transition: none;
+      background: rgba(30, 30, 36, 0.95);
     }
   }
 
@@ -138,21 +135,6 @@
   .card-2 {
     @apply col-start-1 col-span-3 row-span-2;
     background: #00a19c !important;
-    position: relative;
-  }
-
-  .card-2::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('/ftcc.png');
-    background-size: cover;
-    background-position: center;
-    opacity: 0.6;
-    pointer-events: none;
   }
 
   .card-3 {
@@ -189,30 +171,6 @@
   .card-7 {
     @apply col-start-4 col-span-5 row-start-9 row-span-2;
     background: #2b2d42 !important;
-    position: relative;
-  }
-
-  .card-7::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: linear-gradient(
-      45deg,
-      rgba(43, 45, 66, 0.9),
-      rgba(30, 30, 36, 0.9)
-    );
-    pointer-events: none;
-  }
-
-  .card-7:hover::before {
-    background-image: linear-gradient(
-      45deg,
-      rgba(43, 45, 66, 0.8),
-      rgba(30, 30, 36, 0.8)
-    );
   }
 
   .card-9 {
@@ -224,7 +182,6 @@
     @apply col-start-7 col-span-2 row-start-4 row-span-2;
     background: #2b2d42 !important;
   }
-
 
   /* Accent Colors (10%) */
   .card-12 {
