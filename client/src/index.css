@@ -5,20 +5,20 @@
 @tailwind utilities;
 
 @layer base {
- :root {
-    /* Primary Colors */
-    --primary-red: 351 100% 46%;    /* #eb0028 */
-    --primary-teal: 179 100% 32%;   /* #00a19c */
+  :root {
+     /* Primary Colors */
+     --primary-red: 351 100% 46%;    /* #eb0028 */
+     --primary-teal: 179 100% 32%;   /* #00a19c */
 
-    /* Secondary Colors */
-    --secondary-navy: 235 19% 21%;  /* #2b2d42 */
-    --secondary-blue: 237 89% 60%;  /* #404bf2 */
-    --secondary-dark: 240 11% 13%;  /* #1e1e24 */
+     /* Secondary Colors */
+     --secondary-navy: 235 19% 21%;  /* #2b2d42 */
+     --secondary-blue: 237 89% 60%;  /* #404bf2 */
+     --secondary-dark: 240 11% 13%;  /* #1e1e24 */
 
-    /* Accent Colors */
-    --accent-gold: 51 100% 50%;     /* #ffd700 */
-    --accent-cyan: 180 100% 47%;    /* #00f2ea */
-    --accent-pink: 345 100% 61%;    /* #ff3864 */
+     /* Accent Colors */
+     --accent-gold: 51 100% 50%;     /* #ffd700 */
+     --accent-cyan: 180 100% 47%;    /* #00f2ea */
+     --accent-pink: 345 100% 61%;    /* #ff3864 */
   }
 
   * {
@@ -60,25 +60,50 @@
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
     animation: fadeIn 0.6s ease forwards;
-    will-change: transform, opacity, background-color;
+    will-change: transform, opacity, background-color, box-shadow;
     color: white;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
-/* Override for cards 3 and 12 */
-.card-3, .card-12 {
-    background: rgba(30, 30, 36, 0.95) !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
+  .bento-card:hover {
+    transform: translateZ(0) scale(1.03);
+    box-shadow: 
+      inset 4px 4px 8px rgba(255, 255, 255, 0.25),
+      inset -4px -4px 8px rgba(0, 0, 0, 0.5),
+      16px 16px 32px rgba(0, 0, 0, 0.4),
+      -16px -16px 32px rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(16px) saturate(200%);
+    -webkit-backdrop-filter: blur(16px) saturate(200%);
   }
 
-  .bento-card:hover {
-    box-shadow: 
-      inset 4px 4px 8px rgba(255, 255, 255, 0.2),
-      inset -4px -4px 8px rgba(0, 0, 0, 0.45),
-      12px 12px 20px rgba(0, 0, 0, 0.3),
-      -12px -12px 20px rgba(255, 255, 255, 0.12);
-    transform: translateZ(0) scale(1.02);
+  .bento-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.1) 0%,
+      transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .bento-card:hover::after {
+    opacity: 1;
+  }
+
+  /* Add a subtle pulse animation for interactive cards */
+  @keyframes subtle-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.005); }
+    100% { transform: scale(1); }
+  }
+
+  .bento-card[data-interactive="true"] {
+    animation: subtle-pulse 3s ease-in-out infinite;
   }
 
   /* Primary Colors (60%) */
@@ -177,6 +202,13 @@
     background: #2b2d42 !important;
   }
 
+
+  /* Override for cards 3 and 12 */
+  .card-3, .card-12 {
+    background: rgba(30, 30, 36, 0.95) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
 
   /* Accent Colors (10%) */
   .card-12 {
