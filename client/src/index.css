@@ -66,15 +66,13 @@
   }
 
   .bento-card:hover {
-    transform: translateZ(0) scale(1.03);
+    transform: translateZ(0) scale(1.02);
     box-shadow: 
       inset 4px 4px 8px rgba(255, 255, 255, 0.25),
       inset -4px -4px 8px rgba(0, 0, 0, 0.5),
       16px 16px 32px rgba(0, 0, 0, 0.4),
       -16px -16px 32px rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(16px) saturate(200%);
-    -webkit-backdrop-filter: blur(16px) saturate(200%);
   }
 
   .bento-card::after {
@@ -95,17 +93,6 @@
     opacity: 1;
   }
 
-  /* Add a subtle pulse animation for interactive cards */
-  @keyframes subtle-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.005); }
-    100% { transform: scale(1); }
-  }
-
-  .bento-card[data-interactive="true"] {
-    animation: subtle-pulse 3s ease-in-out infinite;
-  }
-
   /* Primary Colors (60%) */
   .card-1 {
     @apply col-start-4 col-span-9 row-span-1;
@@ -115,26 +102,13 @@
   .card-2 {
     @apply col-start-1 col-span-3 row-span-2;
     background: #00a19c !important;
-    position: relative;
-  }
-
-  .card-2::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('/ftcc.png');
-    background-size: cover;
-    background-position: center;
-    opacity: 0.6;
-    pointer-events: none;
   }
 
   .card-3 {
     @apply col-start-1 col-span-3 row-start-3 row-span-5;
-    background: #eb0028 !important;
+    background: rgba(30, 30, 36, 0.95) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
   }
 
   .card-4 {
@@ -152,17 +126,6 @@
     background: #00a19c !important;
   }
 
-  .card-8 {
-    @apply col-start-4 col-span-3 row-start-5 row-span-4;
-    background: #eb0028 !important;
-  }
-
-  .card-10 {
-    @apply col-start-4 col-span-3 row-start-4;
-    background: #00a19c !important;
-  }
-
-  /* Secondary Colors (30%) */
   .card-7 {
     @apply col-start-4 col-span-5 row-start-9 row-span-2;
     background: #2b2d42 !important;
@@ -192,9 +155,19 @@
     );
   }
 
+  .card-8 {
+    @apply col-start-4 col-span-3 row-start-5 row-span-4;
+    background: #eb0028 !important;
+  }
+
   .card-9 {
     @apply col-start-7 col-span-2 row-start-6 row-span-3;
     background: #1e1e24 !important;
+  }
+
+  .card-10 {
+    @apply col-start-4 col-span-3 row-start-4;
+    background: #00a19c !important;
   }
 
   .card-11 {
@@ -202,18 +175,11 @@
     background: #2b2d42 !important;
   }
 
-
-  /* Override for cards 3 and 12 */
-  .card-3, .card-12 {
+  .card-12 {
+    @apply col-start-9 col-span-4 row-start-2 row-span-3;
     background: rgba(30, 30, 36, 0.95) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-  }
-
-  /* Accent Colors (10%) */
-  .card-12 {
-    @apply col-start-9 col-span-4 row-start-2 row-span-3;
-    background: #2b2d42 !important;
   }
 
   .card-13 {
@@ -231,7 +197,18 @@
     background: #00f2ea !important;
   }
 
-  /* Typography styles */
+  /* Add a subtle pulse animation for interactive cards */
+  @keyframes subtle-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.005); }
+    100% { transform: scale(1); }
+  }
+
+  .bento-card[data-interactive="true"] {
+    animation: subtle-pulse 3s ease-in-out infinite;
+  }
+
+  /* Typography */
   .bento-card h1 {
     @apply text-4xl md:text-5xl lg:text-6xl;
     font-family: 'Space Grotesk', sans-serif;
@@ -250,15 +227,6 @@
   .bento-card p {
     @apply text-base md:text-lg leading-relaxed;
     font-family: 'Inter', sans-serif;
-  }
-
-  .bento-card .title-text {
-    @apply font-bold tracking-tight;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-
-  .card-13 h3, .card-14 h3, .card-15 h3 {
-    @apply text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)];
   }
 
   .social-icon {
