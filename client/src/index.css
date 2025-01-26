@@ -54,8 +54,10 @@
       .bento-card {
         grid-column: 1 / -1 !important;
         height: auto;
-        min-height: 200px;
-        margin-bottom: 20px;
+        min-height: fit-content;
+        position: relative;
+        z-index: auto;
+        margin-bottom: 0;
         order: var(--card-order);
       }
 
