@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { db } from "@db";
+import { db, DatabaseConnection } from "@db";
 import { betaSignups, adminUsers, newsItems, teamMembers } from "@db/schema";
 import { eq, desc } from "drizzle-orm";
 import session from "express-session";
@@ -65,7 +65,7 @@ async function fetchLatestNews() {
         content: item.description,
         category: item.category,
         active: true
-      }).onConflictDoNothing();
+      });
     }
     console.log("Successfully saved news items to database");
   } catch (error) {
@@ -78,8 +78,6 @@ async function fetchLatestNews() {
 
 // Cache for storing news when database is unavailable
 let newsCache: any[] = [];
-
-// Start periodic news refresh
 let newsRefreshInterval: NodeJS.Timeout;
 
 function startNewsRefresh() {
@@ -135,11 +133,10 @@ export function registerRoutes(app: Express): Server {
       // Try database first
       let items = [];
       try {
-        items = await db.query.newsItems.findMany({
-          where: eq(newsItems.active, true),
-          orderBy: [desc(newsItems.createdAt)],
-          limit: 3
-        });
+        items = await db.select().from(newsItems)
+          .where(eq(newsItems.active, true))
+          .orderBy(desc(newsItems.createdAt))
+          .limit(3);
       } catch (error) {
         console.error("Database error fetching news:", error);
         // Fall back to cache if database is unavailable
@@ -211,7 +208,7 @@ export function registerRoutes(app: Express): Server {
 
       const data = await response.json();
       res.json(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Chat error:", error);
 
       const statusCode = error.message.includes("Rate limit exceeded") ? 429 : 500;
@@ -228,9 +225,10 @@ export function registerRoutes(app: Express): Server {
     try {
       const { username, password } = req.body;
 
-      const admin = await db.query.adminUsers.findFirst({
-        where: eq(adminUsers.username, username)
-      });
+      const admin = await db.select().from(adminUsers)
+        .where(eq(adminUsers.username, username))
+        .limit(1)
+        .then(results => results[0]);
 
       if (!admin) {
         return res.status(401).json({ message: "Invalid credentials" });
@@ -266,9 +264,10 @@ export function registerRoutes(app: Express): Server {
     try {
       const { email, subscribe } = req.body;
 
-      const existing = await db.query.betaSignups.findFirst({
-        where: eq(betaSignups.email, email)
-      });
+      const existing = await db.select().from(betaSignups)
+        .where(eq(betaSignups.email, email))
+        .limit(1)
+        .then(results => results[0]);
 
       if (existing) {
         return res.status(400).json({ 
@@ -295,9 +294,8 @@ export function registerRoutes(app: Express): Server {
   // Protected admin endpoints
   app.get("/api/admin/beta-signups", requireAdmin, async (req, res) => {
     try {
-      const signups = await db.query.betaSignups.findMany({
-        orderBy: [desc(betaSignups.createdAt)]
-      });
+      const signups = await db.select().from(betaSignups)
+        .orderBy(desc(betaSignups.createdAt));
       res.json(signups);
     } catch (error) {
       console.error("Error fetching beta signups:", error);
@@ -306,12 +304,10 @@ export function registerRoutes(app: Express): Server {
   });
 
   // Content management endpoints
-  // News Items
   app.get("/api/admin/news", requireAdmin, async (req, res) => {
     try {
-      const items = await db.query.newsItems.findMany({
-        orderBy: [desc(newsItems.createdAt)]
-      });
+      const items = await db.select().from(newsItems)
+        .orderBy(desc(newsItems.createdAt));
       res.json(items);
     } catch (error) {
       console.error("Error fetching news items:", error);
@@ -321,10 +317,10 @@ export function registerRoutes(app: Express): Server {
 
   app.post("/api/admin/news", requireAdmin, async (req, res) => {
     try {
-      const { title, description, category } = req.body;
+      const { title, content, category } = req.body;
       const result = await db.insert(newsItems).values({
         title,
-        description,
+        content,
         category,
         active: true
       });
@@ -338,9 +334,8 @@ export function registerRoutes(app: Express): Server {
   // Team Members
   app.get("/api/admin/team", requireAdmin, async (req, res) => {
     try {
-      const members = await db.query.teamMembers.findMany({
-        orderBy: [desc(teamMembers.createdAt)]
-      });
+      const members = await db.select().from(teamMembers)
+        .orderBy(desc(teamMembers.createdAt));
       res.json(members);
     } catch (error) {
       console.error("Error fetching team members:", error);
@@ -365,7 +360,6 @@ export function registerRoutes(app: Express): Server {
       res.status(500).json({ message: "Failed to create team member" });
     }
   });
-
 
   // Cleanup function for graceful shutdown
   const cleanup = () => {
