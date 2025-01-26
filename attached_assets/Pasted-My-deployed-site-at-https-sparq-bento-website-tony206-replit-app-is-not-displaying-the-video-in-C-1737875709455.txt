@@ -1,0 +1,67 @@
+My deployed site at https://sparq-bento-website-tony206.replit.app/ is not displaying the video in Card #6. Please help resolve this issue by:
+Verify Video File Location and Path:
+Ensure the video file is located in the /public/videos/ directory.
+Update the <video> element in Card #6 to use an absolute path:
+jsx
+<video 
+  src="/videos/team-video.mp4" 
+  autoPlay 
+  loop 
+  muted 
+  playsInline 
+  className="w-full h-auto object-cover"
+/>
+Check Video File Size and Hosting:
+If the video file is larger than 100 MB, it may not be properly handled by Git or Vercel. Host the video on a CDN (e.g., AWS S3, Cloudinary) and update the src attribute to point to the hosted URL:
+jsx
+<video 
+  src="https://your-cdn.com/videos/team-video.mp4" 
+  autoPlay 
+  loop 
+  muted 
+  playsInline 
+  className="w-full h-auto object-cover"
+/>
+Update next.config.js for Video Support:
+Add support for serving videos in the Next.js configuration:
+javascript
+const withVideos = require('next-videos');
+
+module.exports = withVideos({
+  reactStrictMode: true,
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.(mp4|webm|ogg|swf|ogv)$/,
+      use: {
+        loader: 'file-loader',
+        options: {
+          publicPath: '/_next/static/videos/',
+          outputPath: 'static/videos/',
+          name: '[name].[hash].[ext]',
+        },
+      },
+    });
+    return config;
+  },
+});
+Test Compatibility Across Browsers:
+Add multiple <source> elements for browser compatibility:
+jsx
+<video autoPlay loop muted playsInline className="w-full h-auto object-cover">
+  <source src="/videos/team-video.mp4" type="video/mp4" />
+  <source src="/videos/team-video.webm" type="video/webm" />
+  <p>Your browser does not support HTML5 video.</p>
+</video>
+Clear Cache and Redeploy:
+Clear any build cache and redeploy the application to ensure changes are applied.
+Fallback Option:
+If hosting locally continues to fail, embed the video using an iframe from YouTube or Vimeo as a fallback:
+jsx
+<iframe
+  src="https://www.youtube.com/embed/your-video-id"
+  frameBorder="0"
+  allow="autoplay; encrypted-media"
+  allowFullScreen
+  className="w-full h-auto"
+></iframe>
+Please implement these steps and ensure that the video in Card #6 displays correctly after deployment.

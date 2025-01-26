@@ -287,10 +287,14 @@ export function BentoGrid() {
         onClick={() => handleCardClick("beta")}
       >
         <div className="absolute inset-0">
-          <img 
-            src="/ftcc.png"
+          <img
+            src="/images/ftcc.png"
             alt="Background Pattern"
             className="w-full h-full object-cover opacity-60"
+            onError={(e) => {
+              e.currentTarget.src = '/images/fallback.png';
+              console.error('Error loading image:', e);
+            }}
           />
         </div>
         <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2 relative z-10">Join Beta Now!</h2>
@@ -303,10 +307,10 @@ export function BentoGrid() {
         animate={{ opacity: 1, y: 0 }}
       >
         <div className="flex items-center justify-center h-full w-full p-4">
-          <img 
-            src="/logo_2.png" 
-            alt="Sparq Logo" 
-            className="max-h-[90%] max-w-[90%] w-auto object-contain" 
+          <img
+            src="/logo_2.png"
+            alt="Sparq Logo"
+            className="max-h-[90%] max-w-[90%] w-auto object-contain"
           />
         </div>
       </motion.div>
@@ -328,36 +332,36 @@ export function BentoGrid() {
         <div className="flex flex-col h-full">
           <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Connect With Us</h3>
           <div className="flex-1 flex justify-center items-center gap-8 p-4">
-            <a 
-              href="https://www.instagram.com/sparqgames" 
-              target="_blank" 
+            <a
+              href="https://www.instagram.com/sparqgames"
+              target="_blank"
               rel="noopener noreferrer"
               className="social-icon"
             >
               <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M3 16V8C3 5.23858 5.23858 3 8 3H16C18.7614 3 21 5.23858 21 8V16C21 18.7614 18.7614 21 16 21H8C5.23858 21 3 18.7614 3 16Z" stroke="currentColor" strokeWidth="2"/>
-                <path d="M17.5 6.51L17.51 6.49889" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M3 16V8C3 5.23858 5.23858 3 8 3H16C18.7614 3 21 5.23858 21 8V16C21 18.7614 18.7614 21 16 21H8C5.23858 21 3 18.7614 3 16Z" stroke="currentColor" strokeWidth="2" />
+                <path d="M17.5 6.51L17.51 6.49889" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
-            <a 
-              href="https://x.com/sparqgames" 
-              target="_blank" 
+            <a
+              href="https://x.com/sparqgames"
+              target="_blank"
               rel="noopener noreferrer"
               className="social-icon"
             >
               <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.7778 3L12.5556 11.9444L21 21H17.4444L11.3889 14.5L4.55556 21H3L10.6667 11.4722L2.55556 3H6.11111L11.7222 8.94444L18.1111 3H19.7778ZM18.2222 19.5L7.22222 4.27778H5.33333L16.3889 19.5H18.2222Z" fill="currentColor"/>
+                <path d="M19.7778 3L12.5556 11.9444L21 21H17.4444L11.3889 14.5L4.55556 21H3L10.6667 11.4722L2.55556 3H6.11111L11.7222 8.94444L18.1111 3H19.7778ZM18.2222 19.5L7.22222 4.27778H5.33333L16.3889 19.5H18.2222Z" fill="currentColor" />
               </svg>
             </a>
-            <a 
-              href="https://www.tiktok.com/@sparqgames" 
-              target="_blank" 
+            <a
+              href="https://www.tiktok.com/@sparqgames"
+              target="_blank"
               rel="noopener noreferrer"
               className="social-icon"
             >
               <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 9.5V15C19 18.866 15.866 22 12 22C8.13401 22 5 18.866 5 15C5 11.134 8.13401 8 12 8V11C9.79086 11 8 12.7909 8 15C8 17.2091 9.79086 19 12 19C14.2091 19 16 17.2091 16 15V2H19C19 2 19 2.5 19 3C19 5.20914 20.7909 7 23 7V9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M19 9.5V15C19 18.866 15.866 22 12 22C8.13401 22 5 18.866 5 15C5 11.134 8.13401 8 12 8V11C9.79086 11 8 12.7909 8 15C8 17.2091 9.79086 19 12 19C14.2091 19 16 17.2091 16 15V2H19C19 2 19 2.5 19 3C19 5.20914 20.7909 7 23 7V9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </a>
           </div>
@@ -378,15 +382,28 @@ export function BentoGrid() {
         className="bento-card card-6 relative overflow-hidden"
         whileHover={{ scale: 1.02 }}
       >
-        <video
-          className="w-full h-full object-cover"
-          src="/teaser_1.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          poster="/teaser_1_poster.jpg"
-        />
+        <div className="w-full h-full">
+          <video
+            className="w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="/images/teaser_1_poster.jpg"
+            onError={(e) => {
+              console.error('Error loading video:', e);
+            }}
+          >
+            <source src="/videos/teaser_1.mp4" type="video/mp4" />
+            <source src="/videos/teaser_1.webm" type="video/webm" />
+            <p className="text-center p-4">
+              Your browser doesn't support HTML5 video.
+              <a href="/videos/teaser_1.mp4" className="text-blue-400 hover:text-blue-300 ml-2">
+                Download the video instead
+              </a>
+            </p>
+          </video>
+        </div>
         <Button
           variant="secondary"
           size="icon"
@@ -467,37 +484,37 @@ export function BentoGrid() {
       </motion.div>
 
       {/* Cards 13-15: Mission/Vision/Values */}
-      <motion.div 
+      <motion.div
         className="bento-card card-13 cursor-pointer flex items-center justify-center relative"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("mission")}
       >
-        <img 
-          src="/footbalPlayer.png" 
+        <img
+          src="/footbalPlayer.png"
           alt="Football Player"
           className="absolute w-auto h-full object-cover opacity-50"
         />
         <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Mission</h3>
       </motion.div>
-      <motion.div 
+      <motion.div
         className="bento-card card-14 cursor-pointer flex items-center justify-center relative"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("vision")}
       >
-        <img 
-          src="/softballPlayer.png" 
+        <img
+          src="/softballPlayer.png"
           alt="Softball Player"
           className="absolute w-auto h-full object-cover opacity-60"
         />
         <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Vision</h3>
       </motion.div>
-      <motion.div 
+      <motion.div
         className="bento-card card-15 cursor-pointer flex items-center justify-center relative"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("values")}
       >
-        <img 
-          src="/basketballPlayer.png" 
+        <img
+          src="/basketballPlayer.png"
           alt="Basketball Player"
           className="absolute w-auto h-full object-cover opacity-40"
         />
