@@ -48,37 +48,45 @@
       grid-template-columns: 1fr;
       grid-template-rows: auto;
       grid-auto-flow: row;
+      gap: 20px;
+      padding: 20px;
 
       .bento-card {
         grid-column: 1 / -1 !important;
         height: auto;
         min-height: 200px;
+        margin-bottom: 20px;
+        order: var(--card-order);
       }
 
-      /* Ensure specific cards maintain proper aspect ratios */
-      .card-1 {
-        height: 80px;
-      }
+      /* Set order for each card */
+      .card-1 { --card-order: 1; height: 80px; }
+      .card-2 { --card-order: 2; }
+      .card-3 { --card-order: 3; height: 300px; }
+      .card-4 { --card-order: 4; }
+      .card-5 { --card-order: 5; height: 400px; }
+      .card-6 { --card-order: 6; height: 300px; }
+      .card-7 { --card-order: 7; }
+      .card-8 { --card-order: 8; }
+      .card-9 { --card-order: 9; }
+      .card-10 { --card-order: 10; }
+      .card-11 { --card-order: 11; }
+      .card-12 { --card-order: 12; height: 400px; }
+      .card-13 { --card-order: 13; height: 150px; }
+      .card-14 { --card-order: 14; height: 150px; }
+      .card-15 { --card-order: 15; height: 150px; }
 
-      .card-5 {
-        height: 400px;
-      }
-
-      .card-6 {
-        height: 300px;
-      }
-
-      /* Stack mission/vision/values cards */
+      /* Fix mission/vision/values cards rotation */
       .card-13, .card-14, .card-15 {
-        height: 150px;
         h3 {
           transform: none !important;
+          font-size: 2.5rem !important;
         }
       }
 
-      /* Ensure chat interface remains accessible */
-      .card-12 {
-        height: 400px;
+      /* Ensure proper padding and spacing */
+      .bento-card {
+        padding: 1rem;
       }
     }
   }
