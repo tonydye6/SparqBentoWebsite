@@ -243,22 +243,34 @@ export function BentoGrid() {
         );
       case "values":
         return (
-          <div className="p-6 space-y-4">
+          <div className="p-6 space-y-6">
             <h2 className="text-2xl font-bold">Our Values</h2>
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-xl font-semibold">Innovation</h3>
-                <p>Constantly pushing boundaries and embracing new technologies</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold">Community</h3>
-                <p>Building strong connections between players, athletes, and fans</p>
-              </div>
-              <div>
-                <h3 className="text-xl font-semibold">Excellence</h3>
-                <p>Striving for the highest quality in everything we do</p>
-              </div>
-            </div>
+            <ul className="list-none space-y-8">
+              <li>
+                <h3 className="text-xl font-semibold mb-2">Unleash Creativity</h3>
+                <p className="text-lg leading-relaxed">
+                  We empower each employee to focus on the most exciting and creative aspects of their job, leveraging AI to eliminate tedious tasks and unlock human potential.
+                </p>
+              </li>
+              <li>
+                <h3 className="text-xl font-semibold mb-2">Enrich Lives</h3>
+                <p className="text-lg leading-relaxed">
+                  We partner with athletes to help them build their brand, achieve financial enrichment, and secure a brighter future. We're committed to creating a positive impact on their lives and the lives of our employees, gamers, and the broader community.
+                </p>
+              </li>
+              <li>
+                <h3 className="text-xl font-semibold mb-2">Fun Above All</h3>
+                <p className="text-lg leading-relaxed">
+                  We're dedicated to crafting games that are ridiculously fun, merging the worlds of sports fans and sports gamers to create a vibrant, interactive, and inclusive community. We listen to feedback, iterate, and innovate to deliver the best gaming experiences possible.
+                </p>
+              </li>
+              <li>
+                <h3 className="text-xl font-semibold mb-2">People-Centric</h3>
+                <p className="text-lg leading-relaxed">
+                  We prioritize the well-being, happiness, and growth of our employees, athletes, and gamers. We strive to create a workplace that defies industry labor challenges, where people can thrive, grow, and love what they do.
+                </p>
+              </li>
+            </ul>
           </div>
         );
       default:
