@@ -21,76 +21,84 @@
     @apply border-border;
   }
 
-  html, body {
+  body {
+    @apply font-sans antialiased min-h-screen;
     font-family: 'Inter', sans-serif;
-    color: var(--textSecondary, #E6E6E6);
-    @apply font-sans antialiased text-white min-h-screen;
+    font-weight: 400;
+    font-size: 1rem;
+    color: #E6E6E6;
     background: var(--carbon);
   }
 
+  /* Typography System */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Chakra Petch', sans-serif;
-    color: var(--textPrimary, #FFFFFF);
+    font-weight: 600;
+    color: #FFFFFF;
     text-shadow: 0 0 10px rgba(235, 0, 40, 0.3);
-    @apply font-bold tracking-tight mb-3;
+    margin-bottom: 0.75em;
   }
 
-  .heading-lg {
-    @apply text-4xl font-semibold;
+  /* Header Sizes */
+  h1, .h1 {
+    font-size: 2.5rem; /* 40px */
+    line-height: 1.2;
   }
 
-  .heading-md {
-    @apply text-2xl font-semibold;
+  h2, .h2 {
+    font-size: 1.5rem; /* 24px */
+    line-height: 1.3;
   }
 
-  .heading-sm {
-    @apply text-xl font-normal;
+  h3, .h3 {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.4;
   }
 
+  /* Body Text */
   p, span, li {
     font-family: 'Inter', sans-serif;
-    @apply text-base font-normal leading-relaxed;
+    font-weight: 400;
+    font-size: 1rem; /* 16px */
+    line-height: 1.6;
+    color: #E6E6E6;
   }
 
+  /* Special Elements */
   .cta-text {
     color: var(--outlaw-red);
-    @apply font-semibold;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--carbon), var(--steel));
+    transition: box-shadow 0.3s ease;
+  }
+
+  .cta-text:hover {
+    box-shadow: 0 0 15px rgba(235, 0, 40, 0.5);
   }
 
   .card-label {
     font-family: 'Chakra Petch', sans-serif;
-    @apply text-sm uppercase tracking-wider;
+    font-size: 0.875rem; /* 14px */
+    color: var(--cyber-teal);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 }
 
 @layer components {
-  /* Card 6 specific overrides */
-  .card-6 {
-    transform-style: flat !important;
-    perspective: none !important;
-    transform: none !important;
-    transition: none !important;
-    position: static !important;
-    z-index: auto !important;
-    overflow: visible !important;
-  }
-
-  .card-6 video {
-    position: static !important;
-    z-index: 1 !important;
-  }
-
   .bento-grid {
     @apply grid grid-cols-12 grid-rows-10 gap-6 p-4 min-h-screen;
     background: var(--carbon);
   }
 
   @media only screen and (max-width: 600px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
-    grid-auto-flow: row;
-    gap: 20px;
-    padding: 20px;
+    .bento-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      grid-auto-flow: row;
+      gap: 20px;
+      padding: 20px;
+    }
 
     .bento-card {
       grid-column: 1 / -1 !important;
@@ -163,11 +171,6 @@
     .min-h-screen {
       padding: 16px;
     }
-
-    .max-w-[1600px] {
-      padding: 0;
-      margin: 0;
-    }
   }
 
   .bento-card {
@@ -200,158 +203,31 @@
       opacity: 1;
     }
 
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-      opacity: 0.1;
-      mix-blend-mode: overlay;
-    }
-
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(235, 0, 40, 0.15);
     }
-
-    @media only screen and (max-width: 600px) {
-      border: none;
-      box-shadow: none;
-      position: static;
-      height: auto !important;
-      min-height: fit-content;
-      margin-bottom: 20px;
-      transform: none !important;
-    }
   }
 
-  /* Category-specific styling */
-  .card-primary {
-    border-color: var(--outlaw-red);
-  }
-
-  .card-interactive {
-    border-color: var(--cyber-teal);
-  }
-
-  .card-info {
-    background: linear-gradient(145deg, var(--carbon), var(--steel));
-  }
-
-  .card-cta {
-    border-color: var(--victory-gold);
-  }
-
-  /* Primary Cards */
-  .card-1 {
-    @apply col-start-4 col-span-9 row-span-1;
-    background: var(--outlaw-red) !important;
-  }
-
-  .card-2 {
-    @apply col-start-1 col-span-3 row-span-2;
-    background: var(--grit-teal) !important;
-  }
-
-  .card-3 {
-    @apply col-start-1 col-span-3 row-start-3 row-span-5;
-    background: var(--outlaw-red) !important;
-  }
-
-  .card-4 {
-    @apply col-start-9 col-span-4 row-start-10;
-    background: var(--grit-teal) !important;
-  }
-
-  .card-5 {
-    @apply col-start-9 col-span-4 row-start-5 row-span-5;
-    background: var(--outlaw-red) !important;
-  }
-
-  .card-6 {
-    @apply col-start-4 col-span-5 row-start-2 row-span-2;
-    background: var(--grit-teal) !important;
-  }
-
-  .card-8 {
-    @apply col-start-4 col-span-3 row-start-5 row-span-4;
-    background: var(--outlaw-red) !important;
-  }
-
-  .card-10 {
-    @apply col-start-4 col-span-3 row-start-4;
-    background: var(--grit-teal) !important;
-  }
-
-  /* Secondary Cards */
-  .card-7 {
-    @apply col-start-4 col-span-5 row-start-9 row-span-2;
-    background: var(--carbon) !important;
-  }
-
-  .card-9 {
-    @apply col-start-7 col-span-2 row-start-6 row-span-3;
-    background: var(--victory-gold) !important;
-  }
-
-  .card-11 {
-    @apply col-start-7 col-span-2 row-start-4 row-span-2;
-    background: var(--carbon) !important;
-  }
-
-  /* Accent Cards */
-  .card-12 {
-    @apply col-start-9 col-span-4 row-start-2 row-span-3;
-    background: var(--carbon) !important;
-  }
-
-  .card-13 {
-    @apply col-start-1 col-span-1 row-start-8 row-span-3;
-    background: var(--rebel-pink) !important;
-  }
-
-  .card-14 {
-    @apply col-start-2 col-span-1 row-start-8 row-span-3;
-    background: var(--victory-gold) !important;
-  }
-
-  .card-15 {
-    @apply col-start-3 col-span-1 row-start-8 row-span-3;
-    background: var(--cyber-teal) !important;
-  }
-
-  /* Typography styles */
-  .bento-card h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-
-  .bento-card h2 {
-    @apply text-2xl md:text-3xl lg:text-4xl;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-
-  .bento-card h3 {
-    @apply text-xl md:text-2xl;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-
-  .bento-card p {
-    @apply text-base md:text-lg leading-relaxed;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .bento-card .title-text {
-    @apply font-bold tracking-tight;
-    font-family: 'Space Grotesk', sans-serif;
-  }
-
-  .card-13 h3, .card-14 h3, .card-15 h3 {
-    @apply text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)];
-  }
+  /* Card specific styles */
+  .card-1 { @apply col-start-4 col-span-9 row-span-1; }
+  .card-2 { @apply col-start-1 col-span-3 row-span-2; }
+  .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-5; }
+  .card-4 { @apply col-start-9 col-span-4 row-start-10; }
+  .card-5 { @apply col-start-9 col-span-4 row-start-5 row-span-5; }
+  .card-6 { @apply col-start-4 col-span-5 row-start-2 row-span-2; }
+  .card-7 { @apply col-start-4 col-span-5 row-start-9 row-span-2; }
+  .card-8 { @apply col-start-4 col-span-3 row-start-5 row-span-4; }
+  .card-9 { @apply col-start-7 col-span-2 row-start-6 row-span-3; }
+  .card-10 { @apply col-start-4 col-span-3 row-start-4; }
+  .card-11 { @apply col-start-7 col-span-2 row-start-4 row-span-2; }
+  .card-12 { @apply col-start-9 col-span-4 row-start-2 row-span-3; }
+  .card-13 { @apply col-start-1 col-span-1 row-start-8 row-span-3; }
+  .card-14 { @apply col-start-2 col-span-1 row-start-8 row-span-3; }
+  .card-15 { @apply col-start-3 col-span-1 row-start-8 row-span-3; }
 
   .social-icon {
-    @apply text-white hover:text-accent-cyan transition-all duration-300 hover:scale-125 transform;
+    @apply text-white hover:text-primary transition-all duration-300 hover:scale-125 transform;
   }
 
   @keyframes fadeIn {
