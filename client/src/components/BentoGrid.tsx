@@ -358,22 +358,10 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("join")}
       >
-        <div className="flex flex-col h-full p-4">
-          <h2 className="text-4xl font-bold text-center drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] mb-4">Join the Sparq Uprising!</h2>
-          <p className="text-white/80 mb-6">
-            Join the revolution in sports-centric mobile gaming, powered by AAA Sports IP,
-            cutting-edge AI, and blockchain technology.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">700+ University IPs</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm">AI-Powered Gaming</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm">Next-Gen Experience</span>
-            </div>
+        <div className="flex flex-col h-full">
+          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Join the Sparq</h3>
+          <div className="flex-1">
+            <JoinUs />
           </div>
         </div>
       </motion.div>
