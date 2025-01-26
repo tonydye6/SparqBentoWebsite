@@ -282,21 +282,18 @@ export function BentoGrid() {
     <div className="bento-grid">
       {/* Card 2: Join Beta */}
       <motion.div
-        className="bento-card card-2 beta-card flex items-center justify-center"
+        className="bento-card card-2 beta-card flex items-center justify-center relative overflow-hidden"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("beta")}
       >
-        <div className="absolute inset-0">
-          <img
-            src="/images/ftcc.png"
-            alt="Background Pattern"
-            className="w-full h-full object-cover opacity-60"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              console.error('Error loading image:', e);
-            }}
-          />
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-carbon/80 to-carbon/40" />
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: 'url("/ftcc.png")',
+            opacity: 0.6,
+          }}
+        />
         <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2 relative z-10">Join Beta Now!</h2>
       </motion.div>
 
@@ -382,50 +379,33 @@ export function BentoGrid() {
         className="bento-card card-6 relative overflow-hidden"
         whileHover={{ scale: 1.02 }}
       >
-        <div className="w-full h-full">
+        <div className="w-full h-full relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-carbon/80 z-10" />
           <video
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover absolute inset-0"
             autoPlay
             loop
             muted
             playsInline
-            poster="/images/teaser_1_poster.jpg"
-            onError={(e) => {
-              const video = e.currentTarget;
-              video.style.display = 'none';
-              const fallback = document.createElement('div');
-              fallback.className = 'w-full h-full flex items-center justify-center bg-gray-900';
-              fallback.innerHTML = `
-                <div class="text-center p-4">
-                  <p class="text-white mb-2">Video playback is not available</p>
-                  <a href="/videos/teaser_1.mp4" class="text-blue-400 hover:text-blue-300">
-                    Download video instead
-                  </a>
-                </div>
-              `;
-              video.parentNode?.appendChild(fallback);
-              console.error('Error loading video:', e);
-            }}
+            poster="/teaser_1_poster.jpg"
           >
             <source src="/videos/teaser_1.mp4" type="video/mp4" />
             <source src="/videos/teaser_1.webm" type="video/webm" />
-            <div className="w-full h-full flex items-center justify-center bg-gray-900">
-              <div className="text-center p-4">
-                <p className="text-white mb-2">Your browser doesn't support HTML5 video</p>
-                <a href="/videos/teaser_1.mp4" className="text-blue-400 hover:text-blue-300">
-                  Download video instead
-                </a>
-              </div>
-            </div>
           </video>
+          <div className="relative z-20 w-full h-full flex items-center justify-center">
+            <div className="text-center p-4">
+              <h3 className="text-2xl font-bold mb-2">Sparq Gaming Revolution</h3>
+              <p className="text-sm text-gray-200">Experience the future of college sports gaming</p>
+            </div>
+          </div>
         </div>
         <Button
           variant="secondary"
           size="icon"
-          className="absolute top-4 right-4 backdrop-blur-sm"
+          className="absolute top-4 right-4 backdrop-blur-sm z-30"
           onClick={(e) => {
             e.stopPropagation();
-            const video = e.currentTarget.parentElement?.querySelector('video');
+            const video = e.currentTarget.closest('.card-6')?.querySelector('video');
             if (video) {
               video.muted = !video.muted;
             }
