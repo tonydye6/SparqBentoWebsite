@@ -395,17 +395,14 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
-      {/* Card 11: Our Story */}
+      {/* Card 11: The Sparq Story */}
       <motion.div
         className="bento-card card-11"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("about")}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Our Story</h3>
-          <div className="flex-1">
-            <AboutUs variant="secondary" />
-          </div>
+        <div className="flex items-center justify-center h-full">
+          <h3 className="text-4xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">The Sparq Story</h3>
         </div>
       </motion.div>
 
