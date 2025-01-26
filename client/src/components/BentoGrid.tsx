@@ -19,6 +19,7 @@ import { Trophy, Star, Users } from "lucide-react";
 import { useBadgeStore, BADGES, type Badge } from "@/lib/badges";
 import { BadgeDisplay } from "./badges/BadgeDisplay";
 import { BadgeNotification } from "./badges/BadgeNotification";
+import { TeamCard } from "./TeamCard";
 
 type ExpandedCard =
   | "ai-chat"
@@ -379,40 +380,7 @@ export function BentoGrid() {
         className="bento-card card-6 relative overflow-hidden"
         whileHover={{ scale: 1.02 }}
       >
-        <div className="w-full h-full relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-carbon/80 z-10" />
-          <video
-            className="w-full h-full object-cover absolute inset-0"
-            autoPlay
-            loop
-            muted
-            playsInline
-            poster="/teaser_1_poster.jpg"
-          >
-            <source src="/videos/teaser_1.mp4" type="video/mp4" />
-            <source src="/videos/teaser_1.webm" type="video/webm" />
-          </video>
-          <div className="relative z-20 w-full h-full flex items-center justify-center">
-            <div className="text-center p-4">
-              <h3 className="text-2xl font-bold mb-2">Sparq Gaming Revolution</h3>
-              <p className="text-sm text-gray-200">Experience the future of college sports gaming</p>
-            </div>
-          </div>
-        </div>
-        <Button
-          variant="secondary"
-          size="icon"
-          className="absolute top-4 right-4 backdrop-blur-sm z-30"
-          onClick={(e) => {
-            e.stopPropagation();
-            const video = e.currentTarget.closest('.card-6')?.querySelector('video');
-            if (video) {
-              video.muted = !video.muted;
-            }
-          }}
-        >
-          <Volume2 className="h-4 w-4" />
-        </Button>
+        <TeamCard />
       </motion.div>
 
       {/* Card 7: Join Us */}
