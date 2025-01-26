@@ -390,7 +390,9 @@ export function BentoGrid() {
         className="bento-card card-10 news-card"
         whileHover={{ scale: 1.02 }}
       >
-        <NewsCarousel />
+        <div className="h-full">
+          <NewsCarousel />
+        </div>
       </motion.div>
 
       {/* Card 11: Our Story */}
