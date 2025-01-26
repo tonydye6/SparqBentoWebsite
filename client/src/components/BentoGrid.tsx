@@ -14,6 +14,7 @@ import { TeamCarousel } from "./TeamCarousel";
 import { ThreeViewer } from "./ThreeViewer";
 import { BetaForm } from "./BetaForm";
 import { BentoCardModal } from "./BentoCardModal";
+import { NewsCarousel } from "./NewsCarousel";
 import { Trophy, Star, Users } from "lucide-react";
 import { useBadgeStore, BADGES, type Badge } from "@/lib/badges";
 import { BadgeDisplay } from "./badges/BadgeDisplay";
