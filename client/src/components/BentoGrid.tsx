@@ -214,14 +214,19 @@ export function BentoGrid() {
         );
       case "vision":
         return (
-          <div className="p-6 space-y-4">
+          <div className="p-6 space-y-6">
             <h2 className="text-2xl font-bold">Our Vision</h2>
-            <p className="text-lg">Create the future of interactive sports entertainment where every player can experience the thrill and excitement of their favorite sports in unprecedented ways.</p>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>Lead the evolution of sports gaming</li>
-              <li>Bridge the gap between virtual and real sports</li>
-              <li>Empower athletes and fans through technology</li>
-            </ul>
+            <div className="space-y-4">
+              <p className="text-lg leading-relaxed">
+                Sparq is rapidly expanding, using our proprietary game publishing platform to launch up to a dozen sports-based mobile games over the next five years which combine our commitment to AI, our gamer fans, college athletes, and the top IP holders we work with - like hundreds of the top universities along with their logos, mascots, and trademarks.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Sparq takes immense pride in showcasing college athletes from hundreds of top U.S. universities. They recognize the significance of this intellectual property, believing it to be among the most powerful in existence. Sparq's commitment is to provide a platform where this cherished heritage can be celebrated and displayed with pride for years to come.
+              </p>
+              <p className="text-lg leading-relaxed">
+                Sparq will be introducing our mobile games beginning in 2025. If you're interested in keeping tabs on Sparq and being a part of the fun as they reach out to the college sports gaming community, then please sign up for the beta. You'll see firsthand what they're building and they'll honor your feedback to make the games as fun as possible.
+              </p>
+            </div>
           </div>
         );
       case "values":
