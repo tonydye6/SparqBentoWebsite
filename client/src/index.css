@@ -93,7 +93,7 @@
     opacity: 1;
   }
 
-  /* Primary Colors (60%) */
+  /* Card Grid Layout */
   .card-1 {
     @apply col-start-4 col-span-9 row-span-1;
     background: #eb0028 !important;
