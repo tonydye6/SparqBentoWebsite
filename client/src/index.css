@@ -5,20 +5,16 @@
 @tailwind utilities;
 
 @layer base {
- :root {
-    /* Primary Colors */
-    --primary-red: 351 100% 46%;    /* #eb0028 */
-    --primary-teal: 179 100% 32%;   /* #00a19c */
-
-    /* Secondary Colors */
-    --secondary-navy: 235 19% 21%;  /* #2b2d42 */
-    --secondary-blue: 237 89% 60%;  /* #404bf2 */
-    --secondary-dark: 240 11% 13%;  /* #1e1e24 */
-
-    /* Accent Colors */
-    --accent-gold: 51 100% 50%;     /* #ffd700 */
-    --accent-cyan: 180 100% 47%;    /* #00f2ea */
-    --accent-pink: 345 100% 61%;    /* #ff3864 */
+  :root {
+    /* Brand Colors */
+    --outlaw-red: #eb0028;
+    --grit-teal: #00a19c;
+    --carbon: #2b2d42;
+    --graphite: #404bf2;
+    --steel: #1e1e24;
+    --victory-gold: #ffd700;
+    --cyber-teal: #00f2ea;
+    --rebel-pink: #ff3864;
   }
 
   * {
@@ -28,10 +24,7 @@
   body {
     @apply font-sans antialiased text-white min-h-screen;
     font-family: 'Inter', sans-serif;
-    background: radial-gradient(circle at top left, 
-      hsl(var(--secondary-navy) / 0.3),
-      hsl(var(--primary-red) / 0.2)
-    );
+    background: var(--carbon);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -42,7 +35,8 @@
 
 @layer components {
   .bento-grid {
-    @apply grid grid-cols-12 grid-rows-10 gap-6 p-4 min-h-screen bg-black;
+    @apply grid grid-cols-12 grid-rows-10 gap-6 p-4 min-h-screen;
+    background: var(--carbon);
 
     @media only screen and (max-width: 600px) {
       grid-template-columns: 1fr;
@@ -85,21 +79,9 @@
           font-size: 2.5rem !important;
         }
       }
-
-      /* Reset positioning for all cards */
-      .bento-card {
-        position: static;
-        top: auto;
-        left: auto;
-        right: auto;
-        bottom: auto;
-        border: none;
-        margin-bottom: 20px;
-        transform: none !important;
-      }
     }
 
-    /* New mobile-specific styles */
+    /* Mobile-specific styles */
     @media screen and (max-width: 768px) {
       .flex {
         display: block;
@@ -131,7 +113,6 @@
         margin-bottom: 20px;
       }
 
-      /* Ensure proper padding and margins for container */
       .min-h-screen {
         padding: 16px;
       }
@@ -140,39 +121,52 @@
         padding: 0;
         margin: 0;
       }
-
-      /* Reset all transforms and transitions */
-      .motion.div {
-        transform: none !important;
-        transition: none !important;
-      }
     }
-    /* New mobile-specific styles */
-
-    /* Ensure proper padding and margins for container */
-
-    /* Reset all transforms and transitions */
-
   }
 
   .bento-card {
     @apply rounded-2xl overflow-hidden relative;
-    background: rgba(30, 30, 36, 0.75);
-    backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%);
-    box-shadow: 
-      inset 3px 3px 6px rgba(255, 255, 255, 0.15),
-      inset -3px -3px 6px rgba(0, 0, 0, 0.4),
-      8px 8px 16px rgba(0, 0, 0, 0.25),
-      -8px -8px 16px rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    transform: translateZ(0);
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0;
-    animation: fadeIn 0.6s ease forwards;
-    will-change: transform, opacity, background-color;
+    background: var(--carbon);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     color: white;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+      margin: -2px;
+      border-radius: inherit;
+      background: linear-gradient(45deg, var(--outlaw-red), var(--cyber-teal));
+      opacity: 0.3;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      opacity: 0.1;
+      mix-blend-mode: overlay;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(235, 0, 40, 0.15);
+    }
 
     @media only screen and (max-width: 600px) {
       border: none;
@@ -185,121 +179,99 @@
     }
   }
 
-  /* Primary Colors (60%) */
+  /* Category-specific styling */
+  .card-primary {
+    border-color: var(--outlaw-red);
+  }
+
+  .card-interactive {
+    border-color: var(--cyber-teal);
+  }
+
+  .card-info {
+    background: linear-gradient(145deg, var(--carbon), var(--steel));
+  }
+
+  .card-cta {
+    border-color: var(--victory-gold);
+  }
+
+  /* Primary Cards */
   .card-1 {
     @apply col-start-4 col-span-9 row-span-1;
-    background: #eb0028 !important;
+    background: var(--outlaw-red) !important;
   }
 
   .card-2 {
     @apply col-start-1 col-span-3 row-span-2;
-    background: #00a19c !important;
-    position: relative;
-  }
-
-  .card-2::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: url('/ftcc.png');
-    background-size: cover;
-    background-position: center;
-    opacity: 0.6;
-    pointer-events: none;
+    background: var(--grit-teal) !important;
   }
 
   .card-3 {
     @apply col-start-1 col-span-3 row-start-3 row-span-5;
-    background: #eb0028 !important;
+    background: var(--outlaw-red) !important;
   }
 
   .card-4 {
     @apply col-start-9 col-span-4 row-start-10;
-    background: #00a19c !important;
+    background: var(--grit-teal) !important;
   }
 
   .card-5 {
     @apply col-start-9 col-span-4 row-start-5 row-span-5;
-    background: #eb0028 !important;
+    background: var(--outlaw-red) !important;
   }
 
   .card-6 {
     @apply col-start-4 col-span-5 row-start-2 row-span-2;
-    background: #00a19c !important;
+    background: var(--grit-teal) !important;
   }
 
   .card-8 {
     @apply col-start-4 col-span-3 row-start-5 row-span-4;
-    background: #eb0028 !important;
+    background: var(--outlaw-red) !important;
   }
 
   .card-10 {
     @apply col-start-4 col-span-3 row-start-4;
-    background: #00a19c !important;
+    background: var(--grit-teal) !important;
   }
 
-  /* Secondary Colors (30%) */
+  /* Secondary Cards */
   .card-7 {
     @apply col-start-4 col-span-5 row-start-9 row-span-2;
-    background: #2b2d42 !important;
-    position: relative;
-  }
-
-  .card-7::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: linear-gradient(
-      45deg,
-      rgba(43, 45, 66, 0.9),
-      rgba(30, 30, 36, 0.9)
-    );
-    pointer-events: none;
-  }
-
-  .card-7:hover::before {
-    background-image: linear-gradient(
-      45deg,
-      rgba(43, 45, 66, 0.8),
-      rgba(30, 30, 36, 0.8)
-    );
+    background: var(--carbon) !important;
   }
 
   .card-9 {
     @apply col-start-7 col-span-2 row-start-6 row-span-3;
-    background: #ffd700 !important;
+    background: var(--victory-gold) !important;
   }
 
   .card-11 {
     @apply col-start-7 col-span-2 row-start-4 row-span-2;
-    background: #2b2d42 !important;
+    background: var(--carbon) !important;
   }
 
-  /* Accent Colors (10%) */
+  /* Accent Cards */
   .card-12 {
     @apply col-start-9 col-span-4 row-start-2 row-span-3;
-    background: #2b2d42 !important;
+    background: var(--carbon) !important;
   }
 
   .card-13 {
     @apply col-start-1 col-span-1 row-start-8 row-span-3;
-    background: #ff3864 !important;
+    background: var(--rebel-pink) !important;
   }
 
   .card-14 {
     @apply col-start-2 col-span-1 row-start-8 row-span-3;
-    background: #ffd700 !important;
+    background: var(--victory-gold) !important;
   }
 
   .card-15 {
     @apply col-start-3 col-span-1 row-start-8 row-span-3;
-    background: #00f2ea !important;
+    background: var(--cyber-teal) !important;
   }
 
   /* Typography styles */
