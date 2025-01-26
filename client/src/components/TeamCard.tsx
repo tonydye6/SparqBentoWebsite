@@ -8,7 +8,7 @@ export function TeamCard() {
     setIsHovered(true);
     if (videoRef.current) {
       videoRef.current.play().catch(error => {
-        console.error('Error playing video:', error);
+        console.error('Video play error:', error);
       });
     }
   };
@@ -23,29 +23,28 @@ export function TeamCard() {
 
   return (
     <div 
-      className="h-full relative overflow-hidden"
+      className="w-full h-full"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {isHovered ? (
         <video
           ref={videoRef}
+          autoPlay
           muted
           playsInline
-          preload="auto"
           className="w-full h-full object-cover"
+          onLoadStart={() => console.log('Video load started')}
+          onError={(e) => console.error('Video error:', e)}
         >
-          <source src="/videos/teaser_1.mp4" type="video/mp4" />
-          <source src="/videos/teaser_1.webm" type="video/webm" />
+          <source src="/teaser_1.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       ) : (
-        <div 
-          className="w-full h-full bg-gradient-to-b from-carbon to-carbon/80 flex items-center justify-center"
-        >
-          <div className="text-center p-4">
-            <h3 className="text-2xl font-bold mb-2">Sparq Gaming Revolution</h3>
-            <p className="text-sm text-gray-200">Experience the future of college sports gaming</p>
+        <div className="w-full h-full bg-gradient-to-b from-carbon to-carbon/80 flex items-center justify-center">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-2">Hover to Play Demo</h3>
+            <p className="text-sm text-gray-200">Experience Sparq Gaming</p>
           </div>
         </div>
       )}
