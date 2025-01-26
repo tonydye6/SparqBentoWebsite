@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+ :root {
     /* Primary Colors */
     --primary-red: 351 100% 46%;    /* #eb0028 */
     --primary-teal: 179 100% 32%;   /* #00a19c */
@@ -102,28 +102,36 @@
     /* New mobile-specific styles */
     @media screen and (max-width: 768px) {
       .flex {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 20px;
+        display: block;
+        padding: 16px;
       }
 
       .flex-1 {
-        width: 100%;
+        margin-bottom: 20px;
       }
 
       .bento-card {
-        position: relative;
-        margin-bottom: 20px !important;
-        transform: none !important;
+        position: static;
+        margin-bottom: 20px;
         height: auto !important;
         min-height: 200px;
+        transform: none !important;
+        clear: both;
+        z-index: 1;
+      }
+
+      .motion-div {
+        position: static;
+        transform: none !important;
       }
 
       .perspective-1000 {
         transform-style: flat;
         perspective: none;
+        margin-bottom: 20px;
       }
 
+      /* Ensure proper padding and margins for container */
       .min-h-screen {
         padding: 16px;
       }
@@ -133,11 +141,18 @@
         margin: 0;
       }
 
+      /* Reset all transforms and transitions */
       .motion.div {
         transform: none !important;
         transition: none !important;
       }
     }
+    /* New mobile-specific styles */
+
+    /* Ensure proper padding and margins for container */
+
+    /* Reset all transforms and transitions */
+
   }
 
   .bento-card {
