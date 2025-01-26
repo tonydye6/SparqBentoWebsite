@@ -241,3 +241,20 @@ export function registerRoutes(app: Express): Server {
   const httpServer = createServer(app);
   return httpServer;
 }
+
+
+  // Test Perplexity API endpoint
+  app.get("/api/test-perplexity", async (req, res) => {
+    try {
+      const response = await client.chat.completions.create({
+        model: "mistral-7b-instruct",
+        messages: [{ role: "user", content: "Hello!" }],
+        max_tokens: 100
+      });
+      res.json({ success: true, response: response.choices[0].message });
+    } catch (error) {
+      console.error("Perplexity API test error:", error);
+      res.status(500).json({ success: false, error: "Failed to connect to Perplexity API" });
+    }
+  });
+
