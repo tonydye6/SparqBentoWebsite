@@ -22,20 +22,17 @@ export function AiChat() {
 
   const chatMutation = useMutation({
     mutationFn: async (message: string) => {
-      // Format messages for API request
-      const formattedMessages = messages
-        .slice(-6) // Keep last 6 messages for context
-        .filter((msg, index, arr) => {
-          // Ensure alternating roles
-          if (index === 0) return true;
-          return msg.role !== arr[index - 1].role;
-        });
+      // Send all messages for context, ensuring they start with assistant
+      const messagesToSend = messages.length > 0 ? messages : [{
+        role: 'assistant',
+        content: 'Hi! Ask me anything about Sparq Games, sports, or gaming!'
+      }];
 
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: [...formattedMessages, { role: 'user', content: message }]
+          messages: [...messagesToSend, { role: 'user', content: message }]
         })
       });
 
@@ -58,9 +55,9 @@ export function AiChat() {
         });
 
         // Retry the last message
-        const lastMessage = messages[messages.length - 1];
-        if (lastMessage.role === 'user') {
-          chatMutation.mutate(lastMessage.content);
+        const lastMessage = input.trim();
+        if (lastMessage) {
+          chatMutation.mutate(lastMessage);
         }
       } else {
         toast({
@@ -69,8 +66,6 @@ export function AiChat() {
           description: error.message,
           duration: 5000
         });
-        // Remove the failed message from the chat
-        setMessages(prev => prev.slice(0, -1));
         setRetryAttempt(0);
       }
     },
@@ -93,19 +88,16 @@ export function AiChat() {
     const trimmedInput = input.trim();
     if (!trimmedInput || chatMutation.isPending) return;
 
-    // Only add user message if the last message was from assistant
-    if (messages.length === 0 || messages[messages.length - 1].role === 'assistant') {
-      setMessages(prev => [...prev, { role: 'user', content: trimmedInput }]);
-      chatMutation.mutate(trimmedInput);
-      setInput('');
-    }
+    // Add the user message to the conversation
+    setMessages(prev => [...prev, { role: 'user', content: trimmedInput }]);
+    chatMutation.mutate(trimmedInput);
+    setInput('');
   };
 
   const handleRetry = () => {
-    const lastMessage = messages[messages.length - 1];
-    if (lastMessage.role === 'user') {
+    if (input.trim()) {
       setRetryAttempt(0);
-      chatMutation.mutate(lastMessage.content);
+      chatMutation.mutate(input.trim());
     }
   };
 
@@ -133,27 +125,30 @@ export function AiChat() {
                 {msg.role === 'user' ? 'You' : 'Sparq Assistant'}
               </div>
               <div className="mt-1">{msg.content}</div>
-              {chatMutation.isPending && i === messages.length - 1 && (
-                <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
-                  <div className="flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-2 animate-pulse" />
-                    Thinking...
-                  </div>
-                  {retryAttempt > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="flex items-center gap-1 text-xs"
-                      onClick={handleRetry}
-                    >
-                      <RefreshCcw className="w-3 h-3" />
-                      Retry ({MAX_RETRIES - retryAttempt + 1})
-                    </Button>
-                  )}
-                </div>
-              )}
             </div>
           ))}
+          {chatMutation.isPending && (
+            <div className="p-3 rounded-lg bg-muted mr-4">
+              <div className="text-sm text-foreground">Sparq Assistant</div>
+              <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
+                <div className="flex items-center">
+                  <AlertCircle className="w-4 h-4 mr-2 animate-pulse" />
+                  Thinking...
+                </div>
+                {retryAttempt > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex items-center gap-1 text-xs"
+                    onClick={handleRetry}
+                  >
+                    <RefreshCcw className="w-3 h-3" />
+                    Retry ({MAX_RETRIES - retryAttempt + 1})
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </ScrollArea>
 
