@@ -291,6 +291,25 @@ export function registerRoutes(app: Express): Server {
         throw new Error("Invalid request format: messages must be an array");
       }
 
+      // Format messages to ensure alternating roles
+      const formattedMessages = [
+        {
+          role: "system",
+          content: "You are Sparq Assistant, helping users learn about Sparq Games."
+        }
+      ];
+
+      // Add user messages and simulate assistant responses if needed
+      req.body.messages.forEach((msg: any, i: number) => {
+        if (i > 0 && msg.role === formattedMessages[formattedMessages.length - 1].role) {
+          formattedMessages.push({
+            role: msg.role === 'user' ? 'assistant' : 'user',
+            content: 'Continue'
+          });
+        }
+        formattedMessages.push(msg);
+      });
+
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
         headers: {
@@ -299,13 +318,7 @@ export function registerRoutes(app: Express): Server {
         },
         body: JSON.stringify({
           model: "llama-3.1-sonar-small-128k-online",
-          messages: [
-            {
-              role: "system",
-              content: "You are Sparq Assistant, helping users learn about Sparq Games."
-            },
-            ...req.body.messages
-          ],
+          messages: formattedMessages,
           max_tokens: 1000,
           temperature: 0.7,
           stream: false

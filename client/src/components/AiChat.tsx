@@ -20,6 +20,7 @@ export function AiChat() {
 
   const sendMessage = async (message: string) => {
     const newMessages = [...messages, { role: 'user', content: message }];
+    setMessages(newMessages); // Update messages immediately for better UX
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
