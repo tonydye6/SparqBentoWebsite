@@ -95,11 +95,11 @@ async function fetchLatestNews() {
       messages: [
         {
           role: "system",
-          content: "You are a news aggregator for Sparq Games. Provide the latest gaming industry news in a structured format. Each news item should have a title and description."
+          content: "You are a news aggregator for Sparq Games. Generate exactly 3 latest gaming industry news items. For each news item, provide a title, description (2-3 sentences), and category (Gaming/Sports/Technology). Respond with a clean JSON array without code blocks or markdown."
         },
         {
           role: "user",
-          content: "Provide 3 latest news items about gaming industry, sports games, or gaming technology. Format as JSON with title, description, and category fields."
+          content: "Generate 3 latest gaming news items."
         }
       ],
       temperature: 0.3,
@@ -115,14 +115,26 @@ async function fetchLatestNews() {
   }
 
   const data = await response.json();
-  const newsData = JSON.parse(data.choices[0].message.content);
+  let newsData;
+
+  try {
+    // Clean the response before parsing
+    const cleanedContent = data.choices[0].message.content
+      .replace(/```json\s*/, '')
+      .replace(/```\s*$/, '')
+      .trim();
+    newsData = JSON.parse(cleanedContent);
+  } catch (error) {
+    console.error("Failed to parse news data:", error);
+    throw new Error("Invalid news data format");
+  }
 
   // Try to save to database, but don't fail if database is unavailable
   try {
     for (const item of newsData) {
       await db.insert(newsItems).values({
         title: item.title,
-        content: item.description,
+        content: item.description || item.content, // Handle both possible field names
         category: item.category,
         active: true
       });
@@ -214,7 +226,7 @@ export function registerRoutes(app: Express): Server {
   app.use("/api/news", newsLimiter);
 
 
-  // Existing routes with enhanced error handling
+  // News endpoint with enhanced resilience
   app.get("/api/news", newsLimiter, async (req, res) => {
     try {
       let items = [];
@@ -228,20 +240,26 @@ export function registerRoutes(app: Express): Server {
         console.error("Database error fetching news:", error);
         healthStatus.database.status = 'unhealthy';
         // Fall back to cache if database is unavailable
-        items = [];
+        items = newsCache;
       }
 
       if (!items?.length) {
         try {
           const freshNews = await fetchLatestNews();
           items = freshNews;
+          newsCache = freshNews; // Update cache
         } catch (error) {
           console.error("Error fetching fresh news:", error);
           healthStatus.news.status = 'unhealthy';
-          return res.status(503).json({
-            message: "News service temporarily unavailable",
-            retry_after: 300 // 5 minutes
-          });
+          if (newsCache.length) {
+            // Return cached news if available
+            items = newsCache;
+          } else {
+            return res.status(503).json({
+              message: "News service temporarily unavailable",
+              retry_after: 300 // 5 minutes
+            });
+          }
         }
       }
 
@@ -257,7 +275,7 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // Enhanced chat endpoint with health monitoring
+  // Enhanced chat endpoint with better error handling
   app.post("/api/chat", chatLimiter, async (req, res) => {
     try {
       if (!process.env.PERPLEXITY_API_KEY) {
