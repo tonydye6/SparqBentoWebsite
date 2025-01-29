@@ -279,7 +279,7 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // Enhanced chat endpoint with better error handling
+  // Chat endpoint with OpenAI client
   app.post("/api/chat", chatLimiter, async (req, res) => {
     try {
       if (!process.env.PERPLEXITY_API_KEY) {

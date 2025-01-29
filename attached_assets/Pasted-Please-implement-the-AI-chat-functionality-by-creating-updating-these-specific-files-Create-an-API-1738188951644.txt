@@ -1,0 +1,109 @@
+Please implement the AI chat functionality by creating/updating these specific files:
+Create an API route for the chat:
+typescript
+// pages/api/chat.ts
+import { OpenAI } from 'openai';
+import type { NextApiRequest, NextApiResponse } from 'next';
+
+const perplexity_api_key = process.env.PERPLEXITY_API_KEY;
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  try {
+    const client = new OpenAI({
+      apiKey: perplexity_api_key,
+      baseURL: 'https://api.perplexity.ai'
+    });
+
+    const completion = await client.chat.completions.create({
+      model: 'sonar-small-chat',
+      messages: req.body.messages,
+      max_tokens: 1000
+    });
+
+    res.status(200).json(completion.choices[0].message);
+  } catch (error) {
+    console.error('Chat API Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+Update the AiChat component:
+typescript
+// components/AiChat.tsx
+import { useState } from 'react';
+
+export function AiChat({ expanded = false }) {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    setIsLoading(true);
+    const newMessages = [...messages, { role: 'user', content: input }];
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: newMessages })
+      });
+
+      if (!response.ok) throw new Error('Chat request failed');
+
+      const data = await response.json();
+      setMessages([...newMessages, data]);
+      setInput('');
+    } catch (error) {
+      console.error('Chat Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className={`flex flex-col h-full ${expanded ? 'p-4' : ''}`}>
+      <div className="flex-1 overflow-y-auto mb-4">
+        {messages.map((msg, i) => (
+          <div key={i} className={`mb-2 ${msg.role === 'user' ? 'text-right' : ''}`}>
+            <span className="inline-block p-2 rounded bg-gray-800">
+              {msg.content}
+            </span>
+          </div>
+        ))}
+      </div>
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask a question..."
+          className="flex-1 p-2 rounded bg-gray-800 text-white"
+          disabled={isLoading}
+        />
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="px-4 py-2 rounded bg-blue-600 text-white"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+  );
+}
+Add environment variable:
+text
+PERPLEXITY_API_KEY=your_api_key_here
+Please implement these changes to enable the AI chat functionality in Card #12. Make sure to:
+Install required dependencies (openai)
+Verify the environment variable is set
+Test the chat functionality in both development and production

@@ -18,31 +18,31 @@ export function AiChat() {
   const [input, setInput] = useState('');
   const { toast } = useToast();
 
-  const sendMessage = async (message: string) => {
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          messages: [{
-            role: 'user',
-            content: message
-          }]
-        })
-      });
+const sendMessage = async (message: string) => {
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messages: [{
+          role: 'user',
+          content: message
+        }]
+      })
+    });
 
-      if (!response.ok) {
-        throw new Error('Chat service error');
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Chat Error:', error);
-      throw new Error('Failed to send message');
+    if (!response.ok) {
+      throw new Error('Chat service error');
     }
-  };
+
+    return await response.json();
+  } catch (error) {
+    console.error('Chat Error:', error);
+    throw new Error('Failed to send message');
+  }
+};
 
   const chatMutation = useMutation({
     mutationFn: sendMessage,
