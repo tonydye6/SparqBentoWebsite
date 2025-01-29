@@ -8,7 +8,7 @@ import { requireAdmin, adminSessionMiddleware } from "./middleware/auth";
 import bcrypt from "bcryptjs";
 import MemoryStore from "memorystore";
 import rateLimit from 'express-rate-limit';
-import { OpenAI } from 'openai';
+//import { OpenAI } from 'openai'; //Removed as no longer needed
 
 const SessionStore = MemoryStore(session);
 
@@ -279,7 +279,7 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  // Chat endpoint with OpenAI client
+  // Chat endpoint with fetch
   app.post("/api/chat", chatLimiter, async (req, res) => {
     try {
       if (!process.env.PERPLEXITY_API_KEY) {
@@ -288,26 +288,36 @@ export function registerRoutes(app: Express): Server {
 
       console.log("Received chat request:", req.body.messages);
 
-      const client = new OpenAI({
-        apiKey: process.env.PERPLEXITY_API_KEY,
-        baseURL: 'https://api.perplexity.ai'
+      const response = await fetch("https://api.perplexity.ai/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "llama-3.1-sonar-small-128k-online",
+          messages: [
+            {
+              role: "system",
+              content: "You are Sparq Assistant, helping users learn about Sparq Games."
+            },
+            ...req.body.messages
+          ],
+          max_tokens: 1000,
+          temperature: 0.7,
+          stream: false
+        })
       });
 
-      const response = await client.chat.completions.create({
-        model: 'llama-3.1-sonar-small-128k-online',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are Sparq Assistant, helping users learn about Sparq Games.'
-          },
-          ...req.body.messages
-        ],
-        max_tokens: 1000,
-        temperature: 0.7
-      });
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("Perplexity API error:", error);
+        throw new Error(`Chat service error: ${error}`);
+      }
 
-      console.log("Perplexity API response:", response.choices[0].message);
-      res.json(response.choices[0].message);
+      const data = await response.json();
+      console.log("Perplexity API response:", data);
+      res.json(data.choices[0].message);
     } catch (error) {
       console.error('Chat Error:', error);
       res.status(500).json({ 
