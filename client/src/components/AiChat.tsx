@@ -22,11 +22,20 @@ export function AiChat() {
 
   const chatMutation = useMutation({
     mutationFn: async (message: string) => {
+      // Format messages to ensure proper alternation
+      const formattedMessages = messages.slice(-6); // Keep last 6 messages for context
+      if (formattedMessages[0].role === 'user') {
+        formattedMessages.unshift({
+          role: 'assistant',
+          content: 'Hi! Ask me anything about Sparq Games, sports, or gaming!'
+        });
+      }
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: messages.concat({ role: 'user', content: message })
+          messages: [...formattedMessages, { role: 'user', content: message }]
         })
       });
 
@@ -66,13 +75,14 @@ export function AiChat() {
       }
     },
     onSuccess: (data) => {
-      if (!data.choices?.[0]?.message?.content) {
+      const content = data.choices?.[0]?.message?.content;
+      if (!content) {
         throw new Error('Invalid response from chat service');
       }
 
       setMessages(prev => [
         ...prev,
-        { role: 'assistant', content: data.choices[0].message.content.trim() }
+        { role: 'assistant', content: content.trim() }
       ]);
       setRetryAttempt(0);
     }

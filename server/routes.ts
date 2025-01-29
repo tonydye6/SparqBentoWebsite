@@ -283,6 +283,20 @@ export function registerRoutes(app: Express): Server {
         throw new Error("Chat service not configured");
       }
 
+      const messages = req.body.messages || [];
+
+      // Ensure proper message structure and role alternation
+      const formattedMessages = messages.reduce((acc: any[], msg: any, i: number) => {
+        if (i === 0 && msg.role === 'user') {
+          acc.push({
+            role: 'assistant',
+            content: 'Hi! Ask me anything about Sparq Games, sports, or gaming!'
+          });
+        }
+        acc.push(msg);
+        return acc;
+      }, []);
+
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
         headers: {
@@ -301,7 +315,7 @@ export function registerRoutes(app: Express): Server {
               - Focus on Sparq's mission of revolutionizing sports gaming through innovation
               - When unsure, be honest and suggest contacting the Sparq team directly`
             },
-            ...req.body.messages.slice(-4)
+            ...formattedMessages
           ],
           temperature: 0.7,
           max_tokens: 150,
@@ -310,8 +324,10 @@ export function registerRoutes(app: Express): Server {
       });
 
       if (!response.ok) {
+        const errorData = await response.text();
+        console.error("API Error response:", errorData);
         healthStatus.chat.status = 'unhealthy';
-        throw new Error(`API Error: ${await response.text()}`);
+        throw new Error(`API Error: ${errorData}`);
       }
 
       healthStatus.chat.status = 'healthy';
