@@ -17,57 +17,42 @@ export function AiChat() {
   ]);
   const [input, setInput] = useState('');
   const { toast } = useToast();
-  const [retryAttempt, setRetryAttempt] = useState(0);
-  const MAX_RETRIES = 3;
 
-  const chatMutation = useMutation({
-    mutationFn: async (message: string) => {
-      // Send all messages for context, ensuring they start with assistant
-      const messagesToSend = messages.length > 0 ? messages : [{
-        role: 'assistant',
-        content: 'Hi! Ask me anything about Sparq Games, sports, or gaming!'
-      }];
-
+  const sendMessage = async (message: string) => {
+    try {
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
-          messages: [...messagesToSend, { role: 'user', content: message }]
+          messages: [{
+            role: 'user',
+            content: message
+          }]
         })
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to send message');
+        throw new Error('Chat service error');
       }
 
-      return response.json();
-    },
-    onError: async (error: Error) => {
-      console.error('Chat error:', error);
+      return await response.json();
+    } catch (error) {
+      console.error('Chat Error:', error);
+      throw new Error('Failed to send message');
+    }
+  };
 
-      if (retryAttempt < MAX_RETRIES) {
-        setRetryAttempt(prev => prev + 1);
-        toast({
-          title: "Retrying message",
-          description: "Attempting to resend your message...",
-          duration: 3000
-        });
-
-        // Retry the last message
-        const lastMessage = input.trim();
-        if (lastMessage) {
-          chatMutation.mutate(lastMessage);
-        }
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Chat Error",
-          description: error.message,
-          duration: 5000
-        });
-        setRetryAttempt(0);
-      }
+  const chatMutation = useMutation({
+    mutationFn: sendMessage,
+    onError: (error: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Chat Error",
+        description: error.message,
+        duration: 5000
+      });
     },
     onSuccess: (data) => {
       const content = data.choices?.[0]?.message?.content;
@@ -79,7 +64,6 @@ export function AiChat() {
         ...prev,
         { role: 'assistant', content: content.trim() }
       ]);
-      setRetryAttempt(0);
     }
   });
 
@@ -88,17 +72,9 @@ export function AiChat() {
     const trimmedInput = input.trim();
     if (!trimmedInput || chatMutation.isPending) return;
 
-    // Add the user message to the conversation
     setMessages(prev => [...prev, { role: 'user', content: trimmedInput }]);
     chatMutation.mutate(trimmedInput);
     setInput('');
-  };
-
-  const handleRetry = () => {
-    if (input.trim()) {
-      setRetryAttempt(0);
-      chatMutation.mutate(input.trim());
-    }
   };
 
   return (
@@ -130,23 +106,7 @@ export function AiChat() {
           {chatMutation.isPending && (
             <div className="p-3 rounded-lg bg-muted mr-4">
               <div className="text-sm text-foreground">Sparq Assistant</div>
-              <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
-                <div className="flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-2 animate-pulse" />
-                  Thinking...
-                </div>
-                {retryAttempt > 0 && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex items-center gap-1 text-xs"
-                    onClick={handleRetry}
-                  >
-                    <RefreshCcw className="w-3 h-3" />
-                    Retry ({MAX_RETRIES - retryAttempt + 1})
-                  </Button>
-                )}
-              </div>
+              <div className="mt-1">Thinking...</div>
             </div>
           )}
         </div>

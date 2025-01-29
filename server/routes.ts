@@ -8,13 +8,17 @@ import { requireAdmin, adminSessionMiddleware } from "./middleware/auth";
 import bcrypt from "bcryptjs";
 import MemoryStore from "memorystore";
 import rateLimit from 'express-rate-limit';
+import { OpenAI } from 'openai';
 
 const SessionStore = MemoryStore(session);
 
 // Rate limiter for high-concurrency endpoints
 const chatLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // Increased for Reserved VM capacity
+  windowMs: 60 * 1000, // 1 minute
+  max: 20, // limit each IP to 20 requests per minute
+  message: {
+    error: 'Too many requests, please try again later.'
+  }
 });
 
 const discordLimiter = rateLimit({
@@ -279,76 +283,31 @@ export function registerRoutes(app: Express): Server {
   app.post("/api/chat", chatLimiter, async (req, res) => {
     try {
       if (!process.env.PERPLEXITY_API_KEY) {
-        healthStatus.chat.status = 'unhealthy';
         throw new Error("Chat service not configured");
       }
 
-      const messages = req.body.messages || [];
-
-      // Validate message structure
-      if (!Array.isArray(messages) || messages.length === 0) {
-        throw new Error("Invalid message format");
-      }
-
-      // Ensure the first message is from the assistant
-      const formattedMessages = messages[0].role === 'assistant'
-        ? messages
-        : [
-            {
-              role: 'assistant',
-              content: 'Hi! Ask me anything about Sparq Games, sports, or gaming!'
-            },
-            ...messages
-          ];
-
-      const response = await fetch("https://api.perplexity.ai/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: "llama-3.1-sonar-small-128k-online",
-          messages: [
-            {
-              role: "system",
-              content: `You are Sparq Games' AI assistant. You should:
-              - Provide knowledgeable responses about sports, gaming, and Sparq Games
-              - Be friendly and enthusiastic while maintaining professionalism
-              - Keep responses concise but informative (2-3 sentences)
-              - Focus on Sparq's mission of revolutionizing sports gaming through innovation
-              - When unsure, be honest and suggest contacting the Sparq team directly`
-            },
-            ...formattedMessages
-          ],
-          temperature: 0.7,
-          max_tokens: 150,
-          stream: false
-        })
+      const client = new OpenAI({
+        apiKey: process.env.PERPLEXITY_API_KEY,
+        baseURL: 'https://api.perplexity.ai'
       });
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error("API Error response:", errorData);
-        healthStatus.chat.status = 'unhealthy';
-        throw new Error(`API Error: ${errorData}`);
-      }
+      const response = await client.chat.completions.create({
+        model: 'sonar-small-chat',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are Sparq Assistant, helping users learn about Sparq Games.'
+          },
+          ...req.body.messages
+        ],
+        max_tokens: 1000
+      });
 
-      healthStatus.chat.status = 'healthy';
-      const data = await response.json();
-      res.json(data);
-    } catch (error: any) {
-      console.error("Chat error:", error);
-      healthStatus.chat.status = 'unhealthy';
-
-      const statusCode = error.message.includes("Rate limit") ? 429 : 503;
-      const message = statusCode === 429
-        ? "Chat service rate limit exceeded. Please try again later."
-        : "Chat service temporarily unavailable. Please try again later.";
-
-      res.status(statusCode).json({
-        message,
-        retry_after: statusCode === 429 ? 900 : 300 // 15 minutes for rate limit, 5 minutes for other errors
+      res.json(response);
+    } catch (error) {
+      console.error('Chat Error:', error);
+      res.status(500).json({ 
+        error: 'Chat service temporarily unavailable. Please try again later.' 
       });
     }
   });
