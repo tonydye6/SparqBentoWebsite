@@ -22,14 +22,14 @@ export function AiChat() {
 
   const chatMutation = useMutation({
     mutationFn: async (message: string) => {
-      // Format messages to ensure proper alternation
-      const formattedMessages = messages.slice(-6); // Keep last 6 messages for context
-      if (formattedMessages[0].role === 'user') {
-        formattedMessages.unshift({
-          role: 'assistant',
-          content: 'Hi! Ask me anything about Sparq Games, sports, or gaming!'
+      // Format messages for API request
+      const formattedMessages = messages
+        .slice(-6) // Keep last 6 messages for context
+        .filter((msg, index, arr) => {
+          // Ensure alternating roles
+          if (index === 0) return true;
+          return msg.role !== arr[index - 1].role;
         });
-      }
 
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -93,10 +93,12 @@ export function AiChat() {
     const trimmedInput = input.trim();
     if (!trimmedInput || chatMutation.isPending) return;
 
-    // Optimistically add user message
-    setMessages(prev => [...prev, { role: 'user', content: trimmedInput }]);
-    chatMutation.mutate(trimmedInput);
-    setInput('');
+    // Only add user message if the last message was from assistant
+    if (messages.length === 0 || messages[messages.length - 1].role === 'assistant') {
+      setMessages(prev => [...prev, { role: 'user', content: trimmedInput }]);
+      chatMutation.mutate(trimmedInput);
+      setInput('');
+    }
   };
 
   const handleRetry = () => {
@@ -114,13 +116,6 @@ export function AiChat() {
         <h3 className="font-heading text-xl font-semibold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
           Sparq Assistant
         </h3>
-      </div>
-      <div className="flex justify-center items-center mb-4">
-        <img 
-          src="/Skull(Red).png" 
-          alt="Red Skull" 
-          className="w-24 h-24 object-contain"
-        />
       </div>
 
       <ScrollArea className="flex-1 mb-4 pr-4">

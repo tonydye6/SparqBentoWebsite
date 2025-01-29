@@ -285,17 +285,20 @@ export function registerRoutes(app: Express): Server {
 
       const messages = req.body.messages || [];
 
-      // Ensure proper message structure and role alternation
-      const formattedMessages = messages.reduce((acc: any[], msg: any, i: number) => {
-        if (i === 0 && msg.role === 'user') {
-          acc.push({
-            role: 'assistant',
-            content: 'Hi! Ask me anything about Sparq Games, sports, or gaming!'
-          });
-        }
-        acc.push(msg);
-        return acc;
-      }, []);
+      // Validate message structure
+      if (!Array.isArray(messages) || messages.length === 0) {
+        throw new Error("Invalid message format");
+      }
+
+      // Ensure messages alternate between user and assistant
+      const isValidAlternation = messages.every((msg, index) => {
+        if (index === 0) return msg.role === 'assistant';
+        return msg.role !== messages[index - 1].role;
+      });
+
+      if (!isValidAlternation) {
+        throw new Error("Invalid message sequence");
+      }
 
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
@@ -315,7 +318,7 @@ export function registerRoutes(app: Express): Server {
               - Focus on Sparq's mission of revolutionizing sports gaming through innovation
               - When unsure, be honest and suggest contacting the Sparq team directly`
             },
-            ...formattedMessages
+            ...messages
           ],
           temperature: 0.7,
           max_tokens: 150,
