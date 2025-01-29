@@ -303,7 +303,7 @@ export function registerRoutes(app: Express): Server {
         max_tokens: 1000
       });
 
-      res.json(response);
+      res.json(response.choices[0].message);
     } catch (error) {
       console.error('Chat Error:', error);
       res.status(500).json({ 

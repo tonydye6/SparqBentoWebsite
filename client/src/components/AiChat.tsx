@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, AlertCircle, SendHorizonal, RefreshCcw } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
@@ -18,31 +18,31 @@ export function AiChat() {
   const [input, setInput] = useState('');
   const { toast } = useToast();
 
-const sendMessage = async (message: string) => {
-  try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        messages: [{
-          role: 'user',
-          content: message
-        }]
-      })
-    });
+  const sendMessage = async (message: string) => {
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          messages: [{
+            role: 'user',
+            content: message
+          }]
+        })
+      });
 
-    if (!response.ok) {
-      throw new Error('Chat service error');
+      if (!response.ok) {
+        throw new Error('Chat service error');
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Chat Error:', error);
+      throw new Error('Failed to send message');
     }
-
-    return await response.json();
-  } catch (error) {
-    console.error('Chat Error:', error);
-    throw new Error('Failed to send message');
-  }
-};
+  };
 
   const chatMutation = useMutation({
     mutationFn: sendMessage,
@@ -55,15 +55,7 @@ const sendMessage = async (message: string) => {
       });
     },
     onSuccess: (data) => {
-      const content = data.choices?.[0]?.message?.content;
-      if (!content) {
-        throw new Error('Invalid response from chat service');
-      }
-
-      setMessages(prev => [
-        ...prev,
-        { role: 'assistant', content: content.trim() }
-      ]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data.content }]);
     }
   });
 
@@ -123,10 +115,8 @@ const sendMessage = async (message: string) => {
         <Button 
           type="submit"
           disabled={chatMutation.isPending}
-          size="icon"
-          className="hover:bg-primary/20"
         >
-          <SendHorizonal className="w-4 h-4" />
+          Send
         </Button>
       </form>
     </div>
