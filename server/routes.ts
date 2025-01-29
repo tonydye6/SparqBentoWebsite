@@ -291,8 +291,6 @@ export function registerRoutes(app: Express): Server {
         throw new Error("Invalid request format: messages must be an array");
       }
 
-      // Format messages to ensure alternating roles
-      // Format messages to enforce alternating roles
       const formattedMessages = [
         {
           role: "system",
@@ -300,12 +298,12 @@ export function registerRoutes(app: Express): Server {
         }
       ];
 
-      // Add messages ensuring alternating roles
-      req.body.messages.slice(-10).forEach((msg: any, i: number) => {
-        if (i === 0 || msg.role !== formattedMessages[formattedMessages.length - 1].role) {
-          formattedMessages.push(msg);
-        }
-      });
+      const userMessages = req.body.messages.filter(msg => msg.role === 'user');
+      const lastUserMessage = userMessages[userMessages.length - 1];
+      
+      if (lastUserMessage) {
+        formattedMessages.push(lastUserMessage);
+      }
 
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",

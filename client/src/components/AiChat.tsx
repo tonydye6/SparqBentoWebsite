@@ -12,9 +12,7 @@ interface Message {
 }
 
 export function AiChat() {
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hi! Ask me anything about Sparq Games, sports, or gaming!' }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const { toast } = useToast();
 
