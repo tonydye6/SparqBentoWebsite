@@ -297,18 +297,7 @@ export function registerRoutes(app: Express): Server {
           role: "system",
           content: "You are Sparq Assistant, helping users learn about Sparq Games."
         }
-      ];
-
-      // Add user messages and simulate assistant responses if needed
-      req.body.messages.forEach((msg: any, i: number) => {
-        if (i > 0 && msg.role === formattedMessages[formattedMessages.length - 1].role) {
-          formattedMessages.push({
-            role: msg.role === 'user' ? 'assistant' : 'user',
-            content: 'Continue'
-          });
-        }
-        formattedMessages.push(msg);
-      });
+      ].concat(req.body.messages.slice(-10));
 
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",

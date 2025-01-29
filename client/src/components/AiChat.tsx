@@ -19,8 +19,13 @@ export function AiChat() {
   const { toast } = useToast();
 
   const sendMessage = async (message: string) => {
-    const newMessages = [...messages, { role: 'user', content: message }];
-    setMessages(newMessages); // Update messages immediately for better UX
+    if (!message.trim()) return;
+    
+    const newMessage = { role: 'user' as const, content: message };
+    const newMessages = [...messages, newMessage];
+    setMessages(newMessages);
+    setInput('');
+    
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
