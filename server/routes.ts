@@ -8,7 +8,6 @@ import { requireAdmin, adminSessionMiddleware } from "./middleware/auth";
 import bcrypt from "bcryptjs";
 import MemoryStore from "memorystore";
 import rateLimit from 'express-rate-limit';
-//import { OpenAI } from 'openai'; //Removed as no longer needed
 
 const SessionStore = MemoryStore(session);
 
@@ -286,7 +285,11 @@ export function registerRoutes(app: Express): Server {
         throw new Error("Chat service not configured");
       }
 
-      console.log("Received chat request:", req.body.messages);
+      console.log("Received chat request:", req.body);
+
+      if (!Array.isArray(req.body.messages)) {
+        throw new Error("Invalid request format: messages must be an array");
+      }
 
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
@@ -310,18 +313,24 @@ export function registerRoutes(app: Express): Server {
       });
 
       if (!response.ok) {
-        const error = await response.text();
-        console.error("Perplexity API error:", error);
-        throw new Error(`Chat service error: ${error}`);
+        const errorText = await response.text();
+        console.error("Perplexity API error response:", errorText);
+        throw new Error(`Chat service error: ${errorText}`);
       }
 
       const data = await response.json();
       console.log("Perplexity API response:", data);
-      res.json(data.choices[0].message);
+
+      if (!data?.choices?.[0]?.message) {
+        console.error("Invalid API response format:", data);
+        throw new Error("Invalid response from chat service");
+      }
+
+      res.json(data);
     } catch (error) {
       console.error('Chat Error:', error);
       res.status(500).json({ 
-        error: 'Chat service temporarily unavailable. Please try again later.' 
+        error: error instanceof Error ? error.message : 'Chat service temporarily unavailable' 
       });
     }
   });

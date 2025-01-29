@@ -19,27 +19,33 @@ export function AiChat() {
   const { toast } = useToast();
 
   const sendMessage = async (message: string) => {
+    const newMessages = [...messages, { role: 'user', content: message }];
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          messages: [...messages, { role: 'user', content: message }]
-        })
+        body: JSON.stringify({ messages: newMessages })
       });
 
       if (!response.ok) {
-        throw new Error('Chat service error');
+        const errorData = await response.text();
+        console.error('API Error:', errorData);
+        throw new Error(errorData || 'Chat service error');
       }
 
       const data = await response.json();
       console.log("Chat response:", data);
-      return data;
+
+      if (!data?.choices?.[0]?.message?.content) {
+        throw new Error('Invalid response format from chat service');
+      }
+
+      return data.choices[0].message;
     } catch (error) {
       console.error('Chat Error:', error);
-      throw new Error('Failed to send message');
+      throw error;
     }
   };
 
@@ -54,10 +60,8 @@ export function AiChat() {
       });
     },
     onSuccess: (data) => {
-      if (!data.content) {
-        throw new Error('Invalid response from chat service');
-      }
       setMessages(prev => [...prev, { role: 'assistant', content: data.content }]);
+      setInput('');
     }
   });
 
@@ -68,7 +72,6 @@ export function AiChat() {
 
     setMessages(prev => [...prev, { role: 'user', content: trimmedInput }]);
     chatMutation.mutate(trimmedInput);
-    setInput('');
   };
 
   return (
