@@ -286,13 +286,15 @@ export function registerRoutes(app: Express): Server {
         throw new Error("Chat service not configured");
       }
 
+      console.log("Received chat request:", req.body.messages);
+
       const client = new OpenAI({
         apiKey: process.env.PERPLEXITY_API_KEY,
         baseURL: 'https://api.perplexity.ai'
       });
 
       const response = await client.chat.completions.create({
-        model: 'sonar-small-chat',
+        model: 'llama-3.1-sonar-small-128k-online',
         messages: [
           {
             role: 'system',
@@ -300,9 +302,11 @@ export function registerRoutes(app: Express): Server {
           },
           ...req.body.messages
         ],
-        max_tokens: 1000
+        max_tokens: 1000,
+        temperature: 0.7
       });
 
+      console.log("Perplexity API response:", response.choices[0].message);
       res.json(response.choices[0].message);
     } catch (error) {
       console.error('Chat Error:', error);

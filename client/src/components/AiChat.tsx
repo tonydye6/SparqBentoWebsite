@@ -26,10 +26,7 @@ export function AiChat() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          messages: [{
-            role: 'user',
-            content: message
-          }]
+          messages: [...messages, { role: 'user', content: message }]
         })
       });
 
@@ -37,7 +34,9 @@ export function AiChat() {
         throw new Error('Chat service error');
       }
 
-      return await response.json();
+      const data = await response.json();
+      console.log("Chat response:", data);
+      return data;
     } catch (error) {
       console.error('Chat Error:', error);
       throw new Error('Failed to send message');
@@ -55,6 +54,9 @@ export function AiChat() {
       });
     },
     onSuccess: (data) => {
+      if (!data.content) {
+        throw new Error('Invalid response from chat service');
+      }
       setMessages(prev => [...prev, { role: 'assistant', content: data.content }]);
     }
   });
@@ -84,8 +86,8 @@ export function AiChat() {
             <div
               key={i}
               className={`p-3 rounded-lg ${
-                msg.role === 'user' 
-                  ? 'bg-primary/10 ml-4 border border-primary/20' 
+                msg.role === 'user'
+                  ? 'bg-primary/10 ml-4 border border-primary/20'
                   : 'bg-muted mr-4'
               }`}
             >
@@ -112,7 +114,7 @@ export function AiChat() {
           disabled={chatMutation.isPending}
           className="bg-background/50"
         />
-        <Button 
+        <Button
           type="submit"
           disabled={chatMutation.isPending}
         >
