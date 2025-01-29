@@ -292,12 +292,20 @@ export function registerRoutes(app: Express): Server {
       }
 
       // Format messages to ensure alternating roles
+      // Format messages to enforce alternating roles
       const formattedMessages = [
         {
           role: "system",
           content: "You are Sparq Assistant, helping users learn about Sparq Games."
         }
-      ].concat(req.body.messages.slice(-10));
+      ];
+
+      // Add messages ensuring alternating roles
+      req.body.messages.slice(-10).forEach((msg: any, i: number) => {
+        if (i === 0 || msg.role !== formattedMessages[formattedMessages.length - 1].role) {
+          formattedMessages.push(msg);
+        }
+      });
 
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
