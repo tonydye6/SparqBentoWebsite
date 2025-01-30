@@ -123,7 +123,7 @@ export function AiChat() {
         </Button>
       </form>
       <div className="mt-4 flex justify-center">
-        <img src="/bfpfw.png" alt="Sparq Games" className="w-full h-auto object-contain" />
+        <img src="/bfpfw.png" alt="Sparq Games" className="h-16 object-contain" />
       </div>
     </div>
   );
