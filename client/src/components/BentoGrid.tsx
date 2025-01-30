@@ -421,9 +421,11 @@ export function BentoGrid() {
         className="bento-card card-10 news-card"
         whileHover={{ scale: 1.02 }}
       >
-        <h2 className="sparq-title">Word Around Town</h2>
-        <div className="h-full">
-          <NewsCarousel />
+        <div className="flex flex-col h-full">
+          <h2 className="sparq-title text-center mb-4">Word Around Town</h2>
+          <div className="flex-1">
+            <NewsCarousel />
+          </div>
         </div>
       </motion.div>
 
