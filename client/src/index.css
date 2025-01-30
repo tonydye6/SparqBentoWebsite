@@ -137,7 +137,8 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 10px rgba(235, 0, 40, 0.5);
-    animation: pulseGlow 2s ease-in-out infinite;
+    animation: pulseGlow 2s ease-in-out infinite,
+               pulseScale 3s ease-in-out infinite;
     transition: transform 0.3s ease;
   }
 
@@ -155,6 +156,15 @@
     }
     100% {
       text-shadow: 0 0 10px rgba(235, 0, 40, 0.5);
+    }
+  }
+
+  @keyframes pulseScale {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.02);
     }
   }
 
