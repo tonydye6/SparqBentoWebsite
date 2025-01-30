@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Newspaper } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface NewsItem {
   title: string;
@@ -47,12 +47,7 @@ export function GameNews() {
   };
 
   return (
-    <div className="h-full p-4 flex flex-col">
-      <div className="flex items-center gap-2 mb-4">
-        <Newspaper className="w-5 h-5" />
-        <h3 className="font-semibold">Latest News</h3>
-      </div>
-
+    <div className="card-content">
       <Card className="flex-1 p-4 bg-black/20">
         <div className="h-full flex flex-col">
           <span className="text-xs font-medium text-primary mb-2">

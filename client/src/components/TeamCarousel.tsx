@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SiLinkedin } from "react-icons/si";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -202,12 +201,7 @@ export function TeamCarousel() {
   const member = teamMembers[currentIndex];
 
   return (
-    <div className="h-full p-4 flex flex-col">
-      <div className="flex items-center gap-2 mb-4">
-        <Users className="w-5 h-5" />
-        <h3 className="font-semibold">Our Team</h3>
-      </div>
-
+    <div className="card-content">
       <Card className="flex-1 p-4 bg-black/20 flex flex-col items-center">
         <Avatar className="w-40 h-40 mb-4">
           <AvatarImage src={member.photo} alt={member.name} />

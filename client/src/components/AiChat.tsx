@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
@@ -18,12 +17,12 @@ export function AiChat() {
 
   const sendMessage = async (message: string) => {
     if (!message.trim()) return;
-    
+
     const newMessage = { role: 'user' as const, content: message };
     const newMessages = [...messages, newMessage];
     setMessages(newMessages);
     setInput('');
-    
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -79,14 +78,7 @@ export function AiChat() {
   };
 
   return (
-    <div className="flex flex-col h-full max-h-[500px]">
-      <div className="flex justify-center items-center gap-2 mb-4">
-        <MessageCircle className="w-5 h-5" />
-        <h3 className="font-heading text-xl font-semibold drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
-          Sparq Assistant
-        </h3>
-      </div>
-
+    <div className="card-content flex flex-col h-full max-h-[500px]">
       <ScrollArea className="flex-1 mb-4 pr-4 h-[350px]">
         <div className="space-y-4">
           {messages.map((msg, i) => (
