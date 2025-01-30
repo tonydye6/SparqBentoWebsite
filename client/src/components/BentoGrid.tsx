@@ -1,24 +1,25 @@
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { MouseTrail } from "./MouseTrail";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Volume2 } from "lucide-react";
 import { AboutUs } from "./AboutUs";
 import { GameNews } from "./GameNews";
 import { AiChat } from "./AiChat";
 import { DiscordWidget } from "./DiscordWidget";
 import { JoinUs } from "./JoinUs";
 import { SchoolSpotlight } from "./SchoolSpotlight";
-import { TeamCarousel, executiveTeam } from "./TeamCarousel";
+import { TeamCarousel, executiveTeam, advisoryTeam } from "./TeamCarousel";
 import { ThreeViewer } from "./ThreeViewer";
 import { BetaForm } from "./BetaForm";
 import { BentoCardModal } from "./BentoCardModal";
 import { NewsCarousel } from "./NewsCarousel";
+import { Trophy, Star, Users } from "lucide-react";
+import { useBadgeStore, BADGES, type Badge } from "@/lib/badges";
 import { BadgeDisplay } from "./badges/BadgeDisplay";
 import { BadgeNotification } from "./badges/BadgeNotification";
-import { useBadgeStore, BADGES, type Badge } from "@/lib/badges";
-import { Volume2 } from "lucide-react";
-import { Trophy, Star, Users } from "lucide-react";
-
+import { TeamCard } from "./TeamCard";
 
 type ExpandedCard =
   | "ai-chat"
@@ -280,6 +281,7 @@ export function BentoGrid() {
 
   return (
     <div className="bento-grid">
+      {/* Card 2: Join Beta */}
       <div
         className="bento-card card-2 beta-card relative overflow-hidden cursor-pointer z-10"
         onClick={() => handleCardClick("beta")}
@@ -295,6 +297,7 @@ export function BentoGrid() {
         />
       </div>
 
+      {/* Card 1: Title Bar */}
       <motion.div
         className="bento-card card-1"
         initial={{ opacity: 0, y: -20 }}
@@ -309,15 +312,16 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
+      {/* Card 3: Discord Live Chat */}
       <motion.div
         className="bento-card card-3 discord-card"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("discord")}
       >
-        <h2 className="sparq-title">Discord Live Chat</h2>
         <DiscordWidget />
       </motion.div>
 
+      {/* Card 4: Connect With Us */}
       <motion.div
         className="bento-card card-4"
         whileHover={{ scale: 1.02 }}
@@ -361,6 +365,7 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
+      {/* Card 5: Spline 3D Viewport */}
       <motion.div
         className="bento-card card-5"
         whileHover={{ scale: 1.02 }}
@@ -369,16 +374,12 @@ export function BentoGrid() {
         <ThreeViewer />
       </motion.div>
 
-      <motion.div
-        className="bento-card card-6"
-        whileHover={{ scale: 1.02 }}
-      >
-        <h2 className="sparq-title">Word Around Town</h2>
-        <div className="news-carousel relative">
-          <NewsCarousel />
-        </div>
-      </motion.div>
+      {/* Card 6: Video Teaser */}
+      <div className="bento-card card-6 relative overflow-hidden">
+        <TeamCard />
+      </div>
 
+      {/* Card 7: Join Us */}
       <motion.div
         className="bento-card card-7 join-card overflow-hidden"
         whileHover={{ scale: 1.02 }}
@@ -388,6 +389,7 @@ export function BentoGrid() {
         <JoinUs />
       </motion.div>
 
+      {/* Card 8: School Spotlight */}
       <motion.div
         className="bento-card card-8 school-card"
         whileHover={{ scale: 1.02 }}
@@ -397,27 +399,37 @@ export function BentoGrid() {
         <SchoolSpotlight />
       </motion.div>
 
+      {/* Card 9: Team Showcase */}
       <motion.div
         className="bento-card card-9"
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("team")}
       >
-        <h2 className="sparq-title">Meet Our Team</h2>
-        <div className="team-carousel relative">
-          <TeamCarousel members={executiveTeam} />
+        <h2 className="sparq-title mb-6">Meet Our Team</h2>
+        <div className="flex flex-col h-[calc(100%-4rem)] gap-2 pt-2">
+          <div className="flex-1">
+            <TeamCarousel members={executiveTeam} />
+          </div>
+          <div className="flex-1">
+            <TeamCarousel members={advisoryTeam} />
+          </div>
         </div>
       </motion.div>
 
+      {/* Card 10: Word Around Town */}
       <motion.div
-        className="bento-card card-10"
+        className="bento-card card-10 news-card"
         whileHover={{ scale: 1.02 }}
       >
-        <h2 className="sparq-title">Sparq Updates</h2>
-        <div className="h-full pt-16 px-4">
-          <GameNews />
+        <div className="flex flex-col h-full">
+          <h2 className="sparq-title text-center mb-6">Word Around Town</h2>
+          <div className="flex-1 overflow-hidden mt-2" style={{ height: 'calc(100% - 5rem)' }}>
+            <NewsCarousel />
+          </div>
         </div>
       </motion.div>
 
+      {/* Card 11: The Sparq Story */}
       <motion.div
         className="bento-card card-11"
         whileHover={{ scale: 1.02 }}
@@ -426,16 +438,18 @@ export function BentoGrid() {
         <h2 className="sparq-title">The Sparq Story</h2>
       </motion.div>
 
+      {/* Card 12: AI Chat */}
       <motion.div
-        className="bento-card card-12 ai-chat-card"
+        className="bento-card card-12 ai-chat-card p-4"
         whileHover={{ scale: 1.02 }}
       >
         <h2 className="sparq-title">Sparq Assistant</h2>
-        <div className="h-full pt-16 px-4">
+        <div className="h-full">
           <AiChat />
         </div>
       </motion.div>
 
+      {/* Cards 13-15: Mission/Vision/Values */}
       <motion.div
         className="bento-card card-13 cursor-pointer flex items-center justify-center relative"
         whileHover={{ scale: 1.02 }}

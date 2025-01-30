@@ -190,19 +190,6 @@
     }
   }
 
-  /* Carousel content spacing adjustments */
-  .news-carousel {
-    padding-top: 4rem; /* Space for title */
-    height: calc(100% - 4rem); /* Adjust height to account for padding */
-    overflow: hidden;
-  }
-
-  .team-carousel {
-    padding-top: 4rem; /* Space for title */
-    height: calc(100% - 4rem); /* Adjust height to account for padding */
-    overflow: hidden;
-  }
-
   .bento-card {
     @apply rounded-2xl overflow-hidden relative;
     background: var(--carbon);
