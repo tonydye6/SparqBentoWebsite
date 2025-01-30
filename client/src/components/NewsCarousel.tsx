@@ -89,10 +89,6 @@ export function NewsCarousel() {
     <div className="h-full p-4 flex flex-col">
       <Card className="flex-1 p-4 bg-black/20 border-0">
         <div className="h-full flex flex-col">
-          <div className="flex flex-col items-center gap-2 mb-4 w-full">
-            <Newspaper className="w-5 h-5" />
-            <h3 className="font-semibold text-center">Word Around Town</h3>
-          </div>
           {news[currentIndex] && (
             <div 
               className="cursor-pointer" 
