@@ -145,12 +145,16 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
+      padding: 16px;
     }
 
     .bento-card {
       width: 100% !important;
       height: auto !important;
       margin-bottom: 0 !important;
+      position: relative !important;
+      grid-column: auto !important;
+      grid-row: auto !important;
     }
 
     /* Hide specific cards on mobile */
@@ -222,7 +226,7 @@
     }
   }
 
-  /* Card specific styles */
+  /* Desktop card positioning unchanged */
   .card-1 { @apply col-start-4 col-span-9 row-span-1; }
   .card-2 { @apply col-start-1 col-span-3 row-span-2; }
   .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-5; }
