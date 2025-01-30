@@ -405,12 +405,12 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("team")}
       >
-        <h2 className="sparq-title">Meet Our Team</h2>
-        <div className="flex flex-col h-full gap-2">
-          <div className="flex-1 h-[45%]">
+        <h2 className="sparq-title mb-4">Meet Our Team</h2>
+        <div className="flex flex-col h-[calc(100%-3rem)] gap-2">
+          <div className="flex-1">
             <TeamCarousel members={executiveTeam} />
           </div>
-          <div className="flex-1 h-[45%]">
+          <div className="flex-1">
             <TeamCarousel members={advisoryTeam} />
           </div>
         </div>
@@ -422,8 +422,8 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
       >
         <div className="flex flex-col h-full">
-          <h2 className="sparq-title text-center mb-4">Word Around Town</h2>
-          <div className="flex-1 overflow-hidden mt-2">
+          <h2 className="sparq-title text-center mb-6">Word Around Town</h2>
+          <div className="flex-1 overflow-hidden mt-4" style={{ height: 'calc(100% - 4rem)' }}>
             <NewsCarousel />
           </div>
         </div>
