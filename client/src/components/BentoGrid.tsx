@@ -318,7 +318,6 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("discord")}
       >
-        <h2 className="sparq-title">Discord Live Chat</h2>
         <DiscordWidget />
       </motion.div>
 
