@@ -79,7 +79,7 @@ export function BentoCardModal({
             </div>
           )}
 
-          <div className="flex-1 overflow-auto p-8 font-body">
+          <div className="flex-1 overflow-y-auto p-8 font-body">
             {children}
           </div>
         </motion.div>
