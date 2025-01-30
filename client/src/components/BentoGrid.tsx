@@ -408,10 +408,10 @@ export function BentoGrid() {
         <h2 className="sparq-title">Meet Our Team</h2>
         <div className="flex flex-col h-full gap-2">
           <div className="flex-1 h-[45%]">
-            <TeamCarousel />
+            <TeamCarousel members={executiveTeam} />
           </div>
           <div className="flex-1 h-[45%]">
-            <TeamCarousel />
+            <TeamCarousel members={advisoryTeam} />
           </div>
         </div>
       </motion.div>
