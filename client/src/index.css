@@ -317,6 +317,32 @@
         font-size: 2.5rem !important;
       }
     }
+    .pulse-title {
+      animation: mobileTitlePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes mobileTitlePulse {
+      0% {
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(235, 0, 40, 0.3);
+      }
+      50% {
+        transform: scale(1.1);
+        text-shadow: 0 0 20px rgba(235, 0, 40, 0.8),
+                     0 0 30px rgba(235, 0, 40, 0.4);
+      }
+      100% {
+        transform: scale(1);
+        text-shadow: 0 0 10px rgba(235, 0, 40, 0.3);
+      }
+    }
+
+    /* Remove pulse animation for desktop */
+    @media screen and (min-width: 769px) {
+      .pulse-title {
+        animation: none;
+      }
+    }
   }
 
   .bento-card {

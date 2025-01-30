@@ -36,6 +36,9 @@ export function TeamCard() {
           loop
           muted={isMuted}
           playsInline
+          webkit-playsinline="true"
+          preload="auto"
+          loading="eager"
           className="w-full h-full object-cover"
           onError={() => setVideoError(true)}
           poster="/ftcc.png"
