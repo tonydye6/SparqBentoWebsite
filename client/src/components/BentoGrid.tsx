@@ -387,6 +387,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("join")}
       >
+        <h3 className="card-title">Join the Sparq Uprising</h3>
         <JoinUs />
       </motion.div>
 
@@ -396,7 +397,6 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("school")}
       >
-        <h3 className="card-title">School Spotlight</h3>
         <SchoolSpotlight />
       </motion.div>
 
@@ -406,12 +406,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("team")}
       >
-        <div className="flex flex-col h-full">
-          <h3 className="card-title text-center">Meet Our Team</h3>
-          <div className="flex-1">
-            <TeamCarousel />
-          </div>
-        </div>
+        <TeamCarousel />
       </motion.div>
 
       {/* Card 10: Word Around Town */}
@@ -419,6 +414,7 @@ export function BentoGrid() {
         className="bento-card card-10 news-card"
         whileHover={{ scale: 1.02 }}
       >
+        <h3 className="card-title">Word Around Town</h3>
         <div className="h-full">
           <NewsCarousel />
         </div>
@@ -437,9 +433,10 @@ export function BentoGrid() {
 
       {/* Card 12: AI Chat */}
       <motion.div
-        className="bento-card card-12 ai-chat-card p-4"
+        className="bento-card card-12 ai-chat-card"
         whileHover={{ scale: 1.02 }}
       >
+        <h3 className="card-title">Sparq AI Assistant</h3>
         <div className="h-full">
           <AiChat />
         </div>
