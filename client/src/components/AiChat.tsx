@@ -18,12 +18,12 @@ export function AiChat() {
 
   const sendMessage = async (message: string) => {
     if (!message.trim()) return;
-    
+
     const newMessage = { role: 'user' as const, content: message };
     const newMessages = [...messages, newMessage];
     setMessages(newMessages);
     setInput('');
-    
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -123,7 +123,7 @@ export function AiChat() {
         </Button>
       </form>
       <div className="mt-4 flex justify-center">
-        <img src="/bfpfw.png" alt="Sparq Games" className="h-16 object-contain" />
+        <img src="/bfpf.png" alt="Sparq Games" className="h-16 object-contain" />
       </div>
     </div>
   );
