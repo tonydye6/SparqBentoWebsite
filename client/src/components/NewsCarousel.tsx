@@ -94,12 +94,14 @@ export function NewsCarousel() {
               className="cursor-pointer" 
               onClick={() => openArticle(news[currentIndex])}
             >
-              <span className="text-xs font-medium text-primary mb-2 block">
-                {news[currentIndex].category}
-              </span>
-              <h4 className="text-lg font-semibold mb-2">
-                {news[currentIndex].title}
-              </h4>
+              <div className="text-center">
+                <span className="text-sm font-medium text-primary mb-3 block">
+                  {news[currentIndex].category}
+                </span>
+                <h4 className="text-xl font-semibold mb-3">
+                  {news[currentIndex].title}
+                </h4>
+              </div>
             </div>
           )}
         </div>
