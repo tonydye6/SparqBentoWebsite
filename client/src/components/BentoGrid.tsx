@@ -295,7 +295,7 @@ export function BentoGrid() {
           }}
         />
         <div className="flex items-center justify-center h-full relative">
-          <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2 pointer-events-none">Join Beta Now!</h2>
+          <h2 className="card-title text-center w-full px-2 pointer-events-none">Join Beta Now!</h2>
         </div>
       </div>
 
@@ -329,7 +329,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
       >
         <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Connect With Us</h3>
+          <h3 className="card-title text-center">Connect With Us</h3>
           <div className="flex-1 flex justify-center items-center gap-8 p-4">
             <a
               href="https://www.instagram.com/sparqgames"
@@ -396,6 +396,7 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("school")}
       >
+        <h3 className="card-title">School Spotlight</h3>
         <SchoolSpotlight />
       </motion.div>
 
@@ -406,7 +407,7 @@ export function BentoGrid() {
         onClick={() => handleCardClick("team")}
       >
         <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Meet Our Team</h3>
+          <h3 className="card-title text-center">Meet Our Team</h3>
           <div className="flex-1">
             <TeamCarousel />
           </div>
@@ -430,7 +431,7 @@ export function BentoGrid() {
         onClick={() => handleCardClick("about")}
       >
         <div className="flex items-center justify-center h-full">
-          <h3 className="text-4xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">The Sparq Story</h3>
+          <h3 className="card-title">The Sparq Story</h3>
         </div>
       </motion.div>
 
@@ -455,7 +456,7 @@ export function BentoGrid() {
           alt="Football Player"
           className="absolute w-auto h-full object-cover opacity-50"
         />
-        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Mission</h3>
+        <h3 className="card-title transform -rotate-90 relative z-10">Mission</h3>
       </motion.div>
       <motion.div
         className="bento-card card-14 cursor-pointer flex items-center justify-center relative"
@@ -467,7 +468,7 @@ export function BentoGrid() {
           alt="Softball Player"
           className="absolute w-auto h-full object-cover opacity-60"
         />
-        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Vision</h3>
+        <h3 className="card-title transform -rotate-90 relative z-10">Vision</h3>
       </motion.div>
       <motion.div
         className="bento-card card-15 cursor-pointer flex items-center justify-center relative"
@@ -479,7 +480,7 @@ export function BentoGrid() {
           alt="Basketball Player"
           className="absolute w-auto h-full object-cover opacity-40"
         />
-        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Values</h3>
+        <h3 className="card-title transform -rotate-90 relative z-10">Values</h3>
       </motion.div>
 
       <AnimatePresence>
