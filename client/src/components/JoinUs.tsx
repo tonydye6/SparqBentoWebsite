@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +22,10 @@ export function JoinUs({ expanded = false }) {
   return (
     <div className="p-6 space-y-8">
       <div className="space-y-4">
+        <div className="flex-1 flex flex-col justify-center items-center p-4 relative">
+          <img src="/pyramid.png" alt="Pyramid" className="absolute w-[200px] h-auto opacity-50" />
+          <h3 className="text-2xl font-semibold mb-4 z-10">Join Our Team</h3>
+        </div>
         <p className="text-lg leading-relaxed">
           Sparq's platform simplifies how games get built and marketed so that the employee owners and development partners focus on creativity instead of the tedious tasks that absorb game-building hours. Sparq is making games more fun by rewarding the best people in the business to truly do what they do best.
         </p>
