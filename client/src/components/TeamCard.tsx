@@ -5,7 +5,7 @@ import { Volume2, VolumeX } from "lucide-react";
 export function TeamCard() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoError, setVideoError] = useState(false);
-  const [isMuted, setIsMuted] = useState(false); // Default to unmuted
+  const [isMuted, setIsMuted] = useState(true); // Default to muted for autoplay
 
   const toggleMute = () => {
     if (videoRef.current) {

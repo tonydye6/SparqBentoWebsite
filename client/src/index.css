@@ -294,7 +294,14 @@
     /* Mobile-specific ordering */
     .card-1 { order: 1; }
     .card-2 { order: 2; }
-    .card-6 { order: 3; }
+    .card-6 { 
+      order: 3; 
+      height: 300px !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+      background: var(--carbon) !important;
+    }
     .card-11 { order: 4; }
     .card-9 { order: 5; }
     .card-10 { order: 6; }
@@ -307,48 +314,8 @@
 
     /* Card-specific height adjustments */
     .card-1 { height: 80px !important; }
-    .card-2 { min-height: 200px !important; } /* Ensure Card #2 has minimum height */
-    .card-6 { height: 300px !important; }
+    .card-2 { min-height: 200px !important; }
     .card-13, .card-14, .card-15 { height: 150px !important; }
-
-    .card-13, .card-14, .card-15 {
-      h3 {
-        transform: none !important;
-        font-size: 2.5rem !important;
-      }
-    }
-    .pulse-title {
-      animation: none; /* Default to no animation */
-    }
-
-    /* Only apply pulse animation to specific titles */
-    .join-card .pulse-title,
-    .card-11 .pulse-title {
-      animation: mobileTitlePulse 4s ease-in-out infinite;
-    }
-
-    @keyframes mobileTitlePulse {
-      0% {
-        transform: scale(1);
-        text-shadow: 0 0 10px rgba(235, 0, 40, 0.3);
-      }
-      50% {
-        transform: scale(1.05);
-        text-shadow: 0 0 15px rgba(235, 0, 40, 0.6),
-                     0 0 25px rgba(235, 0, 40, 0.3);
-      }
-      100% {
-        transform: scale(1);
-        text-shadow: 0 0 10px rgba(235, 0, 40, 0.3);
-      }
-    }
-
-    /* Remove animation for Mission, Vision, Values cards */
-    .card-13 .pulse-title,
-    .card-14 .pulse-title,
-    .card-15 .pulse-title {
-      animation: none;
-    }
   }
 
   /* Remove pulse animation for desktop */
