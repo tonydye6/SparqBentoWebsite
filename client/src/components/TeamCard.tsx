@@ -1,18 +1,40 @@
-
 import { useRef, useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Volume2, VolumeX } from "lucide-react";
 
 export function TeamCard() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoError, setVideoError] = useState(false);
+  const [isMuted, setIsMuted] = useState(false); // Default to unmuted
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
+    }
+  };
 
   return (
-    <div className="w-full h-full bg-gradient-to-b from-carbon to-carbon/80">
+    <div className="w-full h-full bg-gradient-to-b from-carbon to-carbon/80 relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-4 right-4 z-10 backdrop-blur-sm bg-black/20 hover:bg-black/40"
+        onClick={toggleMute}
+      >
+        {isMuted ? (
+          <VolumeX className="h-4 w-4 text-white" />
+        ) : (
+          <Volume2 className="h-4 w-4 text-white" />
+        )}
+      </Button>
+
       {!videoError ? (
         <video
           ref={videoRef}
           autoPlay
           loop
-          muted
+          muted={isMuted}
           playsInline
           className="w-full h-full object-cover"
           onError={() => setVideoError(true)}
