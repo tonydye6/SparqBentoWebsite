@@ -1,0 +1,66 @@
+Please update the BentoGrid component to address mobile layout issues:
+Add a media query for mobile devices:
+css
+@media screen and (max-width: 768px) {
+  .flex {
+    flex-direction: column;
+  }
+  .flex-1 {
+    width: 100%;
+  }
+  .bento-card {
+    margin-bottom: 20px !important;
+    height: auto !important;
+  }
+}
+Implement card visibility and ordering for mobile:
+jsx
+const mobileOrder = [1, 2, 6, 11, 10, 13, 14, 15, 7, 4];
+
+const cards = [
+  { id: 1, component: <TeamCarousel />, onClick: () => handleCardClick("team") },
+  { id: 2, component: <AboutUs />, onClick: () => handleCardClick("sparqverse") },
+  { id: 6, component: <ThreeViewer /> },
+  { id: 11, component: <GameNews />, onClick: () => handleCardClick("news") },
+  { id: 10, component: <AiChat />, onClick: () => handleCardClick("ai-chat") },
+  { id: 13, component: <DiscordWidget />, onClick: () => handleCardClick("discord") },
+  { id: 14, component: <SchoolSpotlight />, onClick: () => handleCardClick("school") },
+  { id: 15, component: <span className="text-2xl font-bold">Additional Content</span> },
+  { id: 7, component: <JoinUs />, onClick: () => handleCardClick("join") },
+  { id: 4, component: <BetaForm />, onClick: () => handleCardClick("beta") }
+];
+
+return (
+  <div className="min-h-screen bg-[#0A0A1E] p-6">
+    <div className="flex flex-wrap gap-5 max-w-[1600px] mx-auto">
+      {cards.map((card, index) => (
+        <motion.div
+          key={card.id}
+          className={`relative perspective-1000 flex-1 ${mobileOrder.includes(card.id) ? '' : 'hidden md:block'}`}
+          style={{ order: mobileOrder.indexOf(card.id) }}
+          whileHover={{ scale: 1.02 }}
+        >
+          <Card
+            className="bento-card mb-5 cursor-pointer"
+            onClick={card.onClick}
+          >
+            {card.component}
+          </Card>
+        </motion.div>
+      ))}
+    </div>
+    <BentoCardModal
+      isOpen={expandedCard !== null}
+      onClose={handleCloseModal}
+      title={getModalTitle()}
+    >
+      {renderExpandedContent()}
+    </BentoCardModal>
+  </div>
+);
+This implementation will:
+Display only the specified cards on mobile
+Order the cards correctly
+Prevent overlapping
+Maintain the desktop layout
+Keep the existing functionality intact
