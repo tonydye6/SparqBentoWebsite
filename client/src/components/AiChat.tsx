@@ -122,7 +122,7 @@ export function AiChat() {
           Send
         </Button>
       </form>
-      <div className="mt-52 flex justify-center"> {/* Increased margin-top */}
+      <div className="mt-4 flex justify-center">
         <img src="/bfpf.png" alt="Sparq Games" className="h-16 object-contain" />
       </div>
     </div>
