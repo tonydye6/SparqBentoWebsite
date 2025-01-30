@@ -49,9 +49,10 @@ export function NewsCarousel() {
     );
   };
 
-  const openArticle = (article: NewsItem) => {
+  const openArticle = (e: React.MouseEvent, article: NewsItem) => {
+    e.preventDefault();
     if (article?.url) {
-      window.open(article.url, '_blank', 'noopener noreferrer');
+      window.open(article.url, '_blank');
     }
   };
 
@@ -90,9 +91,14 @@ export function NewsCarousel() {
       <Card className="flex-1 p-2 bg-black/20 border-0">
         <div className="h-full flex flex-col">
           {news[currentIndex] && (
-            <div 
-              onClick={() => openArticle(news[currentIndex])}
+            <a 
+              href={news[currentIndex].url || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => openArticle(e, news[currentIndex])}
               className="cursor-pointer transition-all duration-200 hover:scale-[1.02] p-4 rounded-lg hover:bg-white/5"
+              role="link"
+              aria-label={`Read more about ${news[currentIndex].title}`}
             >
               <div className="text-center">
                 <span className="text-sm font-medium text-primary mb-3 block">
@@ -102,7 +108,7 @@ export function NewsCarousel() {
                   {news[currentIndex].title}
                 </h4>
               </div>
-            </div>
+            </a>
           )}
         </div>
       </Card>
