@@ -140,17 +140,19 @@
       display: none !important;
     }
 
-    /* Mobile-specific ordering */
+    /* Mobile-specific ordering exactly as specified */
     .card-1 { order: 1; }
     .card-2 { order: 2; }
     .card-6 { order: 3; }
     .card-11 { order: 4; }
-    .card-10 { order: 5; }
-    .card-13 { order: 6; }
-    .card-14 { order: 7; }
-    .card-15 { order: 8; }
-    .card-7 { order: 9; }
-    .card-4 { order: 10; }
+    .card-9 { order: 5; }
+    .card-10 { order: 6; }
+    .card-13 { order: 7; }
+    .card-14 { order: 8; }
+    .card-15 { order: 9; }
+    .card-8 { order: 10; }
+    .card-7 { order: 11; }
+    .card-4 { order: 12; }
 
     /* Card-specific height adjustments */
     .card-1 { height: 80px !important; }
