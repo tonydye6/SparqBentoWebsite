@@ -406,8 +406,11 @@ export function BentoGrid() {
         onClick={() => handleCardClick("team")}
       >
         <h2 className="sparq-title">Meet Our Team</h2>
-        <div className="flex flex-col h-full">
-          <div className="flex-1">
+        <div className="flex flex-col h-full gap-2">
+          <div className="flex-1 h-[45%]">
+            <TeamCarousel />
+          </div>
+          <div className="flex-1 h-[45%]">
             <TeamCarousel />
           </div>
         </div>
