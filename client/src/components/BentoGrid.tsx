@@ -422,10 +422,10 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
       >
         <div className="flex flex-col h-full">
-          <h2 className="sparq-title text-center mb-4">Word Around Town</h2>
-          <div className="flex-1 overflow-hidden" style={{ height: 'calc(100% - 4rem)' }}>
+          <div className="flex-1 overflow-hidden mb-4">
             <NewsCarousel />
           </div>
+          <h2 className="sparq-title text-center">Word Around Town</h2>
         </div>
       </motion.div>
 
