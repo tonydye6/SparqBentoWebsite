@@ -1,0 +1,78 @@
+Please update the BentoGrid component to fix mobile layout issues and display only specific cards. It's crucial that there is no overlapping between cards and that cards not in the specified list are hidden on mobile devices. Implement the following changes:
+Add a mobile-specific stylesheet:
+css
+@media screen and (max-width: 768px) {
+  .bento-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .bento-card {
+    width: 100% !important;
+    height: auto !important;
+    margin-bottom: 0 !important;
+  }
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+Modify the BentoGrid component:
+jsx
+export function BentoGrid() {
+  // ... existing state and functions ...
+
+  const mobileCards = [
+    { id: 1, component: <TeamCarousel />, onClick: () => handleCardClick("team") },
+    { id: 2, component: <AboutUs />, onClick: () => handleCardClick("sparqverse") },
+    { id: 6, component: <ThreeViewer /> },
+    { id: 11, component: <GameNews />, onClick: () => handleCardClick("news") },
+    { id: 10, component: <AiChat />, onClick: () => handleCardClick("ai-chat") },
+    { id: 13, component: <DiscordWidget />, onClick: () => handleCardClick("discord") },
+    { id: 14, component: <SchoolSpotlight />, onClick: () => handleCardClick("school") },
+    { id: 15, component: <span className="text-2xl font-bold">Additional Content</span> },
+    { id: 7, component: <JoinUs />, onClick: () => handleCardClick("join") },
+    { id: 4, component: <BetaForm />, onClick: () => handleCardClick("beta") }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#0A0A1E] p-6">
+      <div className="bento-grid max-w-[1600px] mx-auto">
+        {mobileCards.map((card) => (
+          <motion.div
+            key={card.id}
+            className="relative"
+            whileHover={{ scale: 1.02 }}
+          >
+            <Card
+              className="bento-card cursor-pointer"
+              onClick={card.onClick}
+            >
+              {card.component}
+            </Card>
+          </motion.div>
+        ))}
+        
+        {/* Desktop-only cards */}
+        <motion.div className="hidden-mobile">
+          {/* Add your desktop-only cards here */}
+        </motion.div>
+      </div>
+
+      <BentoCardModal
+        isOpen={expandedCard !== null}
+        onClose={handleCloseModal}
+        title={getModalTitle()}
+      >
+        {renderExpandedContent()}
+      </BentoCardModal>
+    </div>
+  );
+}
+This implementation ensures:
+Only the specified cards are shown on mobile
+Cards are displayed in the correct order
+There is no overlapping between cards
+Cards not in the list are hidden on mobile devices
+The desktop layout remains unchanged
+Existing functionality is maintained
+Please implement these changes and test thoroughly on both mobile and desktop views.
