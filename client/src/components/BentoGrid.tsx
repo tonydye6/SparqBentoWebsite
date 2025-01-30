@@ -10,7 +10,7 @@ import { AiChat } from "./AiChat";
 import { DiscordWidget } from "./DiscordWidget";
 import { JoinUs } from "./JoinUs";
 import { SchoolSpotlight } from "./SchoolSpotlight";
-import { TeamCarousel } from "./TeamCarousel";
+import { TeamCarousel, executiveTeam, advisoryTeam } from "./TeamCarousel";
 import { ThreeViewer } from "./ThreeViewer";
 import { BetaForm } from "./BetaForm";
 import { BentoCardModal } from "./BentoCardModal";
