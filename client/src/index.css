@@ -84,11 +84,7 @@
     letter-spacing: 0.05em;
   }
 
-  /* Modal Styles */
-  [data-radix-popper-content-wrapper] {
-    @apply backdrop-blur-md !important;
-  }
-
+  /* Enhanced Modal Styles */
   .DialogOverlay {
     background-color: rgba(0, 0, 0, 0.6);
     position: fixed;
@@ -106,12 +102,76 @@
     border-radius: 8px;
   }
 
+  /* Modal Typography */
+  .modal-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    text-shadow: 0 0 10px rgba(235, 0, 40, 0.3);
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-content {
+    color: #E6E6E6;
+    line-height: 1.6;
+    padding: 2rem;
+    margin: 1rem 0;
+
+    h2 {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      margin-bottom: 1.25rem;
+      font-size: 1.125rem;
+    }
+
+    ul, ol {
+      margin: 1.25rem 0;
+      padding-left: 1.5rem;
+    }
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    blockquote {
+      border-left: 4px solid var(--outlaw-red);
+      padding-left: 1rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 1.5rem 0;
+    }
+  }
+
   @keyframes overlayShow {
     from {
       opacity: 0;
     }
     to {
       opacity: 1;
+    }
+  }
+
+  @keyframes contentShow {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -48%) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
   }
 }
