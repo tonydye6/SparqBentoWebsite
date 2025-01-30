@@ -111,6 +111,6 @@ app.use((req, res, next) => {
   // this serves both the API and the client
   const PORT = process.env.PORT || 5000;
   server.listen(PORT, "0.0.0.0", () => {
-    log(`Server running in ${app.get('env')} mode on port ${PORT}`);
+    log(`Server running in ${app.get('env')} mode on http://0.0.0.0:${PORT}`);
   });
 })();
