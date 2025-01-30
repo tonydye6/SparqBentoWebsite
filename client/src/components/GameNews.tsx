@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Newspaper } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface NewsItem {
   id: string;
@@ -51,21 +50,33 @@ export function GameNews({ expanded, onHeadlineClick }: GameNewsProps) {
   };
 
   const prevNews = () => {
-    setCurrentIndex((prev) => (prev - 1 + newsItems.length) % newsItems.length);
+    setCurrentIndex((prev) => 
+      (prev - 1 + newsItems.length) % newsItems.length
+    );
   };
 
+  const currentNews = newsItems[currentIndex];
+
   return (
-    <div className="h-full p-4">
-      {newsItems.map((item) => (
-        <div 
-          key={item.id}
-          className="news-item cursor-pointer p-2 hover:bg-gray-800/50 transition-all duration-200"
-          onClick={() => onHeadlineClick(item.headline, item.content, item.category, item.createdAt)}
-        >
-          <h3 className="text-lg font-semibold hover:text-primary transition-colors">{item.headline}</h3>
-          <p className="text-sm text-gray-400 truncate">{item.summary}</p>
+    <div className="h-full flex flex-col">
+      <div 
+        className="flex-1 p-2 cursor-pointer hover:bg-gray-800/50 transition-all duration-200"
+        onClick={() => onHeadlineClick(
+          currentNews.headline,
+          currentNews.content,
+          currentNews.category,
+          currentNews.createdAt
+        )}
+      >
+        <div className="text-center">
+          <span className="text-sm font-medium text-primary mb-2 block">
+            {currentNews.category}
+          </span>
+          <h4 className="text-lg font-semibold hover:text-primary transition-colors">
+            {currentNews.headline}
+          </h4>
         </div>
-      ))}
+      </div>
 
       <div className="flex justify-between mt-4">
         <Button variant="ghost" size="icon" onClick={prevNews}>
