@@ -164,15 +164,16 @@ const advisoryTeam: TeamMember[] = [
 
 interface TeamCarouselProps {
   members: TeamMember[];
+  interval?: number;
 }
 
-export function TeamCarousel({ members }: TeamCarouselProps) {
+export function TeamCarousel({ members, interval = 5000 }: TeamCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const carouselInterval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % members.length);
-    }, 5000);
+    }, interval);
 
     return () => clearInterval(interval);
   }, [members.length]);

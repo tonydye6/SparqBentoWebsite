@@ -421,10 +421,10 @@ export function BentoGrid() {
         </div>
         <div className="flex flex-col h-full card-content">
           <div className="flex-1">
-            <TeamCarousel members={executiveTeam} />
+            <TeamCarousel members={executiveTeam} interval={5000} />
           </div>
           <div className="flex-1">
-            <TeamCarousel members={advisoryTeam} />
+            <TeamCarousel members={advisoryTeam} interval={7000} />
           </div>
         </div>
       </motion.div>
