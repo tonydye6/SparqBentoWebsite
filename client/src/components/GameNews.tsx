@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, ChevronRight as ChevronRightIcon } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface NewsItem {
   id: string;
@@ -72,16 +72,9 @@ export function GameNews({ expanded, onHeadlineClick }: GameNewsProps) {
           <span className="text-sm font-medium text-primary mb-2 block">
             {currentNews.category}
           </span>
-          <h4 className="text-lg font-semibold mb-2 hover:text-primary transition-colors">
+          <h4 className="text-lg font-semibold hover:text-primary transition-colors">
             {currentNews.headline}
           </h4>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="mt-2 text-primary hover:text-primary hover:bg-primary/10"
-          >
-            Read More <ChevronRightIcon className="ml-2 h-4 w-4" />
-          </Button>
         </div>
       </div>
 
