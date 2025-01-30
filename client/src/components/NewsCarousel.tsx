@@ -86,8 +86,8 @@ export function NewsCarousel() {
   }
 
   return (
-    <div className="h-full p-1 flex flex-col">
-      <Card className="flex-1 p-2 bg-black/20 border-0">
+    <div className="h-full flex flex-col">
+      <Card className="flex-1 p-3 bg-black/20 border-0">
         <div className="h-full flex flex-col">
           {news[currentIndex] && (
             <div 
