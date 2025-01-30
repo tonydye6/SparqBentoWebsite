@@ -10,11 +10,6 @@ interface BentoCardModalProps {
   title?: string;
 }
 
-const backdropVariants = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 }
-};
-
 const modalVariants = {
   hidden: { 
     opacity: 0,
@@ -80,7 +75,7 @@ export function BentoCardModal({
           )}
 
           <div className="flex-1 overflow-y-auto">
-            <div className="p-6">
+            <div className="news-modal-content p-6">
               {children}
             </div>
           </div>
