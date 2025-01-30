@@ -126,12 +126,12 @@ export function AiChat() {
         <img src="/bfpf.png" alt="Sparq Games" className="h-16 object-contain" />
         <div className="text-center space-y-4 text-gray-300">
           <div>
-            <p className="italic">"AI is the future of gaming."</p>
-            <p className="text-sm">- Elon Musk</p>
+            <p className="italic text-2xl">"AI is the future of gaming."</p>
+            <p className="text-base">- Elon Musk</p>
           </div>
           <div>
-            <p className="italic">"Gaming as an industry is going to get revitalized by AI"</p>
-            <p className="text-sm">- Jensen Huang</p>
+            <p className="italic text-2xl">"Gaming as an industry is going to get revitalized by AI"</p>
+            <p className="text-base">- Jensen Huang</p>
           </div>
         </div>
       </div>
