@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Volume2, VolumeX } from "lucide-react";
 
@@ -6,6 +6,15 @@ export function TeamCard() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoError, setVideoError] = useState(false);
   const [isMuted, setIsMuted] = useState(false); // Default to unmuted
+
+  useEffect(() => {
+    // Cleanup function to pause video when component unmounts
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.pause();
+      }
+    };
+  }, []);
 
   const toggleMute = () => {
     if (videoRef.current) {
