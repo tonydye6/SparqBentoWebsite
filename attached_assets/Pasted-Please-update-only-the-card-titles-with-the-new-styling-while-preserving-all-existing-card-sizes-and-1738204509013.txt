@@ -1,0 +1,80 @@
+Please update only the card titles with the new styling while preserving all existing card sizes and layouts:
+Add this title styling to your global CSS (without affecting card dimensions):
+css
+.sparq-title {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #FFFFFF 0%, #eb0028 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(235, 0, 40, 0.5);
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+}
+Remove redundant titles and add new styled ones:
+jsx
+// TeamCarousel.tsx - Remove "Our Team" text
+export function TeamCarousel() {
+  return (
+    <div className="relative">
+      <h2 className="sparq-title">Meet Our Team</h2>
+      <div className="carousel-content">
+        {/* Existing carousel content */}
+      </div>
+    </div>
+  );
+}
+
+// GameNews.tsx - Remove "Word Around Town" text
+export function GameNews() {
+  return (
+    <div className="relative">
+      <h2 className="sparq-title">Word Around Town</h2>
+      <div className="news-content">
+        {/* Existing news content */}
+      </div>
+    </div>
+  );
+}
+Update other card titles:
+jsx
+<div className="relative">
+  <h2 className="sparq-title">Join Beta Now!</h2>
+  {/* Beta form content */}
+</div>
+
+<div className="relative">
+  <h2 className="sparq-title">School Spotlight</h2>
+  {/* School content */}
+</div>
+
+<div className="relative">
+  <h2 className="sparq-title">The Sparq Story</h2>
+  {/* About content */}
+</div>
+
+<div className="relative">
+  <h2 className="sparq-title">Sparq Assistant</h2>
+  {/* Chat content */}
+</div>
+
+<div className="relative">
+  <h2 className="sparq-title">Connect With Us</h2>
+  {/* Social content */}
+</div>
+
+<div className="relative">
+  <h2 className="sparq-title">Join the Sparq Uprising!</h2>
+  {/* CTA content */}
+</div>
+These changes will:
+Apply the new gradient text style to all titles
+Remove redundant titles from carousels
+Position titles consistently across cards
+Preserve all existing card dimensions and layouts
+Maintain current functionality

@@ -117,6 +117,24 @@
 }
 
 @layer components {
+  /* Add the new title styling */
+  .sparq-title {
+    font-family: 'Chakra Petch', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #FFFFFF 0%, #eb0028 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 10px rgba(235, 0, 40, 0.5);
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2;
+  }
+
+  /* Keep existing bento grid styles */
   .bento-grid {
     @apply grid grid-cols-12 grid-rows-10 gap-6 p-4 min-h-screen;
     background: var(--carbon);
