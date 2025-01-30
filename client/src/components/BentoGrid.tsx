@@ -96,6 +96,12 @@ const MagneticCard: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 export function BentoGrid() {
   const [expandedCard, setExpandedCard] = useState<ExpandedCard>(null);
+  const [selectedNews, setSelectedNews] = useState<{
+    headline: string;
+    content: string;
+    category: string;
+    date: string;
+  } | null>(null);
   const [recentBadge, setRecentBadge] = useState<Badge | null>(null);
   const visitedSections = useRef(new Set<string>());
   const { awardBadge, hasBadge } = useBadgeStore();
@@ -162,8 +168,14 @@ export function BentoGrid() {
     }
   };
 
+  const handleNewsClick = (headline: string, content: string, category: string, date: string) => {
+    setSelectedNews({ headline, content, category, date });
+    setExpandedCard("news");
+  };
+
   const handleCloseModal = () => {
     setExpandedCard(null);
+    setSelectedNews(null);
   };
 
   const getModalContent = () => {
@@ -175,7 +187,23 @@ export function BentoGrid() {
       case "beta":
         return <BetaForm expanded />;
       case "news":
-        return <GameNews />;
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-primary">
+                {selectedNews?.category}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {selectedNews?.date ? new Date(selectedNews.date).toLocaleDateString() : ''}
+              </span>
+            </div>
+            <article className="prose prose-invert max-w-none">
+              <p className="text-lg leading-relaxed">
+                {selectedNews?.content}
+              </p>
+            </article>
+          </div>
+        );
       case "about":
         return (
           <div className="p-6 space-y-4">
@@ -440,7 +468,10 @@ export function BentoGrid() {
           <h2 className="card-title">Word Around Town</h2>
         </div>
         <div className="card-content">
-          <NewsCarousel />
+          <GameNews
+            expanded={expandedCard === "news"}
+            onHeadlineClick={handleNewsClick}
+          />
         </div>
       </motion.div>
 
@@ -519,7 +550,7 @@ export function BentoGrid() {
           <BentoCardModal
             isOpen={true}
             onClose={handleCloseModal}
-            title={expandedCard.charAt(0).toUpperCase() + expandedCard.slice(1)}
+            title={selectedNews?.headline || expandedCard.charAt(0).toUpperCase() + expandedCard.slice(1)}
           >
             {getModalContent()}
           </BentoCardModal>
