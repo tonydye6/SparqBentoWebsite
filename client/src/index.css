@@ -136,7 +136,9 @@
     background: linear-gradient(90deg, #FFFFFF 0%, #eb0028 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 10px rgba(235, 0, 40, 0.5);
+    text-shadow: 
+      2px 2px 4px rgba(0, 0, 0, 0.8),
+      0 0 10px rgba(235, 0, 40, 0.5);
     animation: pulseGlow 2s ease-in-out infinite;
     transition: transform 0.3s ease;
   }
@@ -147,14 +149,20 @@
 
   @keyframes pulseGlow {
     0% {
-      text-shadow: 0 0 10px rgba(235, 0, 40, 0.5);
+      text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(235, 0, 40, 0.5);
     }
     50% {
-      text-shadow: 0 0 20px rgba(235, 0, 40, 0.8),
-                   0 0 30px rgba(235, 0, 40, 0.4);
+      text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(235, 0, 40, 0.8),
+        0 0 30px rgba(235, 0, 40, 0.4);
     }
     100% {
-      text-shadow: 0 0 10px rgba(235, 0, 40, 0.5);
+      text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(235, 0, 40, 0.5);
     }
   }
 
