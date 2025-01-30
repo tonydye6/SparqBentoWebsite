@@ -318,7 +318,13 @@
       }
     }
     .pulse-title {
-      animation: mobileTitlePulse 3s ease-in-out infinite;
+      animation: none; /* Default to no animation */
+    }
+
+    /* Only apply pulse animation to specific titles */
+    .join-card .pulse-title,
+    .card-11 .pulse-title {
+      animation: mobileTitlePulse 4s ease-in-out infinite;
     }
 
     @keyframes mobileTitlePulse {
@@ -327,9 +333,9 @@
         text-shadow: 0 0 10px rgba(235, 0, 40, 0.3);
       }
       50% {
-        transform: scale(1.1);
-        text-shadow: 0 0 20px rgba(235, 0, 40, 0.8),
-                     0 0 30px rgba(235, 0, 40, 0.4);
+        transform: scale(1.05);
+        text-shadow: 0 0 15px rgba(235, 0, 40, 0.6),
+                     0 0 25px rgba(235, 0, 40, 0.3);
       }
       100% {
         transform: scale(1);
@@ -337,11 +343,18 @@
       }
     }
 
-    /* Remove pulse animation for desktop */
-    @media screen and (min-width: 769px) {
-      .pulse-title {
-        animation: none;
-      }
+    /* Remove animation for Mission, Vision, Values cards */
+    .card-13 .pulse-title,
+    .card-14 .pulse-title,
+    .card-15 .pulse-title {
+      animation: none;
+    }
+  }
+
+  /* Remove pulse animation for desktop */
+  @media screen and (min-width: 769px) {
+    .pulse-title {
+      animation: none;
     }
   }
 
