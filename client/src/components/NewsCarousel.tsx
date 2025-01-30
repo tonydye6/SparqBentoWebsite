@@ -3,13 +3,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Newspaper } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { BentoCardModal } from "@/components/BentoCardModal";
 
 interface NewsItem {
   id: number;
   title: string;
-  url: string;
+  content: string;
   category: 'NIL' | 'AI Gaming' | 'Web3';
   createdAt: string;
+  url?: string;
 }
 
 async function fetchNews(): Promise<NewsItem[]> {
@@ -22,6 +24,7 @@ async function fetchNews(): Promise<NewsItem[]> {
 
 export function NewsCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: news = [], isLoading, error } = useQuery({
     queryKey: ['news'],
     queryFn: fetchNews,
@@ -47,13 +50,6 @@ export function NewsCarousel() {
     setCurrentIndex((prev) => 
       (prev - 1 + Math.max(1, news.length)) % Math.max(1, news.length)
     );
-  };
-
-  const openArticle = (e: React.MouseEvent, article: NewsItem) => {
-    e.preventDefault();
-    if (article?.url) {
-      window.open(article.url, '_blank');
-    }
   };
 
   if (isLoading) {
@@ -86,29 +82,26 @@ export function NewsCarousel() {
     );
   }
 
+  const currentNews = news[currentIndex];
+
   return (
     <div className="h-full flex flex-col">
-      <Card className="flex-1 p-2 bg-black/20 border-0">
+      <Card 
+        className="flex-1 p-2 bg-black/20 border-0 cursor-pointer hover:bg-white/5 transition-all duration-200"
+        onClick={() => setIsModalOpen(true)}
+      >
         <div className="h-full flex flex-col">
-          {news[currentIndex] && (
-            <a 
-              href={news[currentIndex].url || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => openArticle(e, news[currentIndex])}
-              className="cursor-pointer transition-all duration-200 hover:scale-[1.02] p-4 rounded-lg hover:bg-white/5"
-              role="link"
-              aria-label={`Read more about ${news[currentIndex].title}`}
-            >
+          {currentNews && (
+            <div className="p-4">
               <div className="text-center">
                 <span className="text-sm font-medium text-primary mb-3 block">
-                  {news[currentIndex].category}
+                  {currentNews.category}
                 </span>
                 <h4 className="text-xl font-semibold mb-3 hover:text-primary transition-colors">
-                  {news[currentIndex].title}
+                  {currentNews.title}
                 </h4>
               </div>
-            </a>
+            </div>
           )}
         </div>
       </Card>
@@ -121,6 +114,41 @@ export function NewsCarousel() {
           <ChevronRight className="w-4 h-4" />
         </Button>
       </div>
+
+      {currentNews && (
+        <BentoCardModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title={currentNews.title}
+        >
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-primary">
+                {currentNews.category}
+              </span>
+              <span className="text-sm text-muted-foreground">
+                {new Date(currentNews.createdAt).toLocaleDateString()}
+              </span>
+            </div>
+            <article className="prose prose-invert max-w-none">
+              <p className="text-lg leading-relaxed">
+                {currentNews.content}
+              </p>
+              {currentNews.url && (
+                <a
+                  href={currentNews.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center mt-4 text-primary hover:underline"
+                >
+                  Read full article
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </a>
+              )}
+            </article>
+          </div>
+        </BentoCardModal>
+      )}
     </div>
   );
 }
