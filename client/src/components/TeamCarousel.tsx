@@ -203,11 +203,6 @@ export function TeamCarousel() {
 
   return (
     <div className="h-full p-4 flex flex-col">
-      <div className="flex items-center gap-2 mb-4">
-        <Users className="w-5 h-5" />
-        <h3 className="font-semibold">Our Team</h3>
-      </div>
-
       <Card className="flex-1 p-4 bg-black/20 flex flex-col items-center">
         <Avatar className="w-40 h-40 mb-4">
           <AvatarImage src={member.photo} alt={member.name} />
