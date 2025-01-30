@@ -439,6 +439,7 @@ export function BentoGrid() {
         className="bento-card card-12 ai-chat-card p-4"
         whileHover={{ scale: 1.02 }}
       >
+        <h2 className="sparq-title">Sparq Assistant</h2>
         <div className="h-full">
           <AiChat />
         </div>
