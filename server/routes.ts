@@ -11,25 +11,38 @@ import rateLimit from 'express-rate-limit';
 
 const SessionStore = MemoryStore(session);
 
-// Rate limiter for high-concurrency endpoints
-const chatLimiter = rateLimit({
+// Rate limiter configuration for Reserved VM
+const rateLimiterConfig = {
   windowMs: 60 * 1000, // 1 minute
   max: 20, // limit each IP to 20 requests per minute
-  message: {
-    error: 'Too many requests, please try again later.'
+  standardHeaders: true,
+  legacyHeaders: false,
+  trustProxy: false, // Don't trust X-Forwarded-For header by default
+  handler: (req: any, res: any) => {
+    res.status(429).json({
+      error: 'Too many requests, please try again later.'
+    });
+  }
+};
+
+const chatLimiter = rateLimit({
+  ...rateLimiterConfig,
+  keyGenerator: (req) => {
+    // Use CF-Connecting-IP for Cloudflare or fallback to remote address
+    return req.get('CF-Connecting-IP') || req.ip;
   }
 });
 
 const discordLimiter = rateLimit({
+  ...rateLimiterConfig,
   windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: { message: "Too many Discord widget requests, please try again later." }
+  max: 100
 });
 
 const newsLimiter = rateLimit({
+  ...rateLimiterConfig,
   windowMs: 5 * 60 * 1000, // 5 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: { message: "Too many news feed requests, please try again later." }
+  max: 100
 });
 
 // Health status tracking
@@ -184,7 +197,7 @@ function startNewsRefresh() {
 
 export function registerRoutes(app: Express): Server {
   // Configure trust proxy for Reserved VM environment
-  app.set('trust proxy', true);
+  app.set('trust proxy', 1); // trust first proxy
 
   // Session configuration optimized for Reserved VM
   app.use(session({
@@ -194,10 +207,13 @@ export function registerRoutes(app: Express): Server {
     secret: process.env.SESSION_SECRET || 'dev-secret-key',
     resave: false,
     saveUninitialized: false,
+    proxy: true, // Required for secure cookies behind proxy
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      httpOnly: true,
+      sameSite: 'lax',
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
-      sameSite: 'lax'
+      domain: process.env.NODE_ENV === 'production' ? '.sparqgames.com' : undefined
     }
   }));
 
@@ -300,7 +316,7 @@ export function registerRoutes(app: Express): Server {
 
       const userMessages = req.body.messages.filter(msg => msg.role === 'user');
       const lastUserMessage = userMessages[userMessages.length - 1];
-      
+
       if (lastUserMessage) {
         formattedMessages.push(lastUserMessage);
       }
@@ -337,8 +353,8 @@ export function registerRoutes(app: Express): Server {
       res.json(data);
     } catch (error) {
       console.error('Chat Error:', error);
-      res.status(500).json({ 
-        error: error instanceof Error ? error.message : 'Chat service temporarily unavailable' 
+      res.status(500).json({
+        error: error instanceof Error ? error.message : 'Chat service temporarily unavailable'
       });
     }
   });
@@ -487,20 +503,23 @@ export function registerRoutes(app: Express): Server {
   // Start health checks
   const healthCheckInterval = startHealthChecks();
 
-  // Cleanup function for graceful shutdown
-  const cleanup = () => {
-    if (healthCheckInterval) {
-      clearInterval(healthCheckInterval);
-    }
-    if (newsRefreshInterval) {
-      clearInterval(newsRefreshInterval);
-    }
-    console.log('Cleaning up resources...');
+  // Add graceful shutdown handler for Reserved VM
+  const shutdownHandler = () => {
+    console.log('Received shutdown signal, closing HTTP server...');
+    httpServer.close(() => {
+      console.log('HTTP server closed');
+      process.exit(0);
+    });
+
+    // Force close if graceful shutdown fails
+    setTimeout(() => {
+      console.error('Could not close connections in time, forcefully shutting down');
+      process.exit(1);
+    }, 10000);
   };
 
-  // Handle process termination
-  process.on('SIGTERM', cleanup);
-  process.on('SIGINT', cleanup);
+  process.on('SIGTERM', shutdownHandler);
+  process.on('SIGINT', shutdownHandler);
 
   const httpServer = createServer(app);
   return httpServer;
