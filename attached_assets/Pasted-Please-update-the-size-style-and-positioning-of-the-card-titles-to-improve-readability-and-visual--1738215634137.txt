@@ -1,0 +1,106 @@
+Please update the size, style, and positioning of the card titles to improve readability and visual appeal. Follow these steps:
+1. Update Title Styling
+Use the following CSS for card titles:
+css
+.card-title {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: clamp(1.5rem, 2vw, 2.25rem); /* Responsive font size */
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  text-shadow: 0 0 10px rgba(235, 0, 40, 0.5);
+  margin-bottom: 1rem;
+  text-align: center; /* Center-align titles */
+}
+2. Add Title Placement
+Position titles dynamically to avoid overlapping with content:
+css
+.card-title-container {
+  position: absolute;
+  top: 10px; /* Adjust spacing from top of card */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2; /* Ensure title is above other content */
+}
+3. Remove Redundant Titles
+Remove the existing redundant titles from TeamCarousel and NewsCarousel components:
+jsx
+// TeamCarousel.jsx
+export function TeamCarousel() {
+  return (
+    <div className="carousel-content">
+      {/* Existing carousel content */}
+    </div>
+  );
+}
+
+// NewsCarousel.jsx
+export function NewsCarousel() {
+  return (
+    <div className="news-content">
+      {/* Existing news content */}
+    </div>
+  );
+}
+4. Add New Titles
+Add the new styled titles to each card where appropriate:
+jsx
+<div className="relative">
+  <div className="card-title-container">
+    <h2 className="card-title">Word Around Town</h2>
+  </div>
+  <NewsCarousel />
+</div>
+
+<div className="relative">
+  <div className="card-title-container">
+    <h2 className="card-title">Meet Our Team</h2>
+  </div>
+  <TeamCarousel />
+</div>
+
+<div className="relative">
+  <div className="card-title-container">
+    <h2 className="card-title">Join Beta Now!</h2>
+  </div>
+</div>
+
+<div className="relative">
+  <div className="card-title-container">
+    <h2 className="card-title">School Spotlight</h2>
+  </div>
+</div>
+
+<div className="relative">
+  <div className="card-title-container">
+    <h2 className="card-title">The Sparq Story</h2>
+  </div>
+</div>
+
+<div className="relative">
+  <div className="card-title-container">
+    <h2 className="card-title">Sparq Assistant</h2>
+  </div>
+</div>
+
+<div className="relative">
+  <div className="card-title-container">
+    <h2 className="card-title">Connect With Us</h2>
+  </div>
+</div>
+
+<div className="relative">
+  <div className="card-title-container">
+    <h2 className="card-title">Join The Sparq Uprising!</h2>
+  </div>
+</div>
+5. Ensure No Overlap
+Adjust padding or margins inside cards to prevent overlap between titles and content:
+css
+.card-content {
+  padding-top: calc(1rem + var(--title-height)); /* Add space for title */
+}
+6. Test Across All Devices
+Verify that the updated titles are properly positioned and readable on desktop, tablet, and mobile views.
+Ensure that no card content overlaps with the titles.
+Please implement these changes to ensure all card titles are consistent in style and placement while maintaining the current card sizes and layout.
