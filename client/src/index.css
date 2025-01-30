@@ -164,10 +164,12 @@
       grid-row: auto !important;
     }
 
+    /* Hide only specific cards on mobile */
     .card-3, .card-5, .card-12 {
       display: none !important;
     }
 
+    /* Mobile-specific ordering */
     .card-1 { order: 1; }
     .card-2 { order: 2; }
     .card-6 { order: 3; }
@@ -181,7 +183,9 @@
     .card-7 { order: 11; }
     .card-4 { order: 12; }
 
+    /* Card-specific height adjustments */
     .card-1 { height: 80px !important; }
+    .card-2 { min-height: 200px !important; } /* Ensure Card #2 has minimum height */
     .card-6 { height: 300px !important; }
     .card-13, .card-14, .card-15 { height: 150px !important; }
 
@@ -229,6 +233,7 @@
     }
   }
 
+  /* Desktop card positioning */
   .card-1 { @apply col-start-4 col-span-9 row-span-1; }
   .card-2 { @apply col-start-1 col-span-3 row-span-2; }
   .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-5; }
