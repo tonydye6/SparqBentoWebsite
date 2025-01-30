@@ -21,8 +21,11 @@ export function JoinUs({ expanded = false }) {
   }
 
   return (
-    <div className="p-6 space-y-8">
-      <div className="space-y-4">
+    <div className="p-6 space-y-8 relative">
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0">
+        <img src="/pyramid.png" alt="Pyramid" className="w-[200px] h-auto opacity-30" />
+      </div>
+      <div className="space-y-4 relative z-10">
         <p className="text-lg leading-relaxed">
           Sparq's platform simplifies how games get built and marketed so that the employee owners and development partners focus on creativity instead of the tedious tasks that absorb game-building hours. Sparq is making games more fun by rewarding the best people in the business to truly do what they do best.
         </p>
