@@ -16,7 +16,7 @@ export function JoinUs({ expanded = false }) {
   if (!expanded) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-4 relative">
-        <img src="/pyramid.png" alt="Pyramid" className="w-[200px] h-auto opacity-30" />
+        <img src="/pyramid.png" alt="Pyramid" className="w-[800px] h-auto opacity-30" />
       </div>
     );
   }
