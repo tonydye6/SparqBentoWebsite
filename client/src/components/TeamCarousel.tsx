@@ -189,7 +189,7 @@ export function TeamCarousel({ members }: TeamCarouselProps) {
 
   return (
     <div className="h-full flex flex-col">
-      <Card className="flex-1 p-2 bg-black/20 flex flex-col items-center">
+      <Card className="flex-1 p-1 bg-black/20 flex flex-col items-center">
         <Avatar className="w-40 h-40 mb-4">
           <AvatarImage src={member.photo} alt={member.name} />
           <AvatarFallback>
