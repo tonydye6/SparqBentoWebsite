@@ -452,7 +452,7 @@ export function BentoGrid() {
           <h2 className="card-title">The Sparq Story</h2>
         </div>
         <div className="flex items-center justify-center p-6 h-full">
-          <blockquote className="text-[23px] italic text-center text-white/90">
+          <blockquote className="text-sm italic text-center text-white/90">
             "There are over 200 million mobile gamers in the U.S. and 65% of them have a favorite college sports team. They've been starved of college sports game content for years. It's literally the most engaged fan base on the planet and we're about to flood them with fun."
             <footer className="mt-2 text-white/70 font-semibold">
               - Jan Horsfall, CEO & Co-Founder
