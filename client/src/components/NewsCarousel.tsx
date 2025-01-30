@@ -51,7 +51,7 @@ export function NewsCarousel() {
 
   const openArticle = (article: NewsItem) => {
     if (article?.url) {
-      window.open(article.url, '_blank');
+      window.open(article.url, '_blank', 'noopener noreferrer');
     }
   };
 
@@ -91,14 +91,14 @@ export function NewsCarousel() {
         <div className="h-full flex flex-col">
           {news[currentIndex] && (
             <div 
-              className="cursor-pointer" 
               onClick={() => openArticle(news[currentIndex])}
+              className="cursor-pointer transition-all duration-200 hover:scale-[1.02] p-4 rounded-lg hover:bg-white/5"
             >
               <div className="text-center">
                 <span className="text-sm font-medium text-primary mb-3 block">
                   {news[currentIndex].category}
                 </span>
-                <h4 className="text-xl font-semibold mb-3">
+                <h4 className="text-xl font-semibold mb-3 hover:text-primary transition-colors">
                   {news[currentIndex].title}
                 </h4>
               </div>
