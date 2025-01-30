@@ -392,10 +392,10 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
         onClick={() => handleCardClick("join")}
       >
-        <div className="card-title-container mb-4 md:mb-0">
+        <div className="card-title-container mb-4 md:mb-0 md:mt-4">
           <h2 className="card-title">Join the Sparq Team!</h2>
         </div>
-        <div className="pt-16 md:pt-6">
+        <div className="pt-16 md:pt-16">
           <JoinUs />
         </div>
       </motion.div>
