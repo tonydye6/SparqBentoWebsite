@@ -119,7 +119,7 @@
 @layer components {
   .card-title {
     font-family: 'Chakra Petch', sans-serif;
-    font-size: clamp(1.5rem, 2vw, 2.25rem);
+    font-size: clamp(2rem, 3vw, 3.5rem); /* Increased from 1.5rem to 2rem base size */
     font-weight: 600;
     text-transform: uppercase;
     color: #FFFFFF;
