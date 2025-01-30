@@ -83,109 +83,26 @@ const teamMembers: TeamMember[] = [
   }
 ];
 
-const teamMembersTwo: TeamMember[] = [
-  {
-    name: "David Ortiz",
-    title: "Advisory Board Member",
-    photo: "/davido.png",
-    linkedIn: "https://www.linkedin.com/in/david-ortiz-9b79a41/",
-    previousCompanies: [
-      { name: "EA Sports", logo: "/eas.png" },
-      { name: "Activision/Blizzard", logo: "/ab.png" }
-    ],
-    bio: "20+ years of experience in gaming. Deep expertise in coming up with innovative ideas and building world class teams. Generated $2.5 billion in revenue from products he has been involved in developing. Built blockbuster teams at sector leaders like Microsoft/Activision, EA Sports, Sony, and Warner Brothers."
-  },
-  {
-    name: "Mark Coughlin",
-    title: "Advisory Board Member",
-    photo: "/markc.png",
-    linkedIn: "https://www.linkedin.com/in/mark-coughlin-17b7222/",
-    previousCompanies: [
-      { name: "Valvoline", logo: "/val.png" },
-      { name: "Envy Gaming", logo: "/envy.png" }
-    ],
-    bio: "Sports marketing maven and Esports pioneer who led the negotiation strategies for Fortune 500 companies in sponsorship, IP, media, celebrity endorsement, and personal services. Developed and negotiated over $2 billion of marketing program investments for some of the largest sports-related brands, including Sprint Nextel, BMW, Ford, and Sunoco."
-  },
-  {
-    name: "Jim Drewry",
-    title: "Advisory Board Member",
-    photo: "/jimd.png",
-    linkedIn: "https://www.linkedin.com/in/jimdrewry/",
-    previousCompanies: [
-      { name: "Warner Bros", logo: "/wb.png" },
-      { name: "Gamer Sensei", logo: "/gs.png" }
-    ],
-    bio: "Gaming and tech exec successfully applying data-driven product principles to consumer and B2B technology businesses. An innovator who identifies novel opportunities to improve outcomes and executes to deliver results. Skilled at building high-functioning teams and inspiring top performance."
-  },
-  {
-    name: "Michelle Kahle",
-    title: "Advisory Board Member",
-    photo: "/michellek.png",
-    linkedIn: "https://www.linkedin.com/in/mfbronson/",
-    previousCompanies: [
-      { name: "Valvoline", logo: "/val.png" }
-    ],
-    bio: "Initiative-taking, digital thought leader known for driving results with deep expertise in website development, UX design, content strategy, CRM, and integrated digital media marketing. A dedicated team leader with a focus on solutions and achieving business objectives. Expert in Sales Force applications and company integration."
-  },
-  {
-    name: "Adam Mersky",
-    title: "Advisory Board Member",
-    photo: "/adamm.png",
-    linkedIn: "https://www.linkedin.com/in/adammersky/",
-    previousCompanies: [
-      { name: "Warner Bros", logo: "/wb.png" },
-      { name: "Turbine", logo: "/turb.png" }
-    ],
-    bio: "Over 30 years in digital marketing, a connected, seasoned leader dedicated to helping video game brands find and amplify their unique voices. Has deep industry experience with globally recognized gaming IPs and has created campaigns that engage and resonate with large-scale, diverse gaming audiences. Expertise in social media, online media, and event marketing."
-  },
-  {
-    name: "Jon Embree",
-    title: "Advisory Board Member",
-    photo: "/jone.png",
-    linkedIn: "https://www.miamidolphins.com/team/coaches-roster/jon-embree",
-    previousCompanies: [
-      { name: "Colorado Buffaloes", logo: "/buffs.png" },
-      { name: "Miami Dolphins", logo: "/dolphins.png" }
-    ],
-    bio: "A seasoned football coach with extensive experience at both the collegiate and professional levels. Currently serving as the Assistant Head Coach and Tight Ends Coach for the Miami Dolphins, Jon brings a wealth of knowledge in athlete development and team management to Sparq Games."
-  },
-  {
-    name: "Craig Alexander",
-    title: "Advisory Board Member",
-    photo: "/craiga.png",
-    linkedIn: "https://www.linkedin.com/in/craig-alexander-2a46/",
-    previousCompanies: [
-      { name: "EA", logo: "/ear.png" },
-      { name: "Warner Bros", logo: "/wb.png" }
-    ],
-    bio: "Oversaw development for the Lord of the Rings Online (second highest-rated MMO ever, multiple Game of the Year awards), Dungeons & Dragons Online (first F2P MMO in North America/EU). Helped facilitate the sale of Turbine to Warner Bros. Expert in premium F2P online games and pioneering game business models."
-  }
-];
-
-interface TeamCarouselProps {
-  members?: TeamMember[];
-}
-
-export function TeamCarousel({ members = teamMembers }: TeamCarouselProps) {
+export function TeamCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % members.length);
+      setCurrentIndex((prev) => (prev + 1) % teamMembers.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [members.length]);
+  }, []);
 
   const nextMember = () => {
-    setCurrentIndex((prev) => (prev + 1) % members.length);
+    setCurrentIndex((prev) => (prev + 1) % teamMembers.length);
   };
 
   const prevMember = () => {
-    setCurrentIndex((prev) => (prev - 1 + members.length) % members.length);
+    setCurrentIndex((prev) => (prev - 1 + teamMembers.length) % teamMembers.length);
   };
 
-  const member = members[currentIndex];
+  const member = teamMembers[currentIndex];
 
   return (
     <div className="h-full p-4 flex flex-col">
