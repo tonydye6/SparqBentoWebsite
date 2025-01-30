@@ -100,6 +100,23 @@ export function BentoGrid() {
   const visitedSections = useRef(new Set<string>());
   const { awardBadge, hasBadge } = useBadgeStore();
 
+  // Define mobile order for cards
+  const mobileOrder = [1, 2, 6, 11, 10, 13, 14, 15, 7, 4];
+
+  // Define cards with their components
+  const cards = [
+    { id: 1, component: <TeamCarousel />, onClick: () => handleCardClick("team") },
+    { id: 2, component: <AboutUs />, onClick: () => handleCardClick("sparqverse") },
+    { id: 6, component: <ThreeViewer /> },
+    { id: 11, component: <GameNews />, onClick: () => handleCardClick("news") },
+    { id: 10, component: <AiChat />, onClick: () => handleCardClick("ai-chat") },
+    { id: 13, component: <DiscordWidget />, onClick: () => handleCardClick("discord") },
+    { id: 14, component: <SchoolSpotlight />, onClick: () => handleCardClick("school") },
+    { id: 15, component: <span className="text-2xl font-bold">Additional Content</span> },
+    { id: 7, component: <JoinUs />, onClick: () => handleCardClick("join") },
+    { id: 4, component: <BetaForm />, onClick: () => handleCardClick("beta") }
+  ];
+
   const checkExplorerBadge = () => {
     if (visitedSections.current.size >= 5 && !hasBadge(BADGES.EXPLORER.id)) {
       awardBadge(BADGES.EXPLORER.id);
@@ -281,206 +298,82 @@ export function BentoGrid() {
 
   return (
     <div className="bento-grid">
-      {/* Card 2: Join Beta */}
-      <div
-        className="bento-card card-2 beta-card relative overflow-hidden cursor-pointer z-10"
-        onClick={() => handleCardClick("beta")}
-      >
-        <div className="absolute inset-0 bg-gradient-to-br from-carbon/80 to-carbon/40 pointer-events-none" />
-        <div
-          className="absolute inset-0 bg-cover bg-center pointer-events-none"
-          style={{
-            backgroundImage: 'url("/ftcc.png")',
-            opacity: 0.6,
-          }}
-        />
-        <div className="flex items-center justify-center h-full relative">
-          <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2 pointer-events-none">Join Beta Now!</h2>
-        </div>
-      </div>
+      {mobileOrder.map((id) => {
+        const card = cards.find((c) => c.id === id);
+        return (
+          <motion.div
+            key={id}
+            className={`bento-card card-${id} ${
+              id === 4 ? "beta-card" : id === 3 ? "discord-card" : id === 7 ? "join-card" : id === 8 ? "school-card" : id === 10 ? "news-card" : id === 12 ? "ai-chat-card" : ""
+            } relative overflow-hidden cursor-pointer z-10 ${id === 1 || id === 2 || id === 11 || id === 13 || id === 14 || id === 15 ? "" : "w-[300px] h-[300px]"}`}
+            whileHover={{ scale: 1.02 }}
+            onClick={card?.onClick}
+          >
+            {id === 2 && (
+              <div className="absolute inset-0 bg-gradient-to-br from-carbon/80 to-carbon/40 pointer-events-none" />
+            )}
+            {id === 2 && (
+              <div
+                className="absolute inset-0 bg-cover bg-center pointer-events-none"
+                style={{
+                  backgroundImage: 'url("/ftcc.png")',
+                  opacity: 0.6,
+                }}
+              />
+            )}
+            {id === 2 && (
+              <div className="flex items-center justify-center h-full relative">
+                <h2 className="text-6xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] text-center w-full px-2 pointer-events-none">Join Beta Now!</h2>
+              </div>
+            )}
+             {id === 1 && (
+              <div className="flex items-center justify-center h-full w-full p-4">
+                <img
+                  src="/logo_2.png"
+                  alt="Sparq Logo"
+                  className="max-h-[90%] max-w-[90%] w-auto object-contain"
+                />
+              </div>
+            )}
+            {id === 4 && (
+              <div className="flex items-center justify-center h-full">
+                <BetaForm />
+              </div>
+            )}
+            {id === 6 && <ThreeViewer />}
+            {id === 7 && <JoinUs />}
+            {id === 10 && <AiChat />}
+            {id === 11 && <GameNews />}
+            {id === 13 && <DiscordWidget />}
+            {id === 14 && <SchoolSpotlight />}
+            {id === 15 && (
+              <div className="flex items-center justify-center h-full">
+                {card.component}
+              </div>
+            )}
+            {id === 1 && (
+              <div className="flex flex-col h-full">
+                <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Meet Our Team</h3>
+                <div className="flex-1">
+                  <TeamCarousel />
+                </div>
+              </div>
+            )}
 
-      {/* Card 1: Title Bar */}
-      <motion.div
-        className="bento-card card-1"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="flex items-center justify-center h-full w-full p-4">
-          <img
-            src="/logo_2.png"
-            alt="Sparq Logo"
-            className="max-h-[90%] max-w-[90%] w-auto object-contain"
-          />
-        </div>
-      </motion.div>
-
-      {/* Card 3: Discord Live Chat */}
-      <motion.div
-        className="bento-card card-3 discord-card"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("discord")}
-      >
-        <DiscordWidget />
-      </motion.div>
-
-      {/* Card 4: Connect With Us */}
-      <motion.div
-        className="bento-card card-4"
-        whileHover={{ scale: 1.02 }}
-      >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Connect With Us</h3>
-          <div className="flex-1 flex justify-center items-center gap-8 p-4">
-            <a
-              href="https://www.instagram.com/sparqgames"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="social-icon"
-            >
-              <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M3 16V8C3 5.23858 5.23858 3 8 3H16C18.7614 3 21 5.23858 21 8V16C21 18.7614 18.7614 21 16 21H8C5.23858 21 3 18.7614 3 16Z" stroke="currentColor" strokeWidth="2" />
-                <path d="M17.5 6.51L17.51 6.49889" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
-            <a
-              href="https://x.com/sparqgames"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="social-icon"
-            >
-              <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.7778 3L12.5556 11.9444L21 21H17.4444L11.3889 14.5L4.55556 21H3L10.6667 11.4722L2.55556 3H6.11111L11.7222 8.94444L18.1111 3H19.7778ZM18.2222 19.5L7.22222 4.27778H5.33333L16.3889 19.5H18.2222Z" fill="currentColor" />
-              </svg>
-            </a>
-            <a
-              href="https://www.tiktok.com/@sparqgames"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="social-icon"
-            >
-              <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 9.5V15C19 18.866 15.866 22 12 22C8.13401 22 5 18.866 5 15C5 11.134 8.13401 8 12 8V11C9.79086 11 8 12.7909 8 15C8 17.2091 9.79086 19 12 19C14.2091 19 16 17.2091 16 15V2H19C19 2 19 2.5 19 3C19 5.20914 20.7909 7 23 7V9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </a>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Card 5: Spline 3D Viewport */}
-      <motion.div
-        className="bento-card card-5"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("3d")}
-      >
-        <ThreeViewer />
-      </motion.div>
-
-      {/* Card 6: Video Teaser */}
-      <div className="bento-card card-6 relative overflow-hidden">
-        <TeamCard />
-      </div>
-
-      {/* Card 7: Join Us */}
-      <motion.div
-        className="bento-card card-7 join-card overflow-hidden"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("join")}
-      >
-        <JoinUs />
-      </motion.div>
-
-      {/* Card 8: School Spotlight */}
-      <motion.div
-        className="bento-card card-8 school-card"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("school")}
-      >
-        <SchoolSpotlight />
-      </motion.div>
-
-      {/* Card 9: Team Showcase */}
-      <motion.div
-        className="bento-card card-9"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("team")}
-      >
-        <div className="flex flex-col h-full">
-          <h3 className="text-2xl font-bold p-4 text-center text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Meet Our Team</h3>
-          <div className="flex-1">
-            <TeamCarousel />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Card 10: Word Around Town */}
-      <motion.div
-        className="bento-card card-10 news-card"
-        whileHover={{ scale: 1.02 }}
-      >
-        <div className="h-full">
-          <NewsCarousel />
-        </div>
-      </motion.div>
-
-      {/* Card 11: The Sparq Story */}
-      <motion.div
-        className="bento-card card-11"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("about")}
-      >
-        <div className="flex items-center justify-center h-full">
-          <h3 className="text-4xl font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">The Sparq Story</h3>
-        </div>
-      </motion.div>
-
-      {/* Card 12: AI Chat */}
-      <motion.div
-        className="bento-card card-12 ai-chat-card p-4"
-        whileHover={{ scale: 1.02 }}
-      >
-        <div className="h-full">
-          <AiChat />
-        </div>
-      </motion.div>
-
-      {/* Cards 13-15: Mission/Vision/Values */}
-      <motion.div
-        className="bento-card card-13 cursor-pointer flex items-center justify-center relative"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("mission")}
-      >
-        <img
-          src="/footbalPlayer.png"
-          alt="Football Player"
-          className="absolute w-auto h-full object-cover opacity-50"
-        />
-        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Mission</h3>
-      </motion.div>
-      <motion.div
-        className="bento-card card-14 cursor-pointer flex items-center justify-center relative"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("vision")}
-      >
-        <img
-          src="/softballPlayer.png"
-          alt="Softball Player"
-          className="absolute w-auto h-full object-cover opacity-60"
-        />
-        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Vision</h3>
-      </motion.div>
-      <motion.div
-        className="bento-card card-15 cursor-pointer flex items-center justify-center relative"
-        whileHover={{ scale: 1.02 }}
-        onClick={() => handleCardClick("values")}
-      >
-        <img
-          src="/basketballPlayer.png"
-          alt="Basketball Player"
-          className="absolute w-auto h-full object-cover opacity-40"
-        />
-        <h3 className="text-6xl font-bold transform -rotate-90 relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">Values</h3>
-      </motion.div>
+            {id === 11 && <GameNews />}
+            {id === 1 && <TeamCarousel />}
+            {id === 2 && <AboutUs />}
+            {id === 6 && <ThreeViewer />}
+             {id === 11 && <GameNews />}
+            {id === 10 && <AiChat />}
+            {id === 13 && <DiscordWidget />}
+            {id === 14 && <SchoolSpotlight />}
+            {id === 7 && <JoinUs />}
+            {id === 4 && <BetaForm />}
+            {id === 15 && <span className="text-2xl font-bold">Additional Content</span>}
+          </motion.div>
+        );
+      })}
 
       <AnimatePresence>
         {expandedCard && (
