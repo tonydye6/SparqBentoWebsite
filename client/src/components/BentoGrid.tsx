@@ -342,18 +342,20 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
-      {/* Card 3: Additional Content */}
+      {/* Card 3: Featured Content */}
       <motion.div
-        className="bento-card card-3"
+        className="bento-card card-3 relative overflow-hidden"
         whileHover={{ scale: 1.02 }}
       >
-        <div className="card-title-container">
+        <div className="card-title-container relative z-10">
           <h2 className="card-title">Featured Content</h2>
         </div>
-        <div className="flex items-center justify-center h-full">
-          <p className="text-lg text-center text-white/80 p-6">
-            Coming soon...
-          </p>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <img
+            src="/bfpf.png"
+            alt="Featured Content"
+            className="w-full h-auto max-h-[140%] object-contain rotate-90"
+          />
         </div>
       </motion.div>
 
