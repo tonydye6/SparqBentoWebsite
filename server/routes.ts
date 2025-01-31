@@ -194,7 +194,6 @@ function startNewsRefresh() {
   }, 60 * 60 * 1000); // 1 hour
 }
 
-
 export function registerRoutes(app: Express): Server {
   // Configure trust proxy for Reserved VM environment
   app.set('trust proxy', 1); // trust first proxy
@@ -243,7 +242,6 @@ export function registerRoutes(app: Express): Server {
   app.use("/api/chat", chatLimiter);
   app.use("/api/discord", discordLimiter);
   app.use("/api/news", newsLimiter);
-
 
   // News endpoint with enhanced resilience
   app.get("/api/news", newsLimiter, async (req, res) => {
@@ -400,6 +398,12 @@ export function registerRoutes(app: Express): Server {
     try {
       const { email, subscribe } = req.body;
 
+      if (!email) {
+        return res.status(400).json({
+          message: "Email is required"
+        });
+      }
+
       const existing = await db.select().from(betaSignups)
         .where(eq(betaSignups.email, email))
         .limit(1)
@@ -413,7 +417,7 @@ export function registerRoutes(app: Express): Server {
 
       await db.insert(betaSignups).values({
         email,
-        subscribed: subscribe
+        subscribed: subscribe ?? false
       });
 
       res.status(200).json({
@@ -422,7 +426,7 @@ export function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error("Beta signup error:", error);
       res.status(500).json({
-        message: "Failed to sign up for beta"
+        message: "Failed to sign up for beta. Please try again."
       });
     }
   });

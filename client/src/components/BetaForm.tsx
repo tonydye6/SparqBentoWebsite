@@ -6,9 +6,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { PixelPattern } from "./PixelPattern";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const betaSignupSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email("Please enter a valid email address"),
   subscribe: z.boolean().default(false)
 });
 
@@ -20,7 +21,12 @@ interface BetaFormProps {
 
 export function BetaForm({ expanded }: BetaFormProps) {
   const { toast } = useToast();
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<BetaSignupForm>();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<BetaSignupForm>({
+    resolver: zodResolver(betaSignupSchema),
+    defaultValues: {
+      subscribe: false
+    }
+  });
 
   const signupMutation = useMutation({
     mutationFn: async (data: BetaSignupForm) => {
@@ -31,7 +37,8 @@ export function BetaForm({ expanded }: BetaFormProps) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to sign up for beta');
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to sign up for beta');
       }
 
       return response.json();
@@ -43,10 +50,10 @@ export function BetaForm({ expanded }: BetaFormProps) {
       });
       reset();
     },
-    onError: () => {
+    onError: (error: Error) => {
       toast({
         title: "Error",
-        description: "Failed to join beta. Please try again.",
+        description: error.message || "Failed to join beta. Please try again.",
         variant: "destructive",
       });
     }
@@ -88,16 +95,22 @@ export function BetaForm({ expanded }: BetaFormProps) {
             type="email"
             placeholder="Enter your email"
             className="w-full"
+            disabled={signupMutation.isPending}
+            aria-invalid={errors.email ? "true" : "false"}
           />
           {errors.email && (
             <p className="text-sm text-destructive mt-1">
-              Please enter a valid email
+              {errors.email.message}
             </p>
           )}
         </div>
 
         <div className="flex items-center space-x-2">
-          <Checkbox {...register('subscribe')} id="subscribe" />
+          <Checkbox
+            {...register('subscribe')}
+            id="subscribe"
+            disabled={signupMutation.isPending}
+          />
           <label
             htmlFor="subscribe"
             className="text-sm text-muted-foreground"
@@ -114,9 +127,6 @@ export function BetaForm({ expanded }: BetaFormProps) {
           {signupMutation.isPending ? "Joining..." : "Join the Beta"}
         </Button>
       </form>
-
-      {/* Removed Beta Program Details section */}
-
     </div>
   );
 }
