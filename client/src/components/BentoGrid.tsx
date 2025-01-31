@@ -489,7 +489,7 @@ export function BentoGrid() {
 
       {/* Card 12: AI Chat */}
       <motion.div
-        className="bento-card card-12 ai-chat-card p-4"
+        className="bento-card card-12 ai-chat-card"
         whileHover={{ scale: 1.02 }}
       >
         <div className="card-title-container">
