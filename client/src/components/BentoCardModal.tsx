@@ -53,15 +53,6 @@ export function BentoCardModal({
             border: "1px solid rgba(235, 0, 40, 0.3)"
           }}
         >
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-4 top-4 z-50 text-white hover:bg-white/10 hover:scale-110 transition-all duration-200"
-            onClick={onClose}
-          >
-            <X className="h-5 w-5" />
-          </Button>
-
           {title && (
             <div className="sticky top-0 px-6 py-4 border-b border-white/10 bg-background/95 backdrop-blur-sm">
               <h2 className="font-heading text-2xl font-semibold text-white"
