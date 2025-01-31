@@ -1,6 +1,7 @@
-const pg = require('pg');
-const { drizzle } = require('drizzle-orm/node-postgres');
-const schema = require("@db/schema");
+import pkg from 'pg';
+const { Pool } = pkg;
+import { drizzle } from 'drizzle-orm/node-postgres';
+import * as schema from "@db/schema";
 
 if (!process.env.DATABASE_URL) {
   throw new Error(
@@ -9,7 +10,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 // Create a PostgreSQL pool
-const pool = new pg.Pool({
+const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   max: 20,
   idleTimeoutMillis: 30000,
@@ -20,10 +21,7 @@ const pool = new pg.Pool({
 const db = drizzle(pool, { schema });
 
 // Export both pool and db
-module.exports = {
-  db,
-  pool
-};
+export { db, pool };
 
 // Handle process termination
 process.on('SIGTERM', async () => {

@@ -3,6 +3,8 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import path from "path";
 import cors from 'cors';
+import { db } from "@db";
+import { newsItems } from "@db/schema";
 
 const app = express();
 
@@ -58,8 +60,7 @@ app.use((req, res, next) => {
 (async () => {
   try {
     // Check database connection before starting server
-    const { pool } = require('@db');
-    await pool.query('SELECT 1');
+    await db.select().from(newsItems).limit(1);
     console.log('Database connection successful');
 
     const server = registerRoutes(app);
