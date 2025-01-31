@@ -77,9 +77,9 @@ export function AiChat() {
   };
 
   return (
-    <div className="flex flex-col h-full max-h-[500px] mt-52">
+    <div className="flex flex-col h-full max-h-[600px] p-4">
 
-      <ScrollArea className="flex-1 mb-4 pr-4 h-[350px]">
+      <ScrollArea className="flex-1 mb-4 pr-4 h-[400px]">
         <div className="space-y-4">
           {messages.map((msg, i) => (
             <div
@@ -105,7 +105,7 @@ export function AiChat() {
         </div>
       </ScrollArea>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 mt-20">
+      <form onSubmit={handleSubmit} className="flex gap-2 mt-4">
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -120,7 +120,7 @@ export function AiChat() {
           Send
         </Button>
       </form>
-      <div className="mt-20">
+      <div className="mt-4">
         <img src="/bfpf.png" alt="Sparq Games" className="h-16 object-contain mx-auto" />
       </div>
       <div className="mt-auto pt-10 text-center space-y-4 text-gray-300">
