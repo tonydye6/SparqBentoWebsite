@@ -311,13 +311,12 @@ export function registerRoutes(app: Express): Server {
         {
           role: "system",
           content: "You are Sparq Assistant, helping users learn about Sparq Games."
-        }
+        },
+        ...req.body.messages.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }))
       ];
-
-      const formattedMessages = req.body.messages.map(msg => ({
-        role: msg.role,
-        content: msg.content
-      }));
 
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",
