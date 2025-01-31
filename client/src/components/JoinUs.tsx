@@ -31,7 +31,16 @@ export function JoinUs({ expanded = false }) {
 
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Current Openings</h3>
-        <p className="text-lg">Chief Technology Officer to be hired by 3/1/2025</p>
+        <div className="flex items-center justify-between">
+          <p className="text-lg">Chief Technology Officer to be hired by 3/1/2025</p>
+          <Button
+            onClick={() => window.open('/CTO_Job_Description.pdf', '_blank')}
+            className="ml-4"
+            variant="outline"
+          >
+            View
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-4">
