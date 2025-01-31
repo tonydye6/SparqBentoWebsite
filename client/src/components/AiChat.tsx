@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -14,7 +14,39 @@ interface Message {
 export function AiChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const [sessionId, setSessionId] = useState<string>(() => {
+    const saved = localStorage.getItem('chatSessionId');
+    return saved || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  });
   const { toast } = useToast();
+
+  // Query to fetch chat history
+  const { data: chatHistory } = useQuery({
+    queryKey: ['chatHistory', sessionId],
+    queryFn: async () => {
+      const response = await fetch(`/api/chat/history/${sessionId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch chat history');
+      }
+      return response.json();
+    },
+    enabled: !!sessionId
+  });
+
+  // Load chat history when available
+  useEffect(() => {
+    if (chatHistory) {
+      setMessages(chatHistory.map((msg: any) => ({
+        role: msg.role,
+        content: msg.content
+      })));
+    }
+  }, [chatHistory]);
+
+  // Save session ID to localStorage
+  useEffect(() => {
+    localStorage.setItem('chatSessionId', sessionId);
+  }, [sessionId]);
 
   const sendMessage = async (message: string) => {
     if (!message.trim()) return;
@@ -29,7 +61,8 @@ export function AiChat() {
           messages: [
             ...messages,
             { role: 'user', content: message }
-          ]
+          ],
+          sessionId
         })
       });
 
@@ -43,7 +76,7 @@ export function AiChat() {
         throw new Error('Invalid response format');
       }
 
-      return data.choices[0].message;
+      return data;
     } catch (error) {
       console.error('Chat Error:', error);
       throw error;
@@ -56,7 +89,7 @@ export function AiChat() {
       setMessages(prev => [
         ...prev,
         { role: 'user', content: input },
-        { role: 'assistant', content: data.content }
+        { role: 'assistant', content: data.choices[0].message.content }
       ]);
       setInput('');
     },
