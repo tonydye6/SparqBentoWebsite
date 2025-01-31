@@ -314,12 +314,10 @@ export function registerRoutes(app: Express): Server {
         }
       ];
 
-      const userMessages = req.body.messages.filter(msg => msg.role === 'user');
-      const lastUserMessage = userMessages[userMessages.length - 1];
-
-      if (lastUserMessage) {
-        formattedMessages.push(lastUserMessage);
-      }
+      const formattedMessages = req.body.messages.map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }));
 
       const response = await fetch("https://api.perplexity.ai/chat/completions", {
         method: "POST",

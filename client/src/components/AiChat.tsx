@@ -33,17 +33,15 @@ export function AiChat() {
         body: JSON.stringify({ messages: newMessages })
       });
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('API Error:', errorData);
-        throw new Error(errorData || 'Chat service error');
-      }
-
       const data = await response.json();
       console.log("Chat response:", data);
 
-      if (!data?.choices?.[0]?.message?.content) {
-        throw new Error('Invalid response format from chat service');
+      if (!response.ok) {
+        throw new Error(data.error || 'Chat service error');
+      }
+
+      if (!data?.choices?.[0]?.message) {
+        throw new Error('Invalid response format');
       }
 
       return data.choices[0].message;
