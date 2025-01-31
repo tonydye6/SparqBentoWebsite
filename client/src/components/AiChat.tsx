@@ -19,22 +19,21 @@ export function AiChat() {
   const sendMessage = async (message: string) => {
     if (!message.trim()) return;
 
-    const newMessage = { role: 'user' as const, content: message };
-    const newMessages = [...messages, newMessage];
-    setMessages(newMessages);
-    setInput('');
-
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ messages: newMessages })
+        body: JSON.stringify({
+          messages: [
+            ...messages,
+            { role: 'user', content: message }
+          ]
+        })
       });
 
       const data = await response.json();
-      console.log("Chat response:", data);
 
       if (!response.ok) {
         throw new Error(data.error || 'Chat service error');
@@ -53,6 +52,14 @@ export function AiChat() {
 
   const chatMutation = useMutation({
     mutationFn: sendMessage,
+    onSuccess: (data) => {
+      setMessages(prev => [
+        ...prev,
+        { role: 'user', content: input },
+        { role: 'assistant', content: data.content }
+      ]);
+      setInput('');
+    },
     onError: (error: Error) => {
       toast({
         variant: "destructive",
@@ -60,10 +67,6 @@ export function AiChat() {
         description: error.message,
         duration: 5000
       });
-    },
-    onSuccess: (data) => {
-      setMessages(prev => [...prev, { role: 'assistant', content: data.content }]);
-      setInput('');
     }
   });
 
@@ -71,8 +74,6 @@ export function AiChat() {
     e.preventDefault();
     const trimmedInput = input.trim();
     if (!trimmedInput || chatMutation.isPending) return;
-
-    setMessages(prev => [...prev, { role: 'user', content: trimmedInput }]);
     chatMutation.mutate(trimmedInput);
   };
 
