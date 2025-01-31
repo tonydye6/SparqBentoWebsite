@@ -7,6 +7,8 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 import { PixelPattern } from "./PixelPattern";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
 
 const betaSignupSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -43,10 +45,12 @@ export function BetaForm({ expanded }: BetaFormProps) {
 
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast({
         title: "Success!",
-        description: "You've been added to our beta list.",
+        description: data.temporary 
+          ? "You've been added to our beta list (temporary storage). We'll transfer your registration when our database is back online."
+          : "You've been added to our beta list.",
       });
       reset();
     },
@@ -87,6 +91,13 @@ export function BetaForm({ expanded }: BetaFormProps) {
           </ul>
         </div>
       )}
+
+      <Alert className="bg-muted/50 border-primary/20">
+        <InfoIcon className="h-4 w-4" />
+        <AlertDescription>
+          Your registration will be securely stored and processed, even during maintenance periods.
+        </AlertDescription>
+      </Alert>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>

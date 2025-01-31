@@ -8,6 +8,7 @@ import { requireAdmin, adminSessionMiddleware } from "./middleware/auth";
 import bcrypt from "bcryptjs";
 import MemoryStore from "memorystore";
 import rateLimit from 'express-rate-limit';
+import { BetaSignupService } from './services/betaSignupService';
 
 const SessionStore = MemoryStore(session);
 
@@ -150,36 +151,27 @@ export function registerRoutes(app: Express): Server {
     try {
       const { email, subscribe } = req.body;
 
-      console.log('Beta signup request:', { email, subscribe });
-
       if (!email) {
-        console.log('Beta signup validation error: Missing email');
         return res.status(400).json({
           message: "Email is required"
         });
       }
 
-      const existing = await db.select().from(betaSignups)
-        .where(eq(betaSignups.email, email))
-        .limit(1)
-        .then(results => results[0]);
+      const betaService = BetaSignupService.getInstance();
+      const result = await betaService.addSignup({
+        email,
+        subscribed: subscribe ?? false
+      });
 
-      if (existing) {
-        console.log('Beta signup error: Email already exists:', email);
+      if (!result.success) {
         return res.status(400).json({
-          message: "Email already registered for beta"
+          message: result.message
         });
       }
 
-      const result = await db.insert(betaSignups).values({
-        email,
-        subscribed: subscribe ?? false
-      }).returning();
-
-      console.log('Beta signup successful:', { email, result });
-
       res.status(200).json({
-        message: "Successfully signed up for beta"
+        message: result.message,
+        temporary: result.temporary
       });
     } catch (error) {
       console.error("Beta signup error:", error);
@@ -188,6 +180,7 @@ export function registerRoutes(app: Express): Server {
       });
     }
   });
+
 
   // Start health checks
   const healthCheckInterval = startHealthChecks();
