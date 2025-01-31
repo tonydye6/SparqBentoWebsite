@@ -115,21 +115,8 @@ export function BetaForm({ expanded }: BetaFormProps) {
         </Button>
       </form>
 
-      {expanded && (
-        <div className="mt-6 p-4 bg-primary/5 rounded-lg">
-          <h4 className="text-md font-medium mb-2">Beta Program Details</h4>
-          <p className="text-sm text-muted-foreground">
-            Our beta program runs in phases, with each phase introducing new features
-            and gameplay elements. Beta testers get exclusive access to:
-          </p>
-          <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-            <li>• Customizable player characters</li>
-            <li>• AI-powered game mechanics</li>
-            <li>• Multiplayer tournaments</li>
-            <li>• Virtual currency rewards</li>
-          </ul>
-        </div>
-      )}
+      {/* Removed Beta Program Details section */}
+
     </div>
   );
 }
