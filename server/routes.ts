@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { db, pool } from "@db";
+import { db } from "@db";
 import { betaSignups, adminUsers, newsItems, teamMembers } from "@db/schema";
 import { eq, desc } from "drizzle-orm";
 import session from "express-session";
@@ -8,7 +8,6 @@ import { requireAdmin, adminSessionMiddleware } from "./middleware/auth";
 import bcrypt from "bcryptjs";
 import MemoryStore from "memorystore";
 import rateLimit from 'express-rate-limit';
-import { BetaSignupService } from './services/betaSignupService';
 
 const SessionStore = MemoryStore(session);
 
@@ -62,7 +61,9 @@ async function checkServiceHealth(service: keyof typeof healthStatus) {
         await db.select().from(newsItems).limit(1);
         break;
       case 'chat':
-        // Chat health check
+        if (!process.env.PERPLEXITY_API_KEY) {
+          throw new Error('Chat service configuration missing');
+        }
         break;
       case 'news':
         const newsCache = await db.select().from(newsItems).limit(1);
@@ -71,9 +72,10 @@ async function checkServiceHealth(service: keyof typeof healthStatus) {
         }
         break;
       case 'discord':
-        // Discord widget is client-side
+        // Discord widget is client-side, just verify configuration
         break;
     }
+
     healthStatus[service] = { status: 'healthy', lastCheck: Date.now() };
   } catch (error) {
     console.error(`Health check failed for ${service}:`, error);
@@ -82,20 +84,116 @@ async function checkServiceHealth(service: keyof typeof healthStatus) {
 }
 
 // Periodic health checks
-function startHealthChecks() {
+const startHealthChecks = () => {
   const interval = setInterval(() => {
     Object.keys(healthStatus).forEach(service => {
       checkServiceHealth(service as keyof typeof healthStatus);
     });
   }, 60000); // Check every minute
+
   return interval;
+};
+
+// News fetch function using Perplexity API
+async function fetchLatestNews() {
+  if (!process.env.PERPLEXITY_API_KEY) {
+    throw new Error("Perplexity API key not configured");
+  }
+
+  const response = await fetch("https://api.perplexity.ai/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      model: "llama-3.1-sonar-small-128k-online",
+      messages: [
+        {
+          role: "system",
+          content: "You are a news aggregator for Sparq Games. Generate exactly 3 latest gaming industry news items. For each news item, provide a title, description (2-3 sentences), and category (Gaming/Sports/Technology). Respond with a clean JSON array without code blocks or markdown."
+        },
+        {
+          role: "user",
+          content: "Generate 3 latest gaming news items."
+        }
+      ],
+      temperature: 0.3,
+      max_tokens: 500,
+      stream: false
+    })
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    console.error("Perplexity API error:", error);
+    throw new Error(`Failed to fetch news: ${error}`);
+  }
+
+  const data = await response.json();
+  let newsData;
+
+  try {
+    // Clean the response before parsing
+    const cleanedContent = data.choices[0].message.content
+      .replace(/```json\s*/, '')
+      .replace(/```\s*$/, '')
+      .trim();
+    newsData = JSON.parse(cleanedContent);
+  } catch (error) {
+    console.error("Failed to parse news data:", error);
+    throw new Error("Invalid news data format");
+  }
+
+  // Try to save to database, but don't fail if database is unavailable
+  try {
+    for (const item of newsData) {
+      await db.insert(newsItems).values({
+        title: item.title,
+        content: item.description || item.content, // Handle both possible field names
+        category: item.category,
+        active: true
+      });
+    }
+    console.log("Successfully saved news items to database");
+  } catch (error) {
+    console.error("Failed to save news items to database:", error);
+    // Continue with returning the news data even if database save fails
+  }
+
+  return newsData;
 }
 
-// News refresh function (restored from original)
+// Cache for storing news when database is unavailable
+let newsCache: any[] = [];
+let newsRefreshInterval: NodeJS.Timeout;
+
 function startNewsRefresh() {
-  // Placeholder for news refresh logic
-  console.log('News refresh started');
+  // Clear any existing interval
+  if (newsRefreshInterval) {
+    clearInterval(newsRefreshInterval);
+  }
+
+  // Initial fetch
+  fetchLatestNews().then(news => {
+    newsCache = news;
+    console.log("Initial news feed loaded");
+  }).catch(error => {
+    console.error("Failed to load initial news feed:", error);
+  });
+
+  // Refresh news every hour
+  newsRefreshInterval = setInterval(async () => {
+    try {
+      const news = await fetchLatestNews();
+      newsCache = news; // Update cache
+      console.log("News feed refreshed successfully");
+    } catch (error) {
+      console.error("Failed to refresh news feed:", error);
+    }
+  }, 60 * 60 * 1000); // 1 hour
 }
+
 
 export function registerRoutes(app: Express): Server {
   // Configure trust proxy for Reserved VM environment
@@ -146,41 +244,258 @@ export function registerRoutes(app: Express): Server {
   app.use("/api/discord", discordLimiter);
   app.use("/api/news", newsLimiter);
 
+
+  // News endpoint with enhanced resilience
+  app.get("/api/news", newsLimiter, async (req, res) => {
+    try {
+      let items = [];
+      try {
+        items = await db.select()
+          .from(newsItems)
+          .where(eq(newsItems.active, true))
+          .orderBy(desc(newsItems.createdAt))
+          .limit(3);
+      } catch (error) {
+        console.error("Database error fetching news:", error);
+        healthStatus.database.status = 'unhealthy';
+        // Fall back to cache if database is unavailable
+        items = newsCache;
+      }
+
+      if (!items?.length) {
+        try {
+          const freshNews = await fetchLatestNews();
+          items = freshNews;
+          newsCache = freshNews; // Update cache
+        } catch (error) {
+          console.error("Error fetching fresh news:", error);
+          healthStatus.news.status = 'unhealthy';
+          if (newsCache.length) {
+            // Return cached news if available
+            items = newsCache;
+          } else {
+            return res.status(503).json({
+              message: "News service temporarily unavailable",
+              retry_after: 300 // 5 minutes
+            });
+          }
+        }
+      }
+
+      healthStatus.news.status = 'healthy';
+      res.json(items);
+    } catch (error) {
+      console.error("Critical error in news endpoint:", error);
+      healthStatus.news.status = 'unhealthy';
+      res.status(500).json({
+        message: "Unable to retrieve news",
+        retry_after: 300
+      });
+    }
+  });
+
+  // Chat endpoint with fetch
+  app.post("/api/chat", chatLimiter, async (req, res) => {
+    try {
+      if (!process.env.PERPLEXITY_API_KEY) {
+        throw new Error("Chat service not configured");
+      }
+
+      console.log("Received chat request:", req.body);
+
+      if (!Array.isArray(req.body.messages)) {
+        throw new Error("Invalid request format: messages must be an array");
+      }
+
+      const formattedMessages = [
+        {
+          role: "system",
+          content: "You are Sparq Assistant, helping users learn about Sparq Games."
+        },
+        ...req.body.messages.map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }))
+      ];
+
+      const response = await fetch("https://api.perplexity.ai/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "llama-3.1-sonar-small-128k-online",
+          messages: formattedMessages,
+          max_tokens: 1000,
+          temperature: 0.7,
+          stream: false
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Perplexity API error response:", errorText);
+        throw new Error(`Chat service error: ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log("Perplexity API response:", data);
+
+      if (!data?.choices?.[0]?.message) {
+        console.error("Invalid API response format:", data);
+        throw new Error("Invalid response from chat service");
+      }
+
+      res.json(data);
+    } catch (error) {
+      console.error('Chat Error:', error);
+      res.status(500).json({
+        error: error instanceof Error ? error.message : 'Chat service temporarily unavailable'
+      });
+    }
+  });
+
+  // Admin auth routes
+  app.post("/api/admin/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+
+      const admin = await db.select().from(adminUsers)
+        .where(eq(adminUsers.username, username))
+        .limit(1)
+        .then(results => results[0]);
+
+      if (!admin) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      const passwordMatch = await bcrypt.compare(password, admin.password);
+
+      if (!passwordMatch) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+
+      req.session.adminUser = { id: admin.id, username: admin.username };
+
+      res.json({ message: "Logged in successfully" });
+    } catch (error) {
+      console.error("Admin login error:", error);
+      res.status(500).json({ message: "Login failed" });
+    }
+  });
+
+  app.post("/api/admin/logout", requireAdmin, (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        console.error("Logout error:", err);
+        return res.status(500).json({ message: "Logout failed" });
+      }
+      res.json({ message: "Logged out successfully" });
+    });
+  });
+
   // Beta signups endpoint
   app.post("/api/beta-signup", async (req, res) => {
     try {
       const { email, subscribe } = req.body;
 
-      if (!email) {
+      const existing = await db.select().from(betaSignups)
+        .where(eq(betaSignups.email, email))
+        .limit(1)
+        .then(results => results[0]);
+
+      if (existing) {
         return res.status(400).json({
-          message: "Email is required"
+          message: "Email already registered for beta"
         });
       }
 
-      const betaService = BetaSignupService.getInstance();
-      const result = await betaService.addSignup({
+      await db.insert(betaSignups).values({
         email,
-        subscribed: subscribe ?? false
+        subscribed: subscribe
       });
 
-      if (!result.success) {
-        return res.status(400).json({
-          message: result.message
-        });
-      }
-
       res.status(200).json({
-        message: result.message,
-        temporary: result.temporary
+        message: "Successfully signed up for beta"
       });
     } catch (error) {
       console.error("Beta signup error:", error);
       res.status(500).json({
-        message: "Failed to sign up for beta. Please try again."
+        message: "Failed to sign up for beta"
       });
     }
   });
 
+  // Protected admin endpoints
+  app.get("/api/admin/beta-signups", requireAdmin, async (req, res) => {
+    try {
+      const signups = await db.select().from(betaSignups)
+        .orderBy(desc(betaSignups.createdAt));
+      res.json(signups);
+    } catch (error) {
+      console.error("Error fetching beta signups:", error);
+      res.status(500).json({ message: "Failed to fetch beta signups" });
+    }
+  });
+
+  // Content management endpoints
+  app.get("/api/admin/news", requireAdmin, async (req, res) => {
+    try {
+      const items = await db.select().from(newsItems)
+        .orderBy(desc(newsItems.createdAt));
+      res.json(items);
+    } catch (error) {
+      console.error("Error fetching news items:", error);
+      res.status(500).json({ message: "Failed to fetch news items" });
+    }
+  });
+
+  app.post("/api/admin/news", requireAdmin, async (req, res) => {
+    try {
+      const { title, content, category } = req.body;
+      const result = await db.insert(newsItems).values({
+        title,
+        content,
+        category,
+        active: true
+      });
+      res.status(201).json(result);
+    } catch (error) {
+      console.error("Error creating news item:", error);
+      res.status(500).json({ message: "Failed to create news item" });
+    }
+  });
+
+  // Team Members
+  app.get("/api/admin/team", requireAdmin, async (req, res) => {
+    try {
+      const members = await db.select().from(teamMembers)
+        .orderBy(desc(teamMembers.createdAt));
+      res.json(members);
+    } catch (error) {
+      console.error("Error fetching team members:", error);
+      res.status(500).json({ message: "Failed to fetch team members" });
+    }
+  });
+
+  app.post("/api/admin/team", requireAdmin, async (req, res) => {
+    try {
+      const { name, title, photo, linkedIn, previousCompanies } = req.body;
+      const result = await db.insert(teamMembers).values({
+        name,
+        title,
+        photo,
+        linkedIn,
+        previousCompanies,
+        active: true
+      });
+      res.status(201).json(result);
+    } catch (error) {
+      console.error("Error creating team member:", error);
+      res.status(500).json({ message: "Failed to create team member" });
+    }
+  });
 
   // Start health checks
   const healthCheckInterval = startHealthChecks();

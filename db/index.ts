@@ -1,6 +1,4 @@
-import pkg from 'pg';
-const { Pool } = pkg;
-import { drizzle } from 'drizzle-orm/node-postgres';
+import { drizzle } from "drizzle-orm/neon-serverless";
 import * as schema from "@db/schema";
 
 if (!process.env.DATABASE_URL) {
@@ -9,102 +7,24 @@ if (!process.env.DATABASE_URL) {
   );
 }
 
-// Create a PostgreSQL pool with optimized settings for Replit
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  max: 1, // Limit to single connection for Replit environment
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 30000, // Increased timeout
-  query_timeout: 20000,
-  keepAlive: true, // Enable keepalive
-  ssl: {
-    rejectUnauthorized: false // Required for some Replit PostgreSQL connections
-  }
+// Create a direct connection without WebSocket for better stability
+export const db = drizzle({
+  connection: process.env.DATABASE_URL,
+  schema,
 });
 
-// Improved error handler for the pool
-pool.on('error', (err: Error) => {
-  console.error('Unexpected error on idle client:', err);
-  // Don't exit process, just log the error and attempt recovery
-  console.error('Database error occurred, attempting to recover...');
-});
+// Export for type inference
+export type DB = typeof db;
 
-// Create the drizzle database instance
-const db = drizzle(pool, { schema });
-
-// Enhanced connection testing with retries and proper error handling
-async function testConnection(maxRetries = 10): Promise<boolean> {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      console.log(`Attempting database connection (attempt ${attempt}/${maxRetries})...`);
-      const client = await pool.connect();
-      try {
-        // Test query to verify connection is working
-        await client.query('SELECT 1');
-        console.log('Successfully connected to database');
-        return true;
-      } finally {
-        client.release();
-      }
-    } catch (error) {
-      const err = error as Error;
-      console.error(`Database connection attempt ${attempt} failed:`, err.message);
-
-      // Check for specific endpoint disabled error
-      if (err.message.includes('endpoint is disabled')) {
-        console.log('Database endpoint is disabled, waiting for activation...');
-        // Use longer delay for endpoint disabled errors
-        await new Promise(resolve => setTimeout(resolve, 5000));
-      } else if (attempt === maxRetries) {
-        console.error('Max retries reached, database connection failed');
-        return false;
-      }
-
-      // Exponential backoff with jitter
-      const backoff = Math.min(1000 * Math.pow(2, attempt - 1) + Math.random() * 1000, 10000);
-      await new Promise(resolve => setTimeout(resolve, backoff));
-    }
-  }
-  return false;
-}
-
-// Export database instances and utilities
-export { db, pool, testConnection };
-
-// Initialize database connection with proper error handling
-(async () => {
-  try {
-    console.log('Initializing database connection...');
-    const isConnected = await testConnection();
-    if (!isConnected) {
-      console.warn('Database connection failed after retries, application will use fallback mechanisms');
-    } else {
-      console.log('Database connection established successfully');
-    }
-  } catch (error) {
-    console.error('Error during database initialization:', error);
-  }
-})();
-
-// Graceful shutdown handlers
+// Handle process termination
 process.on('SIGTERM', async () => {
   console.log('Received SIGTERM signal. Closing database connections...');
-  try {
-    await pool.end();
-    console.log('Database connections closed successfully');
-  } catch (error) {
-    console.error('Error closing database connections:', error);
-  }
+  await db.dispose(); // Assuming drizzle has a dispose method for cleanup.  Adjust if necessary.
   process.exit(0);
 });
 
 process.on('SIGINT', async () => {
   console.log('Received SIGINT signal. Closing database connections...');
-  try {
-    await pool.end();
-    console.log('Database connections closed successfully');
-  } catch (error) {
-    console.error('Error closing database connections:', error);
-  }
+  await db.dispose(); // Assuming drizzle has a dispose method for cleanup. Adjust if necessary.
   process.exit(0);
 });

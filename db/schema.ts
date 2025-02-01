@@ -61,30 +61,19 @@ export const selectTeamMemberSchema = createSelectSchema(teamMembers);
 export type InsertTeamMember = typeof teamMembers.$inferInsert;
 export type SelectTeamMember = typeof teamMembers.$inferSelect;
 
-export const chatMessages = pgTable("chat_messages", {
-  id: serial("id").primaryKey(),
-  role: text("role").notNull(),
-  content: text("content").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  sessionId: text("session_id").notNull()
-});
-
-export const insertChatMessageSchema = createInsertSchema(chatMessages);
-export const selectChatMessageSchema = createSelectSchema(chatMessages);
-export type InsertChatMessage = typeof chatMessages.$inferInsert;
-export type SelectChatMessage = typeof chatMessages.$inferSelect;
-
+// Define relations
 export const betaSignupsRelations = relations(betaSignups, ({ }) => ({
+  // Add relations if needed
 }));
 
 export const adminUsersRelations = relations(adminUsers, ({ }) => ({
+  // Add relations if needed
 }));
 
 export const newsItemsRelations = relations(newsItems, ({ }) => ({
+  // Add relations if needed
 }));
 
 export const teamMembersRelations = relations(teamMembers, ({ }) => ({
-}));
-
-export const chatMessagesRelations = relations(chatMessages, ({ }) => ({
+  // Add relations if needed
 }));
