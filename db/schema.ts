@@ -6,8 +6,7 @@ export const betaSignups = pgTable("beta_signups", {
   id: serial("id").primaryKey(),
   email: text("email").unique().notNull(),
   subscribed: boolean("subscribed").default(false).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull()
 });
 
 export const insertBetaSignupSchema = createInsertSchema(betaSignups);
