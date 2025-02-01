@@ -308,7 +308,7 @@ export function BentoGrid() {
   };
 
   return (
-    <div className="bento-grid">
+    <div className="bento-grid overflow-x-hidden">
       {/* Card 2: Join Beta */}
       <motion.div
         className="bento-card card-2 beta-card relative overflow-hidden cursor-pointer z-10"
