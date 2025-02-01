@@ -335,11 +335,6 @@ body {
     }
   }
 
-  .card-3-container {
-    grid-area: card-3;
-    height: 100%;
-  }
-
   .bento-card {
     @apply rounded-2xl overflow-hidden relative;
     background: var(--carbon);
