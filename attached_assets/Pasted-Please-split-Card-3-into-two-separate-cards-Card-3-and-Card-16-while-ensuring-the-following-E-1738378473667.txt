@@ -1,0 +1,48 @@
+Please split Card #3 into two separate cards (Card #3 and Card #16) while ensuring the following:
+Equal Heights for Split Cards
+The combined height of Card #3 (upper card) and Card #16 (lower card) must match the original height of Card #3.
+Each card should take up exactly 50% of the original height, with a small gap between them.
+No Impact on Other Cards
+The layout, size, and position of all other cards in the grid must remain unchanged.
+Implementation Details
+Use a flex container to stack the two cards vertically:
+jsx
+<motion.div className="relative perspective-1000" style={{ transformStyle: 'preserve-3d' }} whileHover={{ scale: 1.02 }}>
+  <div className="flex flex-col h-full gap-5"> {/* Maintain original height */}
+    {/* Upper Card (#3) */}
+    <Card className="bento-card flex-1 cursor-pointer">
+      <div className="h-full">
+        {/* Content for Card #3 */}
+      </div>
+    </Card>
+
+    {/* Lower Card (#16) */}
+    <Card className="bento-card flex-1 cursor-pointer">
+      <div className="h-full">
+        {/* Content for Card #16 */}
+      </div>
+    </Card>
+  </div>
+</motion.div>
+CSS Adjustments
+Add CSS to ensure equal heights and consistent spacing:
+css
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Maintain consistent spacing between cards */
+  height: 100%; /* Ensure full height is used */
+}
+
+.bento-card {
+  flex: 1; /* Ensures both cards take up equal height */
+  overflow: hidden; /* Prevent content overflow */
+}
+Test Layout
+Verify that:
+The combined height of Card #3 and Card #16 equals the original height of Card #3.
+The horizontal gap between the two new cards matches the existing grid's spacing.
+The layout and size of all surrounding cards remain unaffected.
+Test Responsiveness
+Ensure these changes work seamlessly on both desktop and mobile views without breaking the layout.
+Please implement these changes to ensure both cards equally fill the space originally occupied by Card #3 while maintaining consistent spacing and layout.
