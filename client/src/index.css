@@ -297,7 +297,7 @@ body {
     }
 
     /* Hide only specific cards on mobile */
-    .card-3, .card-5, .card-12 {
+    .card-3, .card-5, .card-12, .card-16 {
       display: none !important;
     }
 
