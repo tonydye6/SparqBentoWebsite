@@ -139,8 +139,7 @@ body {
 }
 
 .card-3-container .bento-card {
-  flex: 1;
-  min-height: 0;
+  height: calc(50% - 1.25rem);
   transform: none;
   transition: transform 0.3s ease-in-out;
 }
@@ -150,9 +149,6 @@ body {
 }
 
 .card-3-container .flex-col {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
   height: 100%;
 }
 
