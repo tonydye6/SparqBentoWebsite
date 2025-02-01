@@ -131,6 +131,28 @@ body {
     h2 {
       font-family: 'Chakra Petch', sans-serif;
       font-size: 1.5rem;
+
+.card-3-container {
+  grid-column: var(--card-3-column, auto);
+  grid-row: var(--card-3-row, auto);
+  height: 100%;
+}
+
+.card-3-container .bento-card {
+  height: calc(50% - 0.5rem);
+  transform: none;
+}
+
+.card-3-container .flex-col {
+  height: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .card-3-container {
+    display: none !important;
+  }
+}
+
       font-weight: 600;
       color: #FFFFFF;
       margin-bottom: 1rem;
