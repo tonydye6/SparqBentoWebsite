@@ -370,11 +370,52 @@ body {
       box-shadow: 0 8px 20px rgba(235, 0, 40, 0.15);
     }
   }
+  
+  /* Card 3 Split Layout */
+  .card-3 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
+  .card-3 .bento-card {
+    flex: 1;
+    min-height: 0;
+    background: var(--carbon);
+    border: 2px solid transparent;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .card-3 .bento-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(235, 0, 40, 0.15);
+  }
+
+  .card-3 .card-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Desktop card positioning update */
+  @media screen and (min-width: 769px) {
+    .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-5; }
+  }
+
+  /* Mobile-specific adjustments */
+  @media screen and (max-width: 768px) {
+    .card-3 {
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .card-3 .bento-card {
+      height: auto !important;
+      min-height: 150px;
+    }
+  }
   /* Desktop card positioning */
   .card-1 { @apply col-start-4 col-span-9 row-span-1; }
   .card-2 { @apply col-start-1 col-span-3 row-span-2; }
-  .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-5; }
   .card-4 { @apply col-start-9 col-span-4 row-start-10; }
   .card-5 { @apply col-start-9 col-span-4 row-start-5 row-span-5; }
   .card-6 { @apply col-start-4 col-span-5 row-start-2 row-span-2; }
