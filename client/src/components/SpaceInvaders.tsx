@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface SpaceInvadersProps {
   width?: number;
@@ -7,6 +7,8 @@ interface SpaceInvadersProps {
 
 export function SpaceInvaders({ width = 350, height = 500 }: SpaceInvadersProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const gameStateRef = useRef({
     player: { x: 150, y: 450, width: 50, height: 50, speed: 5 },
     bullets: [] as { x: number, y: number, width: number, height: number }[],
@@ -15,8 +17,8 @@ export function SpaceInvaders({ width = 350, height = 500 }: SpaceInvadersProps)
       player: new Image(),
       enemies: [] as HTMLImageElement[],
       loaded: false,
-      totalImages: 5, // player + 4 enemy types
-      loadedImages: 0
+      loadedCount: 0,
+      totalCount: 5 // player + 4 enemy types
     },
     keys: {
       left: false,
@@ -30,51 +32,53 @@ export function SpaceInvaders({ width = 350, height = 500 }: SpaceInvadersProps)
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      setError("Could not initialize game context");
+      return;
+    }
 
     const gameState = gameStateRef.current;
 
-    // Asset loading with promises
-    function loadImage(src: string): Promise<HTMLImageElement> {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => {
-          gameState.assets.loadedImages++;
-          resolve(img);
-        };
-        img.onerror = reject;
-        img.src = src;
-      });
+    // Helper function to create placeholder colored rectangles
+    const createColoredRect = (color: string) => {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = 40;
+      tempCanvas.height = 40;
+      const tempCtx = tempCanvas.getContext('2d');
+      if (tempCtx) {
+        tempCtx.fillStyle = color;
+        tempCtx.fillRect(0, 0, 40, 40);
+      }
+      const img = new Image();
+      img.src = tempCanvas.toDataURL();
+      return img;
+    };
+
+    // Initialize with colored rectangles while loading actual assets
+    gameState.assets.player = createColoredRect('#00ff00');
+    gameState.assets.enemies = [
+      createColoredRect('#ff0000'),
+      createColoredRect('#ff3333'),
+      createColoredRect('#ff6666'),
+      createColoredRect('#ff9999')
+    ];
+    gameState.assets.loaded = true;
+
+    // Initialize enemies with colored rectangles
+    for (let i = 0; i < 5; i++) {
+      for (let j = 0; j < 3; j++) {
+        gameState.enemies.push({
+          x: i * 60 + 20,
+          y: j * 60 + 20,
+          width: 40,
+          height: 40,
+          img: gameState.assets.enemies[j % gameState.assets.enemies.length],
+          direction: Math.random() > 0.5 ? 1 : -1
+        });
+      }
     }
 
-    // Load all assets
-    Promise.all([
-      loadImage('/game_hero.png'),
-      loadImage('/invader_1.png'),
-      loadImage('/invader_2.png'),
-      loadImage('/invader_3.png'),
-      loadImage('/invader_4.png')
-    ]).then(([playerImg, ...enemyImages]) => {
-      gameState.assets.player = playerImg;
-      gameState.assets.enemies = enemyImages;
-      gameState.assets.loaded = true;
-
-      // Initialize enemies after images are loaded
-      for (let i = 0; i < 5; i++) {
-        for (let j = 0; j < 3; j++) {
-          gameState.enemies.push({
-            x: i * 60 + 20,
-            y: j * 60 + 20,
-            width: 40,
-            height: 40,
-            img: gameState.assets.enemies[j % gameState.assets.enemies.length],
-            direction: Math.random() > 0.5 ? 1 : -1
-          });
-        }
-      }
-    }).catch(error => {
-      console.error('Error loading game assets:', error);
-    });
+    setLoading(false);
 
     // Event listeners
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -100,13 +104,15 @@ export function SpaceInvaders({ width = 350, height = 500 }: SpaceInvadersProps)
       if (e.key === ' ') gameState.keys.space = false;
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
+    canvas.addEventListener('keydown', handleKeyDown);
+    canvas.addEventListener('keyup', handleKeyUp);
 
     // Game loop
+    let animationFrameId: number;
+
     function gameLoop() {
       if (!canvas || !ctx || !gameState.assets.loaded) {
-        requestAnimationFrame(gameLoop);
+        animationFrameId = requestAnimationFrame(gameLoop);
         return;
       }
 
@@ -136,13 +142,14 @@ export function SpaceInvaders({ width = 350, height = 500 }: SpaceInvadersProps)
       // Update and draw bullets
       gameState.bullets = gameState.bullets.filter(bullet => {
         bullet.y -= 5;
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = 'yellow';
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
 
         // Check collision with enemies
         gameState.enemies = gameState.enemies.filter(enemy => {
           const hit = (
             bullet.x < enemy.x + enemy.width &&
+            bullet.x + bullet.width > enemy.x &&
             bullet.x + bullet.width > enemy.x &&
             bullet.y < enemy.y + enemy.height &&
             bullet.y + bullet.height > enemy.y
@@ -163,7 +170,7 @@ export function SpaceInvaders({ width = 350, height = 500 }: SpaceInvadersProps)
         ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
       });
 
-      requestAnimationFrame(gameLoop);
+      animationFrameId = requestAnimationFrame(gameLoop);
     }
 
     gameLoop();
@@ -171,15 +178,24 @@ export function SpaceInvaders({ width = 350, height = 500 }: SpaceInvadersProps)
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      cancelAnimationFrame(animationFrameId);
     };
   }, []);
+
+  if (error) {
+    return <div className="text-red-500">Error: {error}</div>;
+  }
+
+  if (loading) {
+    return <div className="text-white">Loading game...</div>;
+  }
 
   return (
     <canvas
       ref={canvasRef}
       width={width}
       height={height}
-      className="rounded-lg"
+      className="rounded-lg outline-none"
       tabIndex={0}
       style={{ background: 'rgba(0, 0, 0, 0.3)' }}
     />
