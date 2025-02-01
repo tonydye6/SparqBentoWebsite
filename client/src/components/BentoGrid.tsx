@@ -348,7 +348,7 @@ export function BentoGrid() {
         style={{ transformStyle: "preserve-3d" }}
         whileHover={{ scale: 1.02 }}
       >
-        <div className="flex flex-col h-full gap-5">
+        <div className="flex flex-col h-[440px] gap-5">
           {/* Upper Card (#3) */}
           <div className="bento-card card-3 flex-1 relative overflow-hidden cursor-pointer">
             <div className="card-title-container relative z-10">
