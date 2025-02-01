@@ -351,13 +351,8 @@ export function BentoGrid() {
           <h2 className="card-title">Featured Content</h2>
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <img
-            src="/bfpf.png"
-            alt="Featured Content"
-            className="w-full h-auto max-h-[140%] object-contain rotate-90"
-          />
-        </div>
-      </motion.div>
+          </div>
+        </motion.div>
 
       {/* Card 4: Connect With Us */}
       <motion.div
