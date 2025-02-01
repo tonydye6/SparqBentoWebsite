@@ -1,0 +1,83 @@
+Please implement a simple 2D Space Invaders-style game in Card #3 using HTML5 Canvas. Follow these steps:
+1. Add an HTML5 Canvas Element to Card #3
+Ensure it fits within the card's dimensions.
+jsx
+<canvas id="space-invaders" width="350" height="500"></canvas>
+2. Game Assets
+Use /game_hero.png as the player's ship.
+Use /invader_1.png, /invader_2.png, /invader_3.png, and /invader_4.png as enemy assets.
+3. Game Logic
+Implement player movement using arrow keys or WASD.
+Allow the player to shoot bullets (spacebar).
+Add rows of enemies that move left-to-right and descend when reaching edges.
+Detect collisions between bullets and enemies.
+4. Example JavaScript Code
+javascript
+const canvas = document.getElementById('space-invaders');
+const ctx = canvas.getContext('2d');
+
+// Game settings
+const player = { x: 150, y: 450, width: 50, height: 50 };
+const bullets = [];
+const enemies = [];
+
+// Load assets
+const playerImg = new Image();
+playerImg.src = '/game_hero.png';
+
+const enemyImgs = [
+  '/invader_1.png',
+  '/invader_2.png',
+  '/invader_3.png',
+  '/invader_4.png'
+].map(src => {
+  const img = new Image();
+  img.src = src;
+  return img;
+});
+
+// Initialize enemies
+for (let i = 0; i < 5; i++) {
+  for (let j = 0; j < 3; j++) {
+    enemies.push({
+      x: i * 60 + 20,
+      y: j * 60 + 20,
+      width: 40,
+      height: 40,
+      img: enemyImgs[j % enemyImgs.length]
+    });
+  }
+}
+
+// Game loop
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw player
+  ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+
+  // Draw bullets
+  bullets.forEach((bullet) => {
+    ctx.fillStyle = 'red';
+    ctx.fillRect(bullet.x, bullet.y -= 5, bullet.width, bullet.height);
+  });
+
+  // Draw enemies
+  enemies.forEach((enemy) => {
+    ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+    enemy.x += enemy.direction || (enemy.direction = Math.random() > 0.5 ? -1 : 1); // Move horizontally
+    if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
+      enemy.direction *= -1;
+      enemy.y += 20; // Descend when hitting edges
+    }
+  });
+
+  requestAnimationFrame(draw);
+}
+
+// Player controls
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') player.x -= Math.max(player.x - 10, 0);
+  if (e.key === 'ArrowRight') player.x += Math.min(player.x + player.width + 10, canvas.width);
+  
+// Start game loop
