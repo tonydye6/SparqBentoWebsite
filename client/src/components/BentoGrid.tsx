@@ -342,30 +342,17 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
-      {/* Cards 3 & 16: Split Content */}
-      <motion.div className="relative perspective-1000" style={{ transformStyle: "preserve-3d" }} whileHover={{ scale: 1.02 }}>
-        <div className="flex flex-col gap-5 h-[440px]">
-          {/* Upper Card (#3) */}
-          <motion.div className="bento-card card-3 relative overflow-hidden h-[215px] cursor-pointer">
-            <div className="card-title-container relative z-10">
-              <h2 className="card-title">Featured Upper</h2>
-            </div>
-            <div className="h-full">
-              {/* Upper card content */}
-            </div>
-          </motion.div>
-
-          {/* Lower Card (#16) */}
-          <motion.div className="bento-card card-16 relative overflow-hidden h-[215px] cursor-pointer">
-            <div className="card-title-container relative z-10">
-              <h2 className="card-title">Featured Lower</h2>
-            </div>
-            <div className="h-full">
-              {/* Lower card content */}
-            </div>
-          </motion.div>
+      {/* Card 3: Featured Content */}
+      <motion.div
+        className="bento-card card-3 relative overflow-hidden"
+        whileHover={{ scale: 1.02 }}
+      >
+        <div className="card-title-container relative z-10">
+          <h2 className="card-title">Featured Content</h2>
         </div>
-      </motion.div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          </div>
+        </motion.div>
 
       {/* Card 4: Connect With Us */}
       <motion.div
