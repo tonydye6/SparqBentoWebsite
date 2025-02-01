@@ -14,8 +14,9 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   max: 1, // Limit to single connection for Replit environment
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
+  connectionTimeoutMillis: 30000, // Increased timeout
   query_timeout: 20000,
+  keepAlive: true, // Enable keepalive
   ssl: {
     rejectUnauthorized: false // Required for some Replit PostgreSQL connections
   }
@@ -32,9 +33,10 @@ pool.on('error', (err: Error) => {
 const db = drizzle(pool, { schema });
 
 // Enhanced connection testing with retries and proper error handling
-async function testConnection(maxRetries = 5): Promise<boolean> {
+async function testConnection(maxRetries = 10): Promise<boolean> {
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
+      console.log(`Attempting database connection (attempt ${attempt}/${maxRetries})...`);
       const client = await pool.connect();
       try {
         // Test query to verify connection is working
@@ -45,11 +47,19 @@ async function testConnection(maxRetries = 5): Promise<boolean> {
         client.release();
       }
     } catch (error) {
-      console.error(`Database connection attempt ${attempt} failed:`, (error as Error).message);
-      if (attempt === maxRetries) {
+      const err = error as Error;
+      console.error(`Database connection attempt ${attempt} failed:`, err.message);
+
+      // Check for specific endpoint disabled error
+      if (err.message.includes('endpoint is disabled')) {
+        console.log('Database endpoint is disabled, waiting for activation...');
+        // Use longer delay for endpoint disabled errors
+        await new Promise(resolve => setTimeout(resolve, 5000));
+      } else if (attempt === maxRetries) {
         console.error('Max retries reached, database connection failed');
         return false;
       }
+
       // Exponential backoff with jitter
       const backoff = Math.min(1000 * Math.pow(2, attempt - 1) + Math.random() * 1000, 10000);
       await new Promise(resolve => setTimeout(resolve, backoff));
@@ -64,6 +74,7 @@ export { db, pool, testConnection };
 // Initialize database connection with proper error handling
 (async () => {
   try {
+    console.log('Initializing database connection...');
     const isConnected = await testConnection();
     if (!isConnected) {
       console.warn('Database connection failed after retries, application will use fallback mechanisms');
