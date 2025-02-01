@@ -139,13 +139,8 @@ body {
 }
 
 .card-3-container .bento-card {
-  height: calc(50% - 1.25rem);
+  height: calc(50% - 0.5rem);
   transform: none;
-  transition: transform 0.3s ease-in-out;
-}
-
-.card-3-container .bento-card:hover {
-  transform: translateY(-2px);
 }
 
 .card-3-container .flex-col {
