@@ -35,6 +35,8 @@ type ExpandedCard =
   | "mission"
   | "vision"
   | "values"
+  | "featured"
+  | "updates"
   | null;
 
 const MagneticCard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -343,31 +345,39 @@ export function BentoGrid() {
       </motion.div>
 
       {/* Card 3: Split into Card 3 and Card 16 */}
-      <motion.div
-        className="relative perspective-1000"
-        style={{ transformStyle: 'preserve-3d', gridArea: 'card-3' }}
-        whileHover={{ scale: 1.02 }}
-      >
-        <div className="flex flex-col h-full gap-5">
+      <div className="bento-card card-3">
+        <motion.div className="flex flex-col h-full gap-5">
           {/* Upper Card (#3) */}
-          <Card className="bento-card flex-1 cursor-pointer">
-            <div className="h-full">
+          <Card 
+            className="flex-1 cursor-pointer bg-black/20 border-0"
+            onClick={() => handleCardClick("featured")}
+          >
+            <div className="h-full p-4">
               <div className="card-title-container">
                 <h2 className="card-title">Featured Content</h2>
+              </div>
+              <div className="mt-4 text-center">
+                <p>Discover what's new at Sparq Games</p>
               </div>
             </div>
           </Card>
 
           {/* Lower Card (#16) */}
-          <Card className="bento-card flex-1 cursor-pointer">
-            <div className="h-full">
+          <Card 
+            className="flex-1 cursor-pointer bg-black/20 border-0"
+            onClick={() => handleCardClick("updates")}
+          >
+            <div className="h-full p-4">
               <div className="card-title-container">
                 <h2 className="card-title">Latest Updates</h2>
               </div>
+              <div className="mt-4 text-center">
+                <p>Stay up to date with our latest news</p>
+              </div>
             </div>
           </Card>
-        </div>
-      </motion.div>
+        </motion.div>
+      </div>
 
 
       {/* Card 4: Connect With Us */}
