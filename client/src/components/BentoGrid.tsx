@@ -20,7 +20,6 @@ import { useBadgeStore, BADGES, type Badge } from "@/lib/badges";
 import { BadgeDisplay } from "./badges/BadgeDisplay";
 import { BadgeNotification } from "./badges/BadgeNotification";
 import { TeamCard } from "./TeamCard";
-import { SpaceInvaders } from "./SpaceInvaders";
 
 type ExpandedCard =
   | "ai-chat"
@@ -349,10 +348,14 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
       >
         <div className="card-title-container relative z-10">
-          <h2 className="card-title">Space Invaders</h2>
+          <h2 className="card-title">Featured Content</h2>
         </div>
-        <div className="absolute inset-0 flex items-center justify-center bg-carbon/80">
-          <SpaceInvaders />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <img
+            src="/bfpf.png"
+            alt="Featured Content"
+            className="w-full h-auto max-h-[140%] object-contain rotate-90"
+          />
         </div>
       </motion.div>
 
