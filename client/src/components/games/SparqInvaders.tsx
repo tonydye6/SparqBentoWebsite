@@ -1,3 +1,4 @@
+
 import { useRef, useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 
@@ -6,6 +7,7 @@ interface GameState {
   highScore: number;
   lives: number;
   level: number;
+  isRunning: boolean;
 }
 
 export function SparqInvaders() {
@@ -14,7 +16,8 @@ export function SparqInvaders() {
     currentScore: 0,
     highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
     lives: 3,
-    level: 1
+    level: 1,
+    isRunning: false
   });
 
   useEffect(() => {
@@ -25,7 +28,6 @@ export function SparqInvaders() {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let isGameRunning = false;
 
     // Game constants
     const PLAYER_SPEED = 5;
@@ -86,8 +88,7 @@ export function SparqInvaders() {
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      if (!isGameRunning) {
-        // Draw start screen
+      if (!gameState.isRunning) {
         ctx.fillStyle = 'white';
         ctx.font = '24px Chakra Petch';
         ctx.textAlign = 'center';
@@ -117,33 +118,12 @@ export function SparqInvaders() {
     };
 
     const update = () => {
-      if (!isGameRunning) return;
-
-      // Update player position based on keyboard input
-      if (keys.left) {
-        player.x = Math.max(0, player.x - player.speed);
-      }
-      if (keys.right) {
-        player.x = Math.min(canvas.width - player.width, player.x + player.speed);
-      }
-
-      // Handle shooting
-      const now = Date.now();
-      if (keys.space && now - lastShot > SHOOT_COOLDOWN) {
-        bullets.push({
-          x: player.x + player.width / 2 - 2,
-          y: player.y,
-          width: 4,
-          height: 10,
-          speed: BULLET_SPEED
-        });
-        lastShot = now;
-      }
+      if (!gameState.isRunning) return;
 
       // Update bullets
       for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
-        bullet.y -= bullet.speed;
+        bullet.y -= BULLET_SPEED;
         if (bullet.y + bullet.height < 0) {
           bullets.splice(i, 1);
         }
@@ -211,25 +191,29 @@ export function SparqInvaders() {
     };
 
     const gameOver = () => {
-      isGameRunning = false;
-      const finalScore = gameState.currentScore;
-      if (finalScore > gameState.highScore) {
-        localStorage.setItem('sparqInvadersHighScore', finalScore.toString());
-        setGameState(prev => ({
-          ...prev,
-          highScore: finalScore
-        }));
-      }
+      setGameState(prev => {
+        const finalScore = prev.currentScore;
+        if (finalScore > prev.highScore) {
+          localStorage.setItem('sparqInvadersHighScore', finalScore.toString());
+          return {
+            ...prev,
+            highScore: finalScore,
+            isRunning: false
+          };
+        }
+        return { ...prev, isRunning: false };
+      });
     };
 
     const startGame = () => {
-      isGameRunning = true;
-      setGameState({
+      setGameState(prev => ({
+        ...prev,
         currentScore: 0,
-        highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
         lives: 3,
-        level: 1
-      });
+        level: 1,
+        isRunning: true
+      }));
+      bullets = [];
       initEnemies();
     };
 
@@ -243,7 +227,7 @@ export function SparqInvaders() {
       if (e.key === 'a' || e.key === 'A') keys.left = true;
       if (e.key === 'd' || e.key === 'D') keys.right = true;
       if (e.key === ' ') {
-        if (!isGameRunning) {
+        if (!gameState.isRunning) {
           startGame();
         }
         keys.space = true;
@@ -269,7 +253,7 @@ export function SparqInvaders() {
       window.removeEventListener('keyup', handleKeyUp);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [gameState.isRunning, gameState.level, gameState.currentScore]);
 
   return (
     <Card className="w-full h-full bg-black flex items-center justify-center">
