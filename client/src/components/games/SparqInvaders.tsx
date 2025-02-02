@@ -27,7 +27,7 @@ export function SparqInvaders() {
     // Game constants
     const PLAYER_SPEED = 5;
     const BULLET_SPEED = 7;
-    const ENEMY_SPEED = 0.5;
+    const ENEMY_SPEED = 0.25;
     const SHOOT_COOLDOWN = 250;
 
     // Game objects
