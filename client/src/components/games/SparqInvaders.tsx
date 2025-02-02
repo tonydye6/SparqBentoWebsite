@@ -15,7 +15,7 @@ export function SparqInvaders() {
     if (!ctx) return;
 
     // Game state
-    playerRef.current = { x: canvas.width / 2 - 40, y: canvas.height - 100, width: 80, height: 80 };
+    playerRef.current = { x: canvas.width / 2 - 80, y: canvas.height - 160, width: 160, height: 160 };
     bulletsRef.current = [];
     const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, dx: number }> = [];
     let playerImg: HTMLImageElement;
