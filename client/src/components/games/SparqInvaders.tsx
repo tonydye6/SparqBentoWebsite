@@ -35,20 +35,25 @@ export function SparqInvaders() {
       dx: number;
     }> = [];
 
-    let playerImg = new Image();
+    const playerImg = new Image();
     playerImg.src = '/game_hero.png';
 
     const loadEnemyImages = async () => {
-      const images = await Promise.all(
-        Array.from({ length: 8 }, (_, i) => {
-          const img = new Image();
-          img.src = `/invader_${i + 1}.png`;
-          return new Promise<HTMLImageElement>((resolve) => {
-            img.onload = () => resolve(img);
-          });
-        })
-      );
-      initEnemies(images);
+      try {
+        const images = await Promise.all(
+          Array.from({ length: 8 }, (_, i) => {
+            const img = new Image();
+            img.src = `/invader_${i + 1}.png`;
+            return new Promise<HTMLImageElement>((resolve, reject) => {
+              img.onload = () => resolve(img);
+              img.onerror = reject;
+            });
+          })
+        );
+        initEnemies(images);
+      } catch (error) {
+        console.error('Failed to load enemy images:', error);
+      }
     };
 
     const initEnemies = (images: HTMLImageElement[]) => {
@@ -58,7 +63,6 @@ export function SparqInvaders() {
       const offsetY = 150;
       const spacingX = 60;
       const spacingY = 50;
-      const baseSpeed = gameState.currentLevel * 0.5;
 
       enemies.length = 0;
       for (let r = 0; r < rows; r++) {
@@ -69,7 +73,7 @@ export function SparqInvaders() {
             width: 40,
             height: 40,
             img: images[Math.floor(Math.random() * images.length)],
-            dx: baseSpeed
+            dx: 2
           });
         }
       }
@@ -102,20 +106,16 @@ export function SparqInvaders() {
         ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
       }
 
-      for (let i = bullets.length - 1; i >= 0; i--) {
-        const bullet = bullets[i];
+      bullets.forEach((bullet, i) => {
         bullet.y -= 5;
         ctx.fillStyle = 'red';
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-        if (bullet.y + bullet.height < 0) {
-          bullets.splice(i, 1);
-        }
-      }
+      });
 
-      enemies.forEach((enemy) => {
+      enemies.forEach((enemy, i) => {
         enemy.x += enemy.dx;
         if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
-          enemy.dx = -enemy.dx;
+          enemy.dx *= -1;
           enemy.y += 20;
         }
         if (enemy.img.complete) {
@@ -123,6 +123,14 @@ export function SparqInvaders() {
         }
       });
 
+      // Clean up off-screen bullets
+      bullets.forEach((bullet, i) => {
+        if (bullet.y < 0) {
+          bullets.splice(i, 1);
+        }
+      });
+
+      // Collision detection
       for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
         for (let j = enemies.length - 1; j >= 0; j--) {
@@ -141,9 +149,7 @@ export function SparqInvaders() {
               currentScore: newScore,
               highScore: Math.max(prev.highScore, newScore)
             }));
-            if (newScore > gameState.highScore) {
-              localStorage.setItem('sparqInvadersHighScore', newScore.toString());
-            }
+            localStorage.setItem('sparqInvadersHighScore', Math.max(gameState.highScore, newScore).toString());
             break;
           }
         }
@@ -166,9 +172,12 @@ export function SparqInvaders() {
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
 
+    playerImg.onload = () => {
+      loadEnemyImages();
+      gameLoop();
+    };
+
     document.addEventListener('keydown', handleKeyDown);
-    loadEnemyImages();
-    gameLoop();
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
@@ -176,7 +185,7 @@ export function SparqInvaders() {
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, []);
+  }, []); // Empty dependency array to run only once
 
   return (
     <Card className="w-full h-full bg-black flex items-center justify-center">
