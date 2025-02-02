@@ -191,7 +191,8 @@ export function SparqInvaders() {
     pressedKeys.current.delete(e.key);
   };
 
-  const createBullet = () => {
+    const createBullet = () => {
+    if (!gameState.hasStarted || !gameState.isPlaying) return;
     bullets.current.push({
       x: player.current.x + player.current.width / 2 - 2,
       y: player.current.y,
