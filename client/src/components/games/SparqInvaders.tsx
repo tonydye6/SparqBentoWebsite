@@ -270,7 +270,7 @@ export function SparqInvaders() {
 
       // Create and draw background image with opacity
       const backgroundImage = new Image();
-      backgroundImage.src = '/field_background.png';
+      backgroundImage.src = '/ftcc.png';
       ctx.globalAlpha = 0.2; // Set low opacity for background
       ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
       ctx.globalAlpha = 1.0; // Reset opacity for other elements
