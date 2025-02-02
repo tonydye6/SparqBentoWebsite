@@ -238,7 +238,7 @@ export function BentoGrid() {
         return <DiscordWidget />;
       case "3d":
         return <ThreeViewer />;
-      case "mission":
+        case "mission":
         return (
           <div className="p-6 space-y-4">
             <h2 className="text-2xl font-bold">Our Mission</h2>
@@ -270,7 +270,7 @@ export function BentoGrid() {
             </ul>
           </div>
         );
-      case "values":
+        case "values":
         return (
           <div className="p-6 space-y-6">
             <h2 className="text-2xl font-bold">Our Values</h2>
@@ -343,33 +343,30 @@ export function BentoGrid() {
       </motion.div>
 
       {/* Split Card 3 into two independent cards */}
-      <motion.div
-        className="relative perspective-1000"
-        style={{ transformStyle: "preserve-3d" }}
-        whileHover={{ scale: 1.02 }}
-      >
-        <Card className="bento-card h-[735px] mb-5 cursor-pointer">
-          {/* Card #3 - Sparq Invaders Game */}
-          <div className="h-full">
-            <div className="card-title-container">
-              <h2 className="card-title">Sparq Invaders</h2>
+      <motion.div 
+          className="relative perspective-1000 card-3" 
+          style={{ transformStyle: "preserve-3d" }} 
+          whileHover={{ scale: 1.02 }}
+        >
+          <Card className="bento-card h-[735px] mb-5 cursor-pointer">
+            {/* Card #3 - Sparq Invaders Game */}
+            <div className="h-full">
+              <div className="card-title-container">
+                <h2 className="card-title">Sparq Invaders</h2>
+              </div>
+              <div className="h-full">
+                <SparqInvaders />
+              </div>
             </div>
-            <div className="h-full pt-16">
-              <SparqInvaders />
-            </div>
-          </div>
-        </Card>
-      </motion.div>
+          </Card>
+        </motion.div>
 
-      {/* Card #16 - Sparq Invaders */}
       <div className="card-16">
-        <Card className="bento-card h-[1035px] bg-carbon hover:transform-none hover:bg-carbon">
+        <Card className="bento-card h-[1135px] bg-carbon hover:transform-none hover:bg-carbon">
+          {/* Card #16 - Featured Games */}
           <div className="h-full">
             <div className="card-title-container">
-              <h2 className="card-title">Sparq Invaders</h2>
-            </div>
-            <div className="h-full pt-16 flex items-center justify-center">
-              <SparqInvaders />
+              <h2 className="card-title">Featured Games</h2>
             </div>
           </div>
         </Card>
@@ -456,21 +453,14 @@ export function BentoGrid() {
         onClick={() => handleCardClick("team")}
       >
         <div className="card-title-container">
-          <h2 className="card-title">Advisors</h2>
+          <h2 className="card-title">Meet Our Team</h2>
         </div>
-        <div className="flex flex-col h-full card-content justify-center space-y-6">
+        <div className="flex flex-col h-full card-content">
+          <div className="flex-1">
+            <TeamCarousel members={executiveTeam} interval={5000} />
+          </div>
           <div className="flex-1">
             <TeamCarousel members={advisoryTeam} interval={7000} />
-          </div>
-          <div className="flex flex-col space-y-4 p-6">
-            <blockquote className="text-xl italic text-center">
-              "AI is the future of gaming."
-              <footer className="mt-2 text-lg text-white/70">- Elon Musk</footer>
-            </blockquote>
-            <blockquote className="text-xl italic text-center">
-              "Gaming as an industry is going to get revitalized by AI"
-              <footer className="mt-2 text-lg text-white/70">- Jensen Huang</footer>
-            </blockquote>
           </div>
         </div>
       </motion.div>

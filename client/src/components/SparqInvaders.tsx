@@ -15,7 +15,7 @@ export function SparqInvaders() {
     if (!ctx) return;
 
     // Game settings
-    const player = { x: 150, y: 400, width: 50, height: 50 }; // Adjusted size
+    const player = { x: 150, y: 400, width: 80, height: 80 }; // Increased size
     const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
     const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, direction?: number }> = [];
     let playerImg: HTMLImageElement;
@@ -63,8 +63,8 @@ export function SparqInvaders() {
       bullets.forEach((bullet, index) => {
         if (!ctx) return;
 
-        ctx.fillStyle = '#eb0028'; // Sparq red color
-        bullet.y -= 7; // Increased bullet speed
+        ctx.fillStyle = 'red';
+        bullet.y -= 5;
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
 
         // Remove bullets that are off screen
@@ -92,42 +92,39 @@ export function SparqInvaders() {
         if (!ctx) return;
         if (enemy.img) {
           ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
-          enemy.x += (enemy.direction || 1) * 2; // Increased movement speed
+          enemy.x += enemy.direction || (enemy.direction = Math.random() > 0.5 ? -1 : 1);
           if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
             enemy.direction! *= -1;
-            enemy.y += 30; // Increased descent speed
+            enemy.y += 20;
           }
         }
       });
 
-      // Draw scores with improved styling
+      // Draw scores
       ctx.fillStyle = 'white';
-      ctx.font = 'bold 16px "Chakra Petch"';
-      ctx.textAlign = 'left';
-      ctx.fillText(`Score: ${scoreRef.current}`, 10, 25);
-      ctx.fillText(`High Score: ${highScore}`, 10, 50);
+      ctx.font = '16px Arial';
+      ctx.fillText(`Score: ${scoreRef.current}`, 10, 20);
+      ctx.fillText(`High Score: ${highScore}`, 10, 40);
 
       gameLoop = requestAnimationFrame(draw);
     }
 
-    // Player controls with smoother movement
+    // Player controls
     function handleKeyDown(e: KeyboardEvent) {
       if (!canvas) return;
 
-      const moveSpeed = 12; // Increased movement speed
-
       if (e.key === 'ArrowLeft' || e.key === 'a') {
-        player.x = Math.max(player.x - moveSpeed, 0);
+        player.x = Math.max(player.x - 10, 0);
       }
       if (e.key === 'ArrowRight' || e.key === 'd') {
-        player.x = Math.min(player.x + moveSpeed, canvas.width - player.width);
+        player.x = Math.min(player.x + 10, canvas.width - player.width);
       }
       if (e.key === ' ' || e.key === 'w' || e.key === 'ArrowUp') {
         bullets.push({
           x: player.x + player.width / 2 - 2,
           y: player.y,
           width: 4,
-          height: 12 // Longer bullets
+          height: 10
         });
       }
     }
@@ -144,27 +141,28 @@ export function SparqInvaders() {
       enemyImgs = invaders;
       loadHighScore();
 
-      // Initialize enemies with better spacing
-      for (let i = 0; i < 6; i++) { // Increased number of enemies
+      // Initialize enemies after images are loaded
+      for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 3; j++) {
           enemies.push({
-            x: i * 50 + 25,
-            y: j * 50 + 20,
-            width: 30,
-            height: 30,
+            x: i * 60 + 20,
+            y: j * 60 + 20,
+            width: 40,
+            height: 40,
             img: enemyImgs[j % enemyImgs.length],
             direction: 1
           });
         }
       }
 
+      // Start game loop and add event listener
       document.addEventListener('keydown', handleKeyDown);
       draw();
     }).catch(error => {
       console.error('Failed to load game assets:', error);
       if (ctx) {
         ctx.fillStyle = 'white';
-        ctx.font = '14px "Chakra Petch"';
+        ctx.font = '14px Arial';
         ctx.textAlign = 'center';
         ctx.fillText('Failed to load game assets', canvas.width/2, canvas.height/2);
       }
@@ -179,13 +177,13 @@ export function SparqInvaders() {
   }, [highScore]);
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-center bg-carbon/30 rounded-lg p-4">
+    <div className="relative w-full h-full flex flex-col items-center">
       <div className="mb-4 w-full flex justify-between px-4">
-        <div className="text-sm font-chakra-petch">
+        <div className="text-sm">
           <div>Score: {currentScore}</div>
           <div>High Score: {highScore}</div>
         </div>
-        <div className="text-sm text-right font-chakra-petch">
+        <div className="text-sm text-right">
           <div>Controls:</div>
           <div>← → or A/D: Move</div>
           <div>Space/W/↑: Shoot</div>
@@ -193,9 +191,9 @@ export function SparqInvaders() {
       </div>
       <canvas
         ref={canvasRef}
-        width={300}
-        height={450}
-        className="max-w-full h-auto bg-black/40 rounded-lg"
+        width={350}
+        height={500}
+        className="max-w-full h-auto"
       />
     </div>
   );

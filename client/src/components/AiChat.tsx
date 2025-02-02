@@ -122,6 +122,16 @@ export function AiChat() {
       </form>
 
       <div className="mt-auto pt-4">
+        <div className="text-center space-y-4 text-gray-300">
+          <div>
+            <p className="italic text-2xl">"AI is the future of gaming."</p>
+            <p className="text-base">- Elon Musk</p>
+          </div>
+          <div>
+            <p className="italic text-2xl">"Gaming as an industry is going to get revitalized by AI"</p>
+            <p className="text-base">- Jensen Huang</p>
+          </div>
+        </div>
       </div>
     </div>
   );
