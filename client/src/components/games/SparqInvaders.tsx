@@ -422,10 +422,13 @@ export function SparqInvaders() {
   }, []);
 
   return (
-    <Card className="w-[600px] h-[1035px] flex flex-col items-center justify-center bg-gray-900 p-4">
+    <Card className="w-full h-full flex flex-col items-center justify-center bg-gray-900 p-4">
       <canvas
         ref={canvasRef}
-        className="border border-gray-700 rounded-lg"
+        width={CANVAS_WIDTH}
+        height={CANVAS_HEIGHT}
+        className="border border-gray-700 rounded-lg bg-black"
+        style={{ width: `${CANVAS_WIDTH}px`, height: `${CANVAS_HEIGHT}px` }}
         tabIndex={0}
       />
       <div className="h-[100px] mt-4 flex flex-col items-center justify-center">
