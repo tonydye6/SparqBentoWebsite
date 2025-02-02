@@ -348,7 +348,7 @@ export function BentoGrid() {
         style={{ transformStyle: "preserve-3d" }}
         whileHover={{ scale: 1.02 }}
       >
-        <Card className="bento-card h-[735px] mb-5 cursor-pointer">
+        <Card className="bento-card h-[635px] mb-5 cursor-pointer">
           {/* Card #3 - Sparq Team */}
           <div className="h-full">
             <div className="card-title-container">
@@ -362,7 +362,7 @@ export function BentoGrid() {
       </motion.div>
 
       <div className="card-16">
-        <Card className="bento-card h-[1135px] bg-carbon hover:transform-none hover:bg-carbon">
+        <Card className="bento-card h-[1035px] bg-carbon hover:transform-none hover:bg-carbon">
           {/* Card #16 - Sparq Invaders */}
           <div className="h-full">
             <div className="card-title-container">
