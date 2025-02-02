@@ -15,7 +15,7 @@ export function SparqInvaders() {
     if (!ctx) return;
 
     // Game settings
-    const player = { x: 150, y: 450, width: 50, height: 50 };
+    const player = { x: 150, y: 400, width: 80, height: 80 }; // Increased size
     const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
     const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, direction?: number }> = [];
     let playerImg: HTMLImageElement;
@@ -131,11 +131,11 @@ export function SparqInvaders() {
 
     // Initialize the game
     Promise.all([
-      loadImage('/sparqIcon.png'),
-      loadImage('/Skull(Red).png'),
-      loadImage('/bfpf.png'),
-      loadImage('/bfpfr.png'),
-      loadImage('/bfpfw.png')
+      loadImage('/game_hero.png'),
+      loadImage('/invader_1.png'),
+      loadImage('/invader_3.png'),
+      loadImage('/invader_6.png'),
+      loadImage('/invader_7.png')
     ]).then(([hero, ...invaders]) => {
       playerImg = hero;
       enemyImgs = invaders;
