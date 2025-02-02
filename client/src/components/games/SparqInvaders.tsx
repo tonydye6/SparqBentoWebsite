@@ -1,3 +1,4 @@
+
 import { useRef, useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 
@@ -11,6 +12,11 @@ export function SparqInvaders() {
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    // Create gradient background
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    gradient.addColorStop(0, '#1a1b26');
+    gradient.addColorStop(1, '#16161e');
 
     let isGameActive = true;
     let animationFrameId: number;
@@ -69,6 +75,28 @@ export function SparqInvaders() {
       return img;
     });
 
+    // Draw grid background
+    function drawGrid() {
+      ctx.strokeStyle = 'rgba(235, 0, 40, 0.1)';
+      ctx.lineWidth = 0.5;
+      
+      // Vertical lines
+      for (let x = 0; x < canvas.width; x += 20) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      
+      // Horizontal lines
+      for (let y = 0; y < canvas.height; y += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+    }
+
     // Input handling
     const keys = {
       left: false,
@@ -120,7 +148,6 @@ export function SparqInvaders() {
       }
     };
 
-    // Game functions
     function createEnemies() {
       const rows = 4;
       const cols = 8;
@@ -148,7 +175,7 @@ export function SparqInvaders() {
       }
     }
 
-    function createExplosion(x: number, y: number, color: string) {
+    function createExplosion(x: number, y: number) {
       for (let i = 0; i < 15; i++) {
         particles.push({
           x,
@@ -156,7 +183,7 @@ export function SparqInvaders() {
           vx: (Math.random() - 0.5) * 8,
           vy: (Math.random() - 0.5) * 8,
           life: 1,
-          color
+          color: `rgba(235, 0, 40, ${Math.random() * 0.5 + 0.5})`
         });
       }
     }
@@ -205,7 +232,7 @@ export function SparqInvaders() {
         if (bullet.y < 0) bullets.splice(i, 1);
       }
 
-      // Update enemies with modified speed progression
+      // Update enemies
       let touchedEdge = false;
       const currentLevelSpeed = ENEMY_SPEED * (1 + 0.15 * (gameState.level - 1));
 
@@ -215,7 +242,6 @@ export function SparqInvaders() {
           touchedEdge = true;
         }
       });
-
 
       if (touchedEdge) {
         enemies.forEach(enemy => {
@@ -235,7 +261,7 @@ export function SparqInvaders() {
             bullet.y < enemy.y + enemy.height &&
             bullet.y + bullet.height > enemy.y
           ) {
-            createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#ff0000');
+            createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
             bullets.splice(i, 1);
             enemies.splice(j, 1);
             gameState.score += enemy.points;
@@ -265,20 +291,27 @@ export function SparqInvaders() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw background
-      ctx.fillStyle = '#000000';
+      ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawGrid();
 
       if (!gameStarted) {
         // Draw start screen
-        ctx.fillStyle = 'white';
-        ctx.font = 'bold 24px "Chakra Petch"';
+        ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
-        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
-        ctx.shadowBlur = 10;
-        ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2);
-        ctx.font = 'bold 16px "Chakra Petch"';
-        ctx.fillText('Use A/D or Arrow Keys to Move', canvas.width / 2, canvas.height / 2 + 40);
-        ctx.fillText('SPACE to Shoot', canvas.width / 2, canvas.height / 2 + 70);
+        ctx.shadowColor = 'rgba(235, 0, 40, 0.8)';
+        ctx.shadowBlur = 15;
+        
+        ctx.font = 'bold 24px "Chakra Petch"';
+        ctx.fillText('SPARQ INVADERS', canvas.width / 2, canvas.height / 2 - 40);
+        
+        ctx.font = 'bold 18px "Chakra Petch"';
+        ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2 + 10);
+        
+        ctx.font = '16px "Chakra Petch"';
+        ctx.fillText('Use A/D or Arrow Keys to Move', canvas.width / 2, canvas.height / 2 + 50);
+        ctx.fillText('SPACE to Shoot', canvas.width / 2, canvas.height / 2 + 80);
+        
         ctx.shadowBlur = 0;
         return;
       }
@@ -292,13 +325,16 @@ export function SparqInvaders() {
           ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
         });
 
-        // Draw bullets
-        ctx.fillStyle = '#ff0000';
+        // Draw bullets with glow effect
+        ctx.shadowColor = 'rgba(235, 0, 40, 0.8)';
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = '#ff3366';
+        
         bullets.forEach(bullet => {
           ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
         });
 
-        // Draw particles
+        // Draw particles with glow
         particles.forEach(p => {
           ctx.globalAlpha = p.life;
           ctx.fillStyle = p.color;
@@ -307,27 +343,39 @@ export function SparqInvaders() {
           ctx.fill();
         });
         ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
 
         // Draw HUD
-        ctx.fillStyle = 'white';
-        ctx.font = '16px "Chakra Petch"';
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 16px "Chakra Petch"';
         ctx.textAlign = 'left';
+        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
+        ctx.shadowBlur = 10;
         ctx.fillText(`Score: ${gameState.score}`, 10, 25);
         ctx.fillText(`High Score: ${gameState.highScore}`, 10, 50);
         ctx.fillText(`Level: ${gameState.level}`, canvas.width - 100, 25);
+        ctx.shadowBlur = 0;
       } else {
         // Draw game over screen
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = 'white';
-        ctx.font = '32px "Chakra Petch"';
+        
+        ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
-        ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2 - 40);
-        ctx.font = '24px "Chakra Petch"';
+        ctx.shadowColor = 'rgba(235, 0, 40, 0.8)';
+        ctx.shadowBlur = 15;
+        
+        ctx.font = 'bold 32px "Chakra Petch"';
+        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 40);
+        
+        ctx.font = 'bold 24px "Chakra Petch"';
         ctx.fillText(`Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 10);
         ctx.fillText(`High Score: ${gameState.highScore}`, canvas.width / 2, canvas.height / 2 + 40);
+        
         ctx.font = '20px "Chakra Petch"';
         ctx.fillText('Press SPACE to Play Again', canvas.width / 2, canvas.height / 2 + 90);
+        
+        ctx.shadowBlur = 0;
       }
     }
 
@@ -384,8 +432,9 @@ export function SparqInvaders() {
         className="max-w-full h-auto relative z-10"
         style={{ 
           backgroundColor: 'transparent',
-          boxShadow: '0 0 20px rgba(235, 0, 40, 0.15)',
-          border: '1px solid rgba(235, 0, 40, 0.3)'
+          boxShadow: '0 0 30px rgba(235, 0, 40, 0.2)',
+          border: '1px solid rgba(235, 0, 40, 0.4)',
+          borderRadius: '8px'
         }}
       />
     </Card>
