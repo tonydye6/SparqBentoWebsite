@@ -11,7 +11,7 @@ const ctx = canvas.getContext('2d');
 if (!ctx) return;
 text
 // Game state
-const player = { x: canvas.width / 2 - 40, y: canvas.height - 100, width: 80, height: 80 };
+const player = { x: canvas.width / 2 - 40, y: canvas.height - 120, width: 80, height: 80 };
 const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
 const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, dx: number }> = [];
 let playerImg: HTMLImageElement;
@@ -150,7 +150,7 @@ return () => {
 }, [currentScore, highScore]);
 return (
 <Card className="bento-card">
-<canvas ref={canvasRef} width={350} height={500} style={{ backgroundColor: 'black' }} />
+<canvas ref={canvasRef} width={350} height={935} style={{ backgroundColor: 'black' }} />
 <div style={{ color: 'white', padding: '10px', textAlign: 'center' }}>
 <p>Score: {currentScore}</p>
 <p>High Score: {highScore}</p>
