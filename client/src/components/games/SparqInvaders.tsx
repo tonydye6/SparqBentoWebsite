@@ -1,4 +1,3 @@
-
 import { useRef, useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 
@@ -27,6 +26,7 @@ export function SparqInvaders() {
       score: 0,
       highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
       level: 1,
+      lives: 3,
       isGameOver: false
     };
 
@@ -64,6 +64,12 @@ export function SparqInvaders() {
       life: number;
       color: string;
     }[] = [];
+    let scorePopups: {
+      value: number;
+      x: number;
+      y: number;
+      life: number;
+    }[] = [];
 
     // Load images
     const playerImage = new Image();
@@ -79,7 +85,7 @@ export function SparqInvaders() {
     function drawGrid() {
       ctx.strokeStyle = 'rgba(235, 0, 40, 0.1)';
       ctx.lineWidth = 0.5;
-      
+
       // Vertical lines
       for (let x = 0; x < canvas.width; x += 20) {
         ctx.beginPath();
@@ -87,7 +93,7 @@ export function SparqInvaders() {
         ctx.lineTo(x, canvas.height);
         ctx.stroke();
       }
-      
+
       // Horizontal lines
       for (let y = 0; y < canvas.height; y += 20) {
         ctx.beginPath();
@@ -97,7 +103,75 @@ export function SparqInvaders() {
       }
     }
 
-    // Input handling
+    function createExplosion(x: number, y: number, color: string) {
+      for (let i = 0; i < 15; i++) {
+        particles.push({
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8,
+          life: 1,
+          color: `rgba(235, 0, 40, ${Math.random() * 0.5 + 0.5})`
+        });
+      }
+    }
+
+    function createScorePopup(x: number, y: number, value: number) {
+      scorePopups.push({
+        value,
+        x,
+        y,
+        life: 1
+      });
+    }
+
+    function updateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.02;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+    }
+
+    function updateScorePopups() {
+      for (let i = scorePopups.length - 1; i >= 0; i--) {
+        const popup = scorePopups[i];
+        popup.y -= 1;
+        popup.life -= 0.02;
+        if (popup.life <= 0) scorePopups.splice(i, 1);
+      }
+    }
+
+    // Game functions
+    function createEnemies() {
+      const rows = 4;
+      const cols = 8;
+      const padding = 20;
+      const startX = padding;
+      const startY = 50;
+      const width = 30;
+      const height = 30;
+      const spacing = (canvas.width - 2 * padding - cols * width) / (cols - 1);
+
+      enemies = [];
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          enemies.push({
+            x: startX + col * (width + spacing),
+            y: startY + row * 40,
+            width,
+            height,
+            img: enemyImages[Math.floor(Math.random() * enemyImages.length)],
+            points: (rows - row) * 100,
+            direction: 1
+          });
+        }
+      }
+    }
+
     const keys = {
       left: false,
       right: false,
@@ -148,56 +222,6 @@ export function SparqInvaders() {
       }
     };
 
-    function createEnemies() {
-      const rows = 4;
-      const cols = 8;
-      const padding = 20;
-      const startX = padding;
-      const startY = 50;
-      const width = 30;
-      const height = 30;
-      const spacing = (canvas.width - 2 * padding - cols * width) / (cols - 1);
-
-      enemies = [];
-
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
-          enemies.push({
-            x: startX + col * (width + spacing),
-            y: startY + row * 40,
-            width,
-            height,
-            img: enemyImages[Math.floor(Math.random() * enemyImages.length)],
-            points: (rows - row) * 100,
-            direction: 1
-          });
-        }
-      }
-    }
-
-    function createExplosion(x: number, y: number) {
-      for (let i = 0; i < 15; i++) {
-        particles.push({
-          x,
-          y,
-          vx: (Math.random() - 0.5) * 8,
-          vy: (Math.random() - 0.5) * 8,
-          life: 1,
-          color: `rgba(235, 0, 40, ${Math.random() * 0.5 + 0.5})`
-        });
-      }
-    }
-
-    function updateParticles() {
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.life -= 0.02;
-        if (p.life <= 0) particles.splice(i, 1);
-      }
-    }
-
     function shoot() {
       const now = Date.now();
       if (now - lastShootTime >= SHOOT_COOLDOWN) {
@@ -232,7 +256,7 @@ export function SparqInvaders() {
         if (bullet.y < 0) bullets.splice(i, 1);
       }
 
-      // Update enemies
+      // Update enemies with modified speed progression
       let touchedEdge = false;
       const currentLevelSpeed = ENEMY_SPEED * (1 + 0.15 * (gameState.level - 1));
 
@@ -261,7 +285,8 @@ export function SparqInvaders() {
             bullet.y < enemy.y + enemy.height &&
             bullet.y + bullet.height > enemy.y
           ) {
-            createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+            createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#eb0028');
+            createScorePopup(enemy.x + enemy.width / 2, enemy.y, enemy.points);
             bullets.splice(i, 1);
             enemies.splice(j, 1);
             gameState.score += enemy.points;
@@ -273,9 +298,27 @@ export function SparqInvaders() {
         }
       }
 
-      // Check game over
-      if (enemies.some(enemy => enemy.y + enemy.height > player.y)) {
-        gameOver();
+      // Check for enemy collision with player or reaching bottom
+      for (let i = enemies.length - 1; i >= 0; i--) {
+        const enemy = enemies[i];
+        if (
+          enemy.y + enemy.height > player.y ||
+          (enemy.x < player.x + player.width &&
+            enemy.x + enemy.width > player.x &&
+            enemy.y < player.y + player.height &&
+            enemy.y + enemy.height > player.y)
+        ) {
+          gameState.lives--;
+          createExplosion(player.x + player.width / 2, player.y + player.height / 2, '#eb0028');
+          if (gameState.lives <= 0) {
+            gameOver();
+          } else {
+            // Reset enemy positions if player still has lives
+            enemies.forEach(e => {
+              e.y = e.y - 100;
+            });
+          }
+        }
       }
 
       // Check level complete
@@ -285,6 +328,7 @@ export function SparqInvaders() {
       }
 
       updateParticles();
+      updateScorePopups();
     }
 
     function drawGame() {
@@ -301,24 +345,27 @@ export function SparqInvaders() {
         ctx.textAlign = 'center';
         ctx.shadowColor = 'rgba(235, 0, 40, 0.8)';
         ctx.shadowBlur = 15;
-        
+
         ctx.font = 'bold 24px "Chakra Petch"';
         ctx.fillText('SPARQ INVADERS', canvas.width / 2, canvas.height / 2 - 40);
-        
+
         ctx.font = 'bold 18px "Chakra Petch"';
         ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2 + 10);
-        
+
         ctx.font = '16px "Chakra Petch"';
         ctx.fillText('Use A/D or Arrow Keys to Move', canvas.width / 2, canvas.height / 2 + 50);
         ctx.fillText('SPACE to Shoot', canvas.width / 2, canvas.height / 2 + 80);
-        
+
         ctx.shadowBlur = 0;
         return;
       }
 
       if (!gameState.isGameOver) {
-        // Draw player
+        // Draw player with glow effect
+        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
+        ctx.shadowBlur = 20;
         ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
+        ctx.shadowBlur = 0;
 
         // Draw enemies
         enemies.forEach(enemy => {
@@ -329,7 +376,7 @@ export function SparqInvaders() {
         ctx.shadowColor = 'rgba(235, 0, 40, 0.8)';
         ctx.shadowBlur = 10;
         ctx.fillStyle = '#ff3366';
-        
+
         bullets.forEach(bullet => {
           ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
         });
@@ -345,6 +392,15 @@ export function SparqInvaders() {
         ctx.globalAlpha = 1;
         ctx.shadowBlur = 0;
 
+        // Draw score popups
+        ctx.font = 'bold 16px "Chakra Petch"';
+        ctx.fillStyle = '#eb0028';
+        scorePopups.forEach(popup => {
+          ctx.globalAlpha = popup.life;
+          ctx.fillText(`+${popup.value}`, popup.x, popup.y);
+        });
+        ctx.globalAlpha = 1;
+
         // Draw HUD
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 16px "Chakra Petch"';
@@ -354,27 +410,28 @@ export function SparqInvaders() {
         ctx.fillText(`Score: ${gameState.score}`, 10, 25);
         ctx.fillText(`High Score: ${gameState.highScore}`, 10, 50);
         ctx.fillText(`Level: ${gameState.level}`, canvas.width - 100, 25);
+        ctx.fillText(`Lives: ${gameState.lives}`, canvas.width - 100, 50);
         ctx.shadowBlur = 0;
       } else {
         // Draw game over screen
         ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
+
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
         ctx.shadowColor = 'rgba(235, 0, 40, 0.8)';
         ctx.shadowBlur = 15;
-        
+
         ctx.font = 'bold 32px "Chakra Petch"';
         ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 40);
-        
+
         ctx.font = 'bold 24px "Chakra Petch"';
         ctx.fillText(`Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 10);
         ctx.fillText(`High Score: ${gameState.highScore}`, canvas.width / 2, canvas.height / 2 + 40);
-        
+
         ctx.font = '20px "Chakra Petch"';
         ctx.fillText('Press SPACE to Play Again', canvas.width / 2, canvas.height / 2 + 90);
-        
+
         ctx.shadowBlur = 0;
       }
     }
@@ -395,10 +452,12 @@ export function SparqInvaders() {
     function resetGame() {
       gameState.score = 0;
       gameState.level = 1;
+      gameState.lives = 3;
       gameState.isGameOver = false;
       player.x = canvas.width / 2 - player.width / 2;
       bullets = [];
       particles = [];
+      scorePopups = [];
       createEnemies();
       setDisplayScore({ current: 0, high: gameState.highScore });
     }
