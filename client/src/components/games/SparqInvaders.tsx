@@ -271,14 +271,10 @@ export function SparqInvaders() {
       if (!gameStarted) {
         // Draw start screen
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 24px "Chakra Petch"';
-        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
-        ctx.shadowBlur = 10;
+        ctx.font = '24px "Chakra Petch"';
         ctx.textAlign = 'center';
         ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2);
-        ctx.font = 'bold 16px "Chakra Petch"';
-        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
-        ctx.shadowBlur = 10;
+        ctx.font = '16px "Chakra Petch"';
         ctx.fillText('Use A/D or Arrow Keys to Move', canvas.width / 2, canvas.height / 2 + 40);
         ctx.fillText('SPACE to Shoot', canvas.width / 2, canvas.height / 2 + 70);
         return;
@@ -311,9 +307,7 @@ export function SparqInvaders() {
 
         // Draw HUD
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 16px "Chakra Petch"';
-        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
-        ctx.shadowBlur = 10;
+        ctx.font = '16px "Chakra Petch"';
         ctx.textAlign = 'left';
         ctx.fillText(`Score: ${gameState.score}`, 10, 25);
         ctx.fillText(`High Score: ${gameState.highScore}`, 10, 50);
@@ -323,19 +317,13 @@ export function SparqInvaders() {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 32px "Chakra Petch"';
-        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
-        ctx.shadowBlur = 10;
+        ctx.font = '32px "Chakra Petch"';
         ctx.textAlign = 'center';
         ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2 - 40);
-        ctx.font = 'bold 24px "Chakra Petch"';
-        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
-        ctx.shadowBlur = 10;
+        ctx.font = '24px "Chakra Petch"';
         ctx.fillText(`Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 10);
         ctx.fillText(`High Score: ${gameState.highScore}`, canvas.width / 2, canvas.height / 2 + 40);
-        ctx.font = 'bold 20px "Chakra Petch"';
-        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
-        ctx.shadowBlur = 10;
+        ctx.font = '20px "Chakra Petch"';
         ctx.fillText('Press SPACE to Play Again', canvas.width / 2, canvas.height / 2 + 90);
       }
     }
