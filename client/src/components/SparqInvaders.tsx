@@ -16,33 +16,48 @@ export function SparqInvaders() {
     const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
     const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, direction?: number }> = [];
 
-    // Load assets
-    const playerImg = new Image();
-    playerImg.src = '/game_hero.png';
+    // Load assets with proper error handling
+    const loadImage = (src: string): Promise<HTMLImageElement> => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+        img.src = src;
+      });
+    };
 
-    const enemyImgs = [
-      '/invader_1.png',
-      '/invader_2.png',
-      '/invader_3.png',
-      '/invader_4.png'
-    ].map(src => {
-      const img = new Image();
-      img.src = src;
-      return img;
-    });
-
-    // Initialize enemies
-    for (let i = 0; i < 5; i++) {
-      for (let j = 0; j < 3; j++) {
-        enemies.push({
-          x: i * 60 + 20,
-          y: j * 60 + 20,
-          width: 40,
-          height: 40,
-          img: enemyImgs[j % enemyImgs.length]
-        });
+    // Load all images before starting the game
+    Promise.all([
+      loadImage('/game_hero.png'),
+      loadImage('/invader_1.png'),
+      loadImage('/invader_2.png'),
+      loadImage('/invader_3.png'),
+      loadImage('/invader_4.png')
+    ]).then(([playerImg, ...enemyImgs]) => {
+      // Initialize enemies after images are loaded
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 3; j++) {
+          enemies.push({
+            x: i * 60 + 20,
+            y: j * 60 + 20,
+            width: 40,
+            height: 40,
+            img: enemyImgs[j % enemyImgs.length]
+          });
+        }
       }
-    }
+
+      // Start game loop only after images are loaded
+      document.addEventListener('keydown', handleKeyDown);
+      draw();
+    }).catch(error => {
+      console.error('Failed to load game assets:', error);
+      // Draw error message on canvas
+      ctx.fillStyle = 'white';
+      ctx.font = '14px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Failed to load game assets', canvas.width/2, canvas.height/2);
+    });
 
     // Game loop
     function draw() {
