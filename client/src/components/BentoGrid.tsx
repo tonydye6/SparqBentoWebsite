@@ -349,7 +349,7 @@ export function BentoGrid() {
         style={{ transformStyle: "preserve-3d" }} 
         whileHover={{ scale: 1.02 }}
       >
-        <Card className="bento-card h-[440px] mb-6 cursor-pointer bg-black/20">
+        <Card className="bento-card h-[315px] mb-5 cursor-pointer bg-black/20">
           {/* Card #3 - Sparq Invaders Game */}
           <div className="h-full">
             <div className="card-title-container">
@@ -367,7 +367,7 @@ export function BentoGrid() {
         style={{ transformStyle: "preserve-3d" }} 
         whileHover={{ scale: 1.02 }}
       >
-        <Card className="bento-card h-[440px] cursor-pointer bg-black/20">
+        <Card className="bento-card h-[315px] cursor-pointer bg-black/20">
           {/* Card #16 - Featured Games */}
           <div className="h-full">
             <div className="card-title-container">
