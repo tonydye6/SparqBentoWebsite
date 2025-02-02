@@ -330,6 +330,16 @@ body {
   z-index: -1;
 }
 
+.beta-card .card-title-container {
+  background: linear-gradient(to bottom, 
+    rgba(43, 45, 66, 0.95), 
+    rgba(43, 45, 66, 0.7),
+    rgba(43, 45, 66, 0)
+  );
+  padding: 2rem 1rem;
+  backdrop-filter: blur(5px);
+}
+
 .beta-card:hover {
   transform: translateY(-8px) scale(1.03);
   box-shadow: 
@@ -355,9 +365,15 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradientText 8s ease infinite;
-  text-shadow: none;
+  text-shadow: 
+    2px 2px 0 rgba(0, 0, 0, 0.8),
+    -2px -2px 0 rgba(0, 0, 0, 0.8),
+    2px -2px 0 rgba(0, 0, 0, 0.8),
+    -2px 2px 0 rgba(0, 0, 0, 0.8);
   letter-spacing: 0.15em;
   position: relative;
+  text-transform: uppercase;
+  font-weight: 800;
 }
 
 .beta-card .card-title::after {
