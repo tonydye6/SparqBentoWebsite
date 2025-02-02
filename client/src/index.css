@@ -378,6 +378,7 @@ body {
   .card-2 { @apply col-start-1 col-span-3 row-span-2; }
   .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-2; height: calc(100% - 1.25rem); }
   .card-16 { @apply col-start-1 col-span-3 row-start-5 row-span-3; height: 100%; }
+  .card-17 { @apply col-start-1 col-span-3 row-start-8 row-span-3; height: 100%; }
   .card-4 { @apply col-start-9 col-span-4 row-start-10; }
   .card-5 { @apply col-start-9 col-span-4 row-start-5 row-span-5; }
   .card-6 { @apply col-start-4 col-span-5 row-start-2 row-span-2; }
