@@ -21,7 +21,8 @@ export function SparqInvaders() {
       score: 0,
       highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
       level: 1,
-      isGameOver: false
+      isGameOver: false,
+      backgroundImage: new Image()
     };
 
     // Game constants
@@ -62,6 +63,9 @@ export function SparqInvaders() {
     // Load images
     const playerImage = new Image();
     playerImage.src = '/game_hero.png';
+
+    // Load background image
+    gameState.backgroundImage.src = '/ftcc.png';
 
     const enemyImages = Array.from({ length: 8 }, (_, i) => {
       const img = new Image();
@@ -264,16 +268,14 @@ export function SparqInvaders() {
     function drawGame() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw background
+      // Draw black background first
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Create and draw background image with opacity
-      const backgroundImage = new Image();
-      backgroundImage.src = '/ftcc.png';
-      ctx.globalAlpha = 0.2; // Set low opacity for background
-      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-      ctx.globalAlpha = 1.0; // Reset opacity for other elements
+      // Draw background image with increased opacity
+      ctx.globalAlpha = 0.3; // Increased opacity for better visibility
+      ctx.drawImage(gameState.backgroundImage, 0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1.0;
 
       if (!gameStarted) {
         // Draw start screen
