@@ -154,11 +154,7 @@ export function SparqInvaders() {
         }
       }
 
-      // Draw scores
-      ctx.fillStyle = 'white';
-      ctx.font = '16px Arial';
-      ctx.fillText(`Score: ${currentScore}`, 10, 20);
-      ctx.fillText(`High Score: ${highScore}`, 10, 40);
+      // Scores are now displayed in the UI overlay
 
       animationFrameId = requestAnimationFrame(gameLoop);
     };
