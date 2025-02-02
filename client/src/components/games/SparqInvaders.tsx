@@ -309,71 +309,60 @@ export function SparqInvaders() {
   };
 
   const draw = (ctx: CanvasRenderingContext2D) => {
-    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    if (gameState.screenShake > 0) {
-      const magnitude = gameState.screenShake * 5;
-      ctx.save();
-      ctx.translate(
-        Math.random() * magnitude - magnitude / 2,
-        Math.random() * magnitude - magnitude / 2
-      );
-      setGameState(prev => ({ ...prev, screenShake: prev.screenShake * 0.9 }));
-    }
+      if (gameState.screenShake > 0) {
+        const magnitude = gameState.screenShake * 5;
+        ctx.save();
+        ctx.translate(
+          Math.random() * magnitude - magnitude / 2,
+          Math.random() * magnitude - magnitude / 2
+        );
+        setGameState(prev => ({ ...prev, screenShake: prev.screenShake * 0.9 }));
+      }
 
-    const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-    gradient.addColorStop(0, '#000033');
-    gradient.addColorStop(1, '#000066');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+      gradient.addColorStop(0, '#000033');
+      gradient.addColorStop(1, '#000066');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    if (!gameState.hasStarted) {
-       ctx.fillStyle = '#ffffff';
-       ctx.font = '48px Arial';
-       ctx.textAlign = 'center';
-       ctx.fillText('SPARQ INVADERS', CANVAS_WIDTH/2, CANVAS_HEIGHT/3);
-       return;
-    }
+      if (assets.current.player) {
+        ctx.drawImage(
+          assets.current.player,
+          player.current.x,
+          player.current.y,
+          player.current.width,
+          player.current.height
+        );
+      }
 
-    if (assets.current.player) {
-      console.log('Drawing player ship...');
-      ctx.drawImage(
-        assets.current.player,
-        player.current.x,
-        player.current.y,
-        player.current.width,
-        player.current.height
-      );
-    } else {
-      console.log('Player ship asset not loaded');
-    }
+      ctx.fillStyle = '#ff0000';
+      bullets.current.forEach(bullet => {
+        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+      });
 
-    ctx.fillStyle = '#ff0000';
-    bullets.current.forEach(bullet => {
-      ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-    });
+      enemies.current.forEach(enemy => {
+        ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+      });
 
-    enemies.current.forEach(enemy => {
-      ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
-    });
+      ctx.fillStyle = '#ffff00';
+      particles.current.forEach(particle => {
+        ctx.fillRect(particle.x, particle.y, particle.width, particle.height);
+      });
 
-    ctx.fillStyle = '#ffff00';
-    particles.current.forEach(particle => {
-      ctx.fillRect(particle.x, particle.y, particle.width, particle.height);
-    });
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '20px Arial';
+      ctx.textAlign = 'left';
+      ctx.fillText(`Score: ${score}`, 10, 30);
+      ctx.fillText(`High Score: ${highScore}`, 10, 60);
+      ctx.fillText(`Lives: ${gameState.lives}`, CANVAS_WIDTH - 100, 30);
+      ctx.fillText(`Level: ${gameState.level}`, CANVAS_WIDTH - 100, 60);
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '20px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText(`Score: ${score}`, 10, 30);
-    ctx.fillText(`High Score: ${highScore}`, 10, 60);
-    ctx.fillText(`Lives: ${gameState.lives}`, CANVAS_WIDTH - 100, 30);
-    ctx.fillText(`Level: ${gameState.level}`, CANVAS_WIDTH - 100, 60);
-
-    if (gameState.screenShake > 0) {
-      ctx.restore();
-    }
-  };
+      if (gameState.screenShake > 0) {
+        ctx.restore();
+      }
+    };
 
   const gameUpdate = (timestamp: number) => {
     if (!canvasRef.current) return;
