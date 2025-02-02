@@ -83,7 +83,7 @@ export function SparqInvaders() {
         console.error(`Failed to load image: ${src}`);
         reject(new Error(`Failed to load image: ${src}`));
       };
-      img.src = `/images/${src}`;
+      img.src = `/${src}`;
     });
   };
 
