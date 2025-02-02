@@ -3,14 +3,15 @@ import { Card } from '@/components/ui/card';
 
 export function SparqInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [gameState, setGameState] = useState({
+  const gameLoopRef = useRef<number>();
+  const gameStateRef = useRef({
     currentScore: 0,
     highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
     lives: 3,
     level: 1,
     isGameOver: false
   });
-  const gameLoopRef = useRef<number>();
+  const [displayState, setDisplayState] = useState(gameStateRef.current);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -154,6 +155,8 @@ export function SparqInvaders() {
 
     // Game update logic
     const update = () => {
+      if (gameStateRef.current.isGameOver) return;
+
       // Player movement
       if (keys.left) {
         player.x = Math.max(0, player.x - player.speed);
@@ -187,7 +190,7 @@ export function SparqInvaders() {
       // Update enemies
       let touchedEdge = false;
       enemies.forEach(enemy => {
-        enemy.x += enemy.direction * (ENEMY_SPEED_BASE * (1 + 0.1 * (gameState.level - 1)));
+        enemy.x += enemy.direction * (ENEMY_SPEED_BASE * (1 + 0.1 * (gameStateRef.current.level - 1)));
         if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
           touchedEdge = true;
         }
@@ -214,16 +217,17 @@ export function SparqInvaders() {
             createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#eb0028');
             bullets.splice(i, 1);
             enemies.splice(j, 1);
-            setGameState(prev => {
-              const newScore = prev.currentScore + enemy.points;
-              const newHighScore = Math.max(prev.highScore, newScore);
-              localStorage.setItem('sparqInvadersHighScore', newHighScore.toString());
-              return {
-                ...prev,
-                currentScore: newScore,
-                highScore: newHighScore
-              };
-            });
+
+            // Update score using ref
+            gameStateRef.current.currentScore += enemy.points;
+            gameStateRef.current.highScore = Math.max(
+              gameStateRef.current.highScore,
+              gameStateRef.current.currentScore
+            );
+            localStorage.setItem('sparqInvadersHighScore', gameStateRef.current.highScore.toString());
+
+            // Update display state periodically
+            setDisplayState({ ...gameStateRef.current });
             break;
           }
         }
@@ -231,10 +235,8 @@ export function SparqInvaders() {
 
       // Check for level completion
       if (enemies.length === 0) {
-        setGameState(prev => ({
-          ...prev,
-          level: prev.level + 1
-        }));
+        gameStateRef.current.level++;
+        setDisplayState({ ...gameStateRef.current });
         initEnemies();
       }
 
@@ -251,12 +253,10 @@ export function SparqInvaders() {
     // Draw game
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw background
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      if (!gameState.isGameOver) {
+      if (!gameStateRef.current.isGameOver) {
         // Draw player
         if (playerImg.complete) {
           ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
@@ -281,10 +281,10 @@ export function SparqInvaders() {
         // Draw UI
         ctx.fillStyle = 'white';
         ctx.font = '16px "Chakra Petch"';
-        ctx.fillText(`Score: ${gameState.currentScore}`, 10, 25);
-        ctx.fillText(`High Score: ${gameState.highScore}`, 10, 50);
-        ctx.fillText(`Level: ${gameState.level}`, canvas.width - 100, 25);
-        ctx.fillText(`Lives: ${gameState.lives}`, canvas.width - 100, 50);
+        ctx.fillText(`Score: ${displayState.currentScore}`, 10, 25);
+        ctx.fillText(`High Score: ${displayState.highScore}`, 10, 50);
+        ctx.fillText(`Level: ${displayState.level}`, canvas.width - 100, 25);
+        ctx.fillText(`Lives: ${displayState.lives}`, canvas.width - 100, 50);
       } else {
         // Draw game over screen
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -294,51 +294,54 @@ export function SparqInvaders() {
         ctx.textAlign = 'center';
         ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2);
         ctx.font = '20px "Chakra Petch"';
-        ctx.fillText(`Final Score: ${gameState.currentScore}`, canvas.width / 2, canvas.height / 2 + 40);
+        ctx.fillText(`Final Score: ${displayState.currentScore}`, canvas.width / 2, canvas.height / 2 + 40);
         ctx.fillText('Press Space to Play Again', canvas.width / 2, canvas.height / 2 + 80);
       }
     };
 
     // Game loop
     const gameLoop = () => {
-      if (!gameState.isGameOver) {
-        update();
-      }
+      update();
       draw();
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
 
     // Game over
     const gameOver = () => {
-      setGameState(prev => ({ ...prev, isGameOver: true }));
+      gameStateRef.current.isGameOver = true;
+      setDisplayState({ ...gameStateRef.current });
+      if (gameLoopRef.current) {
+        cancelAnimationFrame(gameLoopRef.current);
+      }
     };
 
     // Start game
     const startGame = () => {
-      setGameState({
+      gameStateRef.current = {
         currentScore: 0,
         highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
         lives: 3,
         level: 1,
         isGameOver: false
-      });
+      };
+      setDisplayState({ ...gameStateRef.current });
       bullets = [];
       particles = [];
       initEnemies();
+      gameLoop();
     };
 
     // Event listeners
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
     document.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === ' ' && gameState.isGameOver) {
+      if (e.key === ' ' && gameStateRef.current.isGameOver) {
         startGame();
       }
     });
 
     // Initialize game
     startGame();
-    gameLoop();
 
     // Cleanup
     return () => {
@@ -348,7 +351,7 @@ export function SparqInvaders() {
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, [gameState.isGameOver]); // Only re-run effect when game over state changes
+  }, []);
 
   return (
     <Card className="w-full h-full bg-black flex items-center justify-center">
