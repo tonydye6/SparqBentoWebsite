@@ -506,13 +506,20 @@ export function BentoGrid() {
 
       {/* Card 12: AI Chat */}
       <motion.div
-        className="bento-card card-12 ai-chat-card"
+        className="bento-card card-12 ai-chat-card relative"
         whileHover={{ scale: 1.02 }}
       >
-        <div className="card-title-container">
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-40" 
+          style={{ 
+            backgroundImage: 'url("/BG_2.png")',
+            filter: 'brightness(0.5) contrast(1.2)'
+          }} 
+        />
+        <div className="card-title-container relative z-10">
           <h2 className="card-title">Sparq Assistant</h2>
         </div>
-        <div className="h-full">
+        <div className="h-full relative z-10">
           <AiChat />
         </div>
       </motion.div>
