@@ -306,88 +306,105 @@ body {
 .beta-card::before {
   content: '';
   position: absolute;
-  inset: -2px;
-  background: linear-gradient(
-    45deg,
-    var(--outlaw-red),
-    var(--grit-teal),
-    var(--outlaw-red),
-    var(--grit-teal)
-  );
-  background-size: 400% 400%;
-  animation: gradientFlow 15s ease infinite;
-  opacity: 0.7;
-  z-index: -1;
-  filter: blur(8px);
+  inset: 0;
+  background-image: url('/ftcc.png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+  z-index: -2;
 }
 
 .beta-card::after {
   content: '';
   position: absolute;
-  inset: 2px;
-  background: var(--carbon);
-  border-radius: inherit;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(43, 45, 66, 0.7),
+    rgba(255, 0, 51, 0.3),
+    rgba(0, 229, 211, 0.3),
+    rgba(43, 45, 66, 0.7)
+  );
+  backdrop-filter: blur(8px);
+  background-size: 400% 400%;
+  animation: gradientFlow 15s ease infinite;
   z-index: -1;
+}
+
+.beta-card .card-title-container {
+  position: relative;
+  z-index: 2;
+  background: radial-gradient(
+    circle at center,
+    transparent,
+    var(--carbon) 150%
+  );
+  padding: 2rem;
+  margin-top: -1rem;
+}
+
+.beta-card .card-title {
+  font-size: clamp(2rem, 3vw, 3rem);
+  color: white;
+  text-shadow: 
+    0 0 20px rgba(255, 0, 51, 0.8),
+    0 0 40px rgba(0, 229, 211, 0.4);
+  letter-spacing: 0.15em;
+  position: relative;
+  animation: titlePulse 3s ease-in-out infinite;
+  background: linear-gradient(
+    -45deg,
+    #fff 0%,
+    var(--outlaw-red) 25%,
+    var(--grit-teal) 75%,
+    #fff 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .beta-card:hover {
   transform: translateY(-8px) scale(1.03);
   box-shadow: 
     0 20px 40px rgba(255, 0, 51, 0.4),
-    0 0 60px rgba(0, 229, 211, 0.2),
-    inset 0 0 30px rgba(255, 0, 51, 0.2);
+    0 0 60px rgba(0, 229, 211, 0.2);
 }
 
-.beta-card:hover::before {
+.beta-card:hover::after {
   animation: gradientFlow 8s ease infinite;
-  opacity: 1;
-}
-
-.beta-card .card-title {
-  font-size: clamp(2rem, 3vw, 3rem);
   background: linear-gradient(
-    -45deg,
-    #fff 0%,
-    var(--outlaw-red) 50%,
-    var(--grit-teal) 100%
+    135deg,
+    rgba(43, 45, 66, 0.5),
+    rgba(255, 0, 51, 0.4),
+    rgba(0, 229, 211, 0.4),
+    rgba(43, 45, 66, 0.5)
   );
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientText 8s ease infinite;
-  text-shadow: none;
-  letter-spacing: 0.15em;
-  position: relative;
-}
-
-.beta-card .card-title::after {
-  display: none;
 }
 
 @keyframes gradientFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-@keyframes gradientText {
+@keyframes titlePulse {
   0% {
-    background-position: 0% 50%;
+    text-shadow: 
+      0 0 20px rgba(255, 0, 51, 0.8),
+      0 0 40px rgba(0, 229, 211, 0.4);
   }
   50% {
-    background-position: 100% 50%;
+    text-shadow: 
+      0 0 30px rgba(255, 0, 51, 1),
+      0 0 60px rgba(0, 229, 211, 0.6);
   }
   100% {
-    background-position: 0% 50%;
+    text-shadow: 
+      0 0 20px rgba(255, 0, 51, 0.8),
+      0 0 40px rgba(0, 229, 211, 0.4);
   }
 }
-
   @media screen and (max-width: 768px) {
     .bento-grid {
       display: flex;
