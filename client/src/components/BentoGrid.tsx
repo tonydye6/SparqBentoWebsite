@@ -517,25 +517,6 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
-      {/* Background Image under Card 12 */}
-      <div 
-        className="absolute z-0"
-        style={{
-          top: 'calc(var(--card-12-bottom, 0px))',
-          right: '0',
-          width: '100%',
-          height: '400px',
-          backgroundImage: 'url("/BG_2.png")',
-          backgroundSize: 'contain',
-          backgroundPosition: 'top right',
-          backgroundRepeat: 'no-repeat',
-          opacity: '0.15',
-          pointerEvents: 'none',
-          maskImage: 'linear-gradient(to bottom, black, transparent)',
-          WebkitMaskImage: 'linear-gradient(to bottom, black, transparent)'
-        }}
-      />
-
       {/* Cards 13-15: Mission/Vision/Values */}
       <motion.div
         className="bento-card card-13 cursor-pointer flex items-center justify-center relative"
