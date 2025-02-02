@@ -367,7 +367,7 @@ export function BentoGrid() {
         style={{ transformStyle: "preserve-3d" }} 
         whileHover={{ scale: 1.02 }}
       >
-        <Card className="bento-card h-[735px] cursor-pointer bg-black/20">
+        <Card className="bento-card h-[1135px] cursor-pointer bg-black/20">
           {/* Card #16 - Featured Games */}
           <div className="h-full">
             <div className="card-title-container">
