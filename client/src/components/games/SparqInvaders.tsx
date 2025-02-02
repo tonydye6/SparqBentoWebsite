@@ -80,8 +80,9 @@ export function SparqInvaders() {
         console.log(`Successfully loaded: ${src}`);
         resolve(img);
       };
-      img.onerror = () => {
-        console.error(`Failed to load image: ${src}`);
+      img.onerror = (e) => {
+        console.error(`Failed to load image: ${src}`, e);
+        console.error('Current image path:', img.src);
         reject(new Error(`Failed to load image: ${src}`));
       };
       img.src = `/${src}`;
@@ -110,14 +111,14 @@ export function SparqInvaders() {
   const initAssets = async () => {
     try {
       console.log('Starting asset loading...');
-      const playerImg = await loadImage('game_hero.svg');
+      const playerImg = await loadImage('game_hero.png');
       console.log('Player ship loaded');
 
       const enemyPromises = [
-        loadImage('invader_1.svg'),
-        loadImage('invader_2.svg'),
-        loadImage('invader_3.svg'),
-        loadImage('invader_4.svg')
+        loadImage('invader_1.png'),
+        loadImage('invader_2.png'),
+        loadImage('invader_3.png'),
+        loadImage('invader_4.png')
       ];
 
       const enemyImgs = await Promise.all(enemyPromises);
