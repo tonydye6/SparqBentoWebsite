@@ -1,0 +1,406 @@
+import { useEffect, useRef, useState } from 'react';
+import { Card } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+
+// Game object interfaces
+interface GameObject {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  speed?: number;
+}
+
+interface Enemy extends GameObject {
+  img: HTMLImageElement;
+  direction: number;
+  points: number;
+  type: number;
+  movePattern: (time: number) => void;
+}
+
+interface GameState {
+  isPlaying: boolean;
+  level: number;
+  lives: number;
+  screenShake: number;
+}
+
+interface SoundEffects {
+  shoot: HTMLAudioElement;
+  explosion: HTMLAudioElement;
+}
+
+export function SparqInvaders() {
+  const { toast } = useToast();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [score, setScore] = useState<number>(0);
+  const [highScore, setHighScore] = useState<number>(0);
+  const [gameState, setGameState] = useState<GameState>({
+    isPlaying: false,
+    level: 1,
+    lives: 3,
+    screenShake: 0
+  });
+
+  // Canvas constants
+  const CANVAS_WIDTH = 800;
+  const CANVAS_HEIGHT = 600;
+  const ENEMY_ROWS = 4;
+  const ENEMY_COLS = 8;
+  const ENEMY_PADDING = 60;
+  const ENEMY_TOP_OFFSET = 50;
+
+  // Game refs
+  const gameLoop = useRef<number>();
+  const lastTime = useRef<number>(0);
+  const pressedKeys = useRef<Set<string>>(new Set());
+  const sounds = useRef<SoundEffects>();
+  const assets = useRef<{
+    player: HTMLImageElement | null;
+    enemies: HTMLImageElement[];
+  }>({ player: null, enemies: [] });
+
+  // Game objects
+  const player = useRef<GameObject>({
+    x: CANVAS_WIDTH / 2,
+    y: CANVAS_HEIGHT - 80,
+    width: 50,
+    height: 50,
+    speed: 5
+  });
+
+  const bullets = useRef<GameObject[]>([]);
+  const enemies = useRef<Enemy[]>([]);
+  const particles = useRef<GameObject[]>([]);
+
+  // Asset loading
+  const loadImage = (src: string): Promise<HTMLImageElement> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  };
+
+  const loadSound = (src: string): Promise<HTMLAudioElement> => {
+    return new Promise((resolve, reject) => {
+      const audio = new Audio(src);
+      audio.oncanplaythrough = () => resolve(audio);
+      audio.onerror = reject;
+      audio.src = src;
+    });
+  };
+
+  const initAssets = async () => {
+    try {
+      // Load images
+      const [playerImg, ...enemyImgs] = await Promise.all([
+        loadImage('/game_hero.png'),
+        ...Array(8).fill(null).map((_, i) => loadImage(`/invader_${i + 1}.png`))
+      ]);
+
+      // Load sounds
+      const [shootSound, explosionSound] = await Promise.all([
+        loadSound('/shoot.wav'),
+        loadSound('/explosion.wav')
+      ]);
+
+      assets.current = { player: playerImg, enemies: enemyImgs };
+      sounds.current = { shoot: shootSound, explosion: explosionSound };
+      return true;
+    } catch (error) {
+      console.error('Failed to load assets:', error);
+      toast({
+        title: "Asset Loading Error",
+        description: "Failed to load game assets. Please refresh the page.",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+
+  // Enemy patterns
+  const enemyPatterns = {
+    zigzag: (enemy: Enemy, time: number) => {
+      enemy.x += Math.sin(time * 2) * enemy.speed!;
+    },
+    circular: (enemy: Enemy, time: number) => {
+      enemy.x += Math.cos(time) * enemy.speed!;
+      enemy.y += Math.sin(time) * enemy.speed! * 0.5;
+    },
+    straight: (enemy: Enemy) => {
+      enemy.x += enemy.direction * enemy.speed!;
+    }
+  };
+
+  const initEnemies = () => {
+    enemies.current = [];
+    for (let row = 0; row < ENEMY_ROWS; row++) {
+      for (let col = 0; col < ENEMY_COLS; col++) {
+        const enemyType = row % assets.current.enemies.length;
+        const pattern = row === 0 ? enemyPatterns.zigzag : 
+                       row === 1 ? enemyPatterns.circular : 
+                       enemyPatterns.straight;
+        
+        enemies.current.push({
+          x: col * ENEMY_PADDING + ENEMY_PADDING,
+          y: row * ENEMY_PADDING + ENEMY_TOP_OFFSET,
+          width: 40,
+          height: 40,
+          img: assets.current.enemies[enemyType],
+          direction: 1,
+          points: (ENEMY_ROWS - row) * 100,
+          type: enemyType,
+          speed: 1 + (gameState.level * 0.1),
+          movePattern: (time: number) => pattern(enemies.current[enemies.current.length - 1], time)
+        });
+      }
+    }
+  };
+
+  // Input handling
+  const handleKeyDown = (e: KeyboardEvent) => {
+    pressedKeys.current.add(e.key);
+    if (e.key === ' ') {
+      createBullet();
+      sounds.current?.shoot.play().catch(console.error);
+    }
+  };
+
+  const handleKeyUp = (e: KeyboardEvent) => {
+    pressedKeys.current.delete(e.key);
+  };
+
+  // Game mechanics
+  const createBullet = () => {
+    bullets.current.push({
+      x: player.current.x + player.current.width / 2 - 2,
+      y: player.current.y,
+      width: 4,
+      height: 10
+    });
+  };
+
+  const applyScreenShake = (ctx: CanvasRenderingContext2D) => {
+    if (gameState.screenShake > 0) {
+      const magnitude = gameState.screenShake * 5;
+      ctx.save();
+      ctx.translate(
+        Math.random() * magnitude - magnitude / 2,
+        Math.random() * magnitude - magnitude / 2
+      );
+      setGameState(prev => ({ ...prev, screenShake: prev.screenShake * 0.9 }));
+    }
+  };
+
+  // Game loop functions
+  const updatePlayer = (deltaTime: number) => {
+    const keys = pressedKeys.current;
+    if (keys.has('ArrowLeft') || keys.has('a')) {
+      player.current.x = Math.max(0, player.current.x - (player.current.speed || 0) * deltaTime * 200);
+    }
+    if (keys.has('ArrowRight') || keys.has('d')) {
+      player.current.x = Math.min(
+        CANVAS_WIDTH - player.current.width,
+        player.current.x + (player.current.speed || 0) * deltaTime * 200
+      );
+    }
+  };
+
+  const updateBullets = (deltaTime: number) => {
+    bullets.current.forEach((bullet, index) => {
+      bullet.y -= 400 * deltaTime;
+      if (bullet.y < 0) bullets.current.splice(index, 1);
+    });
+  };
+
+  const updateEnemies = (deltaTime: number, time: number) => {
+    let shouldChangeDirection = false;
+    enemies.current.forEach(enemy => {
+      enemy.movePattern(time);
+      if (enemy.x <= 0 || enemy.x + enemy.width >= CANVAS_WIDTH) {
+        shouldChangeDirection = true;
+      }
+    });
+
+    if (shouldChangeDirection) {
+      enemies.current.forEach(enemy => {
+        enemy.direction *= -1;
+        enemy.y += 20;
+      });
+    }
+  };
+
+  const checkCollisions = () => {
+    bullets.current.forEach((bullet, bulletIndex) => {
+      enemies.current.forEach((enemy, enemyIndex) => {
+        if (detectCollision(bullet, enemy)) {
+          createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+          bullets.current.splice(bulletIndex, 1);
+          enemies.current.splice(enemyIndex, 1);
+          sounds.current?.explosion.play().catch(console.error);
+          setGameState(prev => ({ ...prev, screenShake: 1 }));
+          setScore(prev => {
+            const newScore = prev + enemy.points;
+            if (newScore > highScore) {
+              setHighScore(newScore);
+              localStorage.setItem('sparqInvadersHighScore', newScore.toString());
+            }
+            return newScore;
+          });
+        }
+      });
+    });
+  };
+
+  const detectCollision = (a: GameObject, b: GameObject): boolean => {
+    return (
+      a.x < b.x + b.width &&
+      a.x + a.width > b.x &&
+      a.y < b.y + b.height &&
+      a.y + a.height > b.y
+    );
+  };
+
+  const createExplosion = (x: number, y: number) => {
+    for (let i = 0; i < 10; i++) {
+      const angle = (Math.PI * 2 * i) / 10;
+      const speed = Math.random() * 2 + 1;
+      particles.current.push({
+        x,
+        y,
+        width: 2,
+        height: 2,
+        speed,
+        direction: angle
+      });
+    }
+  };
+
+  const updateParticles = (deltaTime: number) => {
+    particles.current = particles.current.filter(particle => {
+      particle.x += Math.cos(particle.direction!) * particle.speed! * deltaTime * 100;
+      particle.y += Math.sin(particle.direction!) * particle.speed! * deltaTime * 100;
+      particle.speed! *= 0.99;
+      return particle.speed! > 0.1;
+    });
+  };
+
+  const draw = (ctx: CanvasRenderingContext2D) => {
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    
+    // Apply screen shake
+    applyScreenShake(ctx);
+    
+    // Draw background gradient
+    const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
+    gradient.addColorStop(0, '#000033');
+    gradient.addColorStop(1, '#000066');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // Draw game objects
+    if (assets.current.player) {
+      ctx.drawImage(
+        assets.current.player,
+        player.current.x,
+        player.current.y,
+        player.current.width,
+        player.current.height
+      );
+    }
+
+    ctx.fillStyle = '#ff0000';
+    bullets.current.forEach(bullet => {
+      ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+    });
+
+    enemies.current.forEach(enemy => {
+      ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+    });
+
+    ctx.fillStyle = '#ffff00';
+    particles.current.forEach(particle => {
+      ctx.fillRect(particle.x, particle.y, particle.width, particle.height);
+    });
+
+    // Draw UI
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '20px Arial';
+    ctx.fillText(`Score: ${score}`, 10, 30);
+    ctx.fillText(`High Score: ${highScore}`, 10, 60);
+    ctx.fillText(`Lives: ${gameState.lives}`, CANVAS_WIDTH - 100, 30);
+    ctx.fillText(`Level: ${gameState.level}`, CANVAS_WIDTH - 100, 60);
+
+    if (gameState.screenShake > 0) {
+      ctx.restore();
+    }
+  };
+
+  const gameUpdate = (timestamp: number) => {
+    if (!canvasRef.current) return;
+    const ctx = canvasRef.current.getContext('2d');
+    if (!ctx) return;
+
+    const deltaTime = (timestamp - lastTime.current) / 1000;
+    lastTime.current = timestamp;
+
+    updatePlayer(deltaTime);
+    updateBullets(deltaTime);
+    updateEnemies(deltaTime, timestamp / 1000);
+    updateParticles(deltaTime);
+    checkCollisions();
+    draw(ctx);
+
+    gameLoop.current = requestAnimationFrame(gameUpdate);
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    canvas.width = CANVAS_WIDTH;
+    canvas.height = CANVAS_HEIGHT;
+
+    const init = async () => {
+      const loaded = await initAssets();
+      if (loaded) {
+        initEnemies();
+        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keyup', handleKeyUp);
+        requestAnimationFrame(gameUpdate);
+      }
+    };
+
+    init();
+
+    const savedHighScore = localStorage.getItem('sparqInvadersHighScore');
+    if (savedHighScore) {
+      setHighScore(parseInt(savedHighScore, 10));
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+      if (gameLoop.current) {
+        cancelAnimationFrame(gameLoop.current);
+      }
+    };
+  }, []);
+
+  return (
+    <Card className="w-[800px] h-[700px] flex flex-col items-center justify-center bg-gray-900 p-4">
+      <canvas
+        ref={canvasRef}
+        className="border border-gray-700 rounded-lg"
+        tabIndex={0}
+      />
+      <div className="h-[100px] mt-4 text-white text-center">
+        <p>Use Arrow Keys or A/D to move</p>
+        <p>Space to shoot</p>
+      </div>
+    </Card>
+  );
+}
