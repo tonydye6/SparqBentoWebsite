@@ -362,12 +362,8 @@ export function BentoGrid() {
           </Card>
         </motion.div>
 
-      <motion.div 
-        className="relative perspective-1000 card-16" 
-        style={{ transformStyle: "preserve-3d" }} 
-        whileHover={{ scale: 1.02 }}
-      >
-        <Card className="bento-card h-[1135px] cursor-pointer bg-black/20">
+      <div className="card-16">
+        <Card className="bento-card h-[1135px] bg-carbon">
           {/* Card #16 - Featured Games */}
           <div className="h-full">
             <div className="card-title-container">
@@ -378,7 +374,7 @@ export function BentoGrid() {
             </div>
           </div>
         </Card>
-      </motion.div>
+      </div>
 
       {/* Card 4: Connect With Us */}
       <motion.div
