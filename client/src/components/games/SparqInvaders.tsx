@@ -138,7 +138,14 @@ export function SparqInvaders() {
       space: false
     };
 
+   // Modified handleKeyDown function
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (gameStateRef.current.isGameOver && e.key === ' ') {
+        e.preventDefault();
+        startGame();
+        return;
+      }
+
       if (e.key === 'a' || e.key === 'A' || e.key === 'ArrowLeft') keys.left = true;
       if (e.key === 'd' || e.key === 'D' || e.key === 'ArrowRight') keys.right = true;
       if (e.key === ' ') {
@@ -299,11 +306,13 @@ export function SparqInvaders() {
       }
     };
 
-    // Game loop
+    // Game loop update
     const gameLoop = () => {
       update();
       draw();
-      gameLoopRef.current = requestAnimationFrame(gameLoop);
+       if (!gameStateRef.current.isGameOver) {
+        gameLoopRef.current = requestAnimationFrame(gameLoop);
+      }
     };
 
     // Game over
@@ -315,8 +324,9 @@ export function SparqInvaders() {
       }
     };
 
-    // Start game
+    // Start game function update
     const startGame = () => {
+      // Reset game state
       gameStateRef.current = {
         currentScore: 0,
         highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
@@ -325,20 +335,28 @@ export function SparqInvaders() {
         isGameOver: false
       };
       setDisplayState({ ...gameStateRef.current });
+
+      // Reset game objects
       bullets = [];
       particles = [];
+
+      // Reset player position
+       player.x = canvas.width / 2 - 40;
+
+      // Initialize new enemies
       initEnemies();
+
+     // Start new game loop
+      if (gameLoopRef.current) {
+        cancelAnimationFrame(gameLoopRef.current);
+      }
       gameLoop();
     };
 
-    // Event listeners
+
+    // Event listeners setup
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
-    document.addEventListener('keydown', (e: KeyboardEvent) => {
-      if (e.key === ' ' && gameStateRef.current.isGameOver) {
-        startGame();
-      }
-    });
 
     // Initialize game
     startGame();
