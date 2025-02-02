@@ -303,7 +303,7 @@ export function SparqInvaders() {
         ctx.shadowBlur = 15;
         
         ctx.font = 'bold 24px "Chakra Petch"';
-        ctx.fillText('Have a little fun while you\'re here', canvas.width / 2, canvas.height / 2 - 40);
+        ctx.fillText('SPARQ INVADERS', canvas.width / 2, canvas.height / 2 - 40);
         
         ctx.font = 'bold 18px "Chakra Petch"';
         ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2 + 10);

@@ -78,8 +78,7 @@ export function AiChat() {
   };
 
   return (
-    <div className="flex flex-col h-full p-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-carbon/10 to-carbon/5" />
+    <div className="flex flex-col h-full p-4">
       <ScrollArea className="flex-1 pr-4 h-[calc(100%-80px)]">
         <div className="space-y-4">
           {messages.map((msg, i) => (
