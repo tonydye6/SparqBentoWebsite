@@ -510,9 +510,12 @@ export function BentoGrid() {
         whileHover={{ scale: 1.02 }}
       >
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-20" 
+          className="absolute inset-0 opacity-20" 
           style={{ 
             backgroundImage: 'url("/BG_2.png")',
+            backgroundSize: 'contain',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
             filter: 'brightness(0.7) contrast(1.1)'
           }} 
         />
