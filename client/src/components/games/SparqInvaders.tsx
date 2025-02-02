@@ -1,134 +1,232 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 
 export function SparqInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [currentScore, setCurrentScore] = useState(0);
-  const [highScore, setHighScore] = useState(0);
-  const [gameOver, setGameOver] = useState(false);
+  const [displayScore, setDisplayScore] = useState({ current: 0, high: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Game state
-    const player = { x: canvas.width / 2 - 40, y: canvas.height - 200, width: 80, height: 80 };
-    const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
-    const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, dx: number }> = [];
-    let playerImg: HTMLImageElement;
-    let enemyImg: HTMLImageElement;
+    let isGameActive = true;
     let animationFrameId: number;
+    let gameStarted = false;
 
-    // Image loader promise
-    const loadImage = (src: string): Promise<HTMLImageElement> => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.src = src;
-        img.onload = () => resolve(img);
-        img.onerror = (e) => {
-          console.error(`Failed to load image: ${src}`, e);
-          reject(new Error(`Failed to load image: ${src}`));
-        };
-      });
+    // Game state
+    const gameState = {
+      score: 0,
+      highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
+      level: 1,
+      isGameOver: false
     };
 
-    // Initialize game
-    const initGame = async () => {
-      try {
-        playerImg = await loadImage('/game_hero.png');
-        // Load enemy images with absolute paths
-        const enemyImages = await Promise.all([
-          loadImage('/invader_1.png'),
-          loadImage('/invader_2.png'),
-          loadImage('/invader_3.png'),
-          loadImage('/invader_4.png'),
-          loadImage('/invader_5.png'),
-          loadImage('/invader_6.png'),
-          loadImage('/invader_7.png'),
-          loadImage('/invader_8.png')
-        ]);
+    // Game constants
+    const PLAYER_SPEED = 5;
+    const BULLET_SPEED = 7;
+    const ENEMY_SPEED = 0.25;
+    const SHOOT_COOLDOWN = 250;
 
-        // Create enemies
-        const rows = 3;
-        const cols = 8;
-        const offsetX = 30;
-        const offsetY = 150;
-        const spacingX = 60;
-        const spacingY = 50;
-
-        for (let r = 0; r < rows; r++) {
-          for (let c = 0; c < cols; c++) {
-            enemies.push({
-              x: offsetX + c * spacingX,
-              y: offsetY + r * spacingY,
-              width: 40,
-              height: 40,
-              img: enemyImages[Math.floor(Math.random() * enemyImages.length)],
-              dx: 1
-            });
-          }
-        }
-
-        setGameOver(false);
-        gameLoop();
-      } catch (error) {
-        console.error('Error loading game assets:', error);
-        ctx.fillStyle = 'white';
-        ctx.font = '16px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Failed to load game assets', canvas.width / 2, canvas.height / 2);
-      }
+    // Game objects
+    const player = {
+      x: canvas.width / 2 - 50,
+      y: canvas.height - 120,
+      width: 100,
+      height: 100,
+      speed: PLAYER_SPEED
     };
 
-    const gameLoop = () => {
-      if (!ctx || !canvas || gameOver) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let lastShootTime = 0;
+    let bullets: { x: number; y: number; width: number; height: number }[] = [];
+    let enemies: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+      img: HTMLImageElement;
+      points: number;
+      direction: number;
+    }[] = [];
+    let particles: {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      life: number;
+      color: string;
+    }[] = [];
 
-      // Draw player
-      if (playerImg) {
-        ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-      }
+    // Load images
+    const playerImage = new Image();
+    playerImage.src = '/game_hero.png';
 
-      // Update and draw bullets
-      for (let i = bullets.length - 1; i >= 0; i--) {
-        const bullet = bullets[i];
-        bullet.y -= 5;
-        ctx.fillStyle = 'red';
-        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-        if (bullet.y + bullet.height < 0) {
-          bullets.splice(i, 1);
-        }
-      }
+    const enemyImages = Array.from({ length: 8 }, (_, i) => {
+      const img = new Image();
+      img.src = `/invader_${i + 1}.png`;
+      return img;
+    });
 
-      // Check for game over (enemies reaching bottom)
-      const enemyReachedBottom = enemies.some(enemy => enemy.y + enemy.height > player.y);
-      if (enemyReachedBottom) {
-        setGameOver(true);
-        if (currentScore > highScore) {
-          setHighScore(currentScore);
-        }
+    // Input handling
+    const keys = {
+      left: false,
+      right: false,
+      space: false
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === ' ') e.preventDefault();
+
+      if (!gameStarted) {
+        gameStarted = true;
         return;
       }
 
-      // Update and draw enemies
-      enemies.forEach(enemy => {
-        enemy.x += enemy.dx;
-        if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
-          enemy.dx *= -1;
-          enemy.y += 20;
+      if (gameState.isGameOver && e.key === ' ') {
+        resetGame();
+        return;
+      }
+
+      switch (e.key.toLowerCase()) {
+        case 'a':
+        case 'arrowleft':
+          keys.left = true;
+          break;
+        case 'd':
+        case 'arrowright':
+          keys.right = true;
+          break;
+        case ' ':
+          keys.space = true;
+          break;
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      switch (e.key.toLowerCase()) {
+        case 'a':
+        case 'arrowleft':
+          keys.left = false;
+          break;
+        case 'd':
+        case 'arrowright':
+          keys.right = false;
+          break;
+        case ' ':
+          keys.space = false;
+          break;
+      }
+    };
+
+    // Game functions
+    function createEnemies() {
+      const rows = 4;
+      const cols = 8;
+      const padding = 20;
+      const startX = padding;
+      const startY = 50;
+      const width = 30;
+      const height = 30;
+      const spacing = (canvas.width - 2 * padding - cols * width) / (cols - 1);
+
+      enemies = [];
+
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          enemies.push({
+            x: startX + col * (width + spacing),
+            y: startY + row * 40,
+            width,
+            height,
+            img: enemyImages[Math.floor(Math.random() * enemyImages.length)],
+            points: (rows - row) * 100,
+            direction: 1
+          });
         }
-        if (enemy.img) {
-          ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+      }
+    }
+
+    function createExplosion(x: number, y: number, color: string) {
+      for (let i = 0; i < 15; i++) {
+        particles.push({
+          x,
+          y,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8,
+          life: 1,
+          color
+        });
+      }
+    }
+
+    function updateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.02;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+    }
+
+    function shoot() {
+      const now = Date.now();
+      if (now - lastShootTime >= SHOOT_COOLDOWN) {
+        bullets.push({
+          x: player.x + player.width / 2 - 2,
+          y: player.y,
+          width: 4,
+          height: 10
+        });
+        lastShootTime = now;
+      }
+    }
+
+    function updateGame() {
+      if (gameState.isGameOver) return;
+
+      // Player movement
+      if (keys.left) {
+        player.x = Math.max(0, player.x - player.speed);
+      }
+      if (keys.right) {
+        player.x = Math.min(canvas.width - player.width, player.x + player.speed);
+      }
+      if (keys.space) {
+        shoot();
+      }
+
+      // Update bullets
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        const bullet = bullets[i];
+        bullet.y -= BULLET_SPEED;
+        if (bullet.y < 0) bullets.splice(i, 1);
+      }
+
+      // Update enemies with modified speed progression
+      let touchedEdge = false;
+      const currentLevelSpeed = ENEMY_SPEED * (1 + 0.15 * (gameState.level - 1));
+
+      enemies.forEach(enemy => {
+        enemy.x += enemy.direction * currentLevelSpeed;
+        if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
+          touchedEdge = true;
         }
       });
 
-      // Collision detection
+
+      if (touchedEdge) {
+        enemies.forEach(enemy => {
+          enemy.direction *= -1;
+          enemy.y += 20;
+        });
+      }
+
+      // Check collisions
       for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
-        let collisionDetected = false;
-
         for (let j = enemies.length - 1; j >= 0; j--) {
           const enemy = enemies[j];
           if (
@@ -137,97 +235,151 @@ export function SparqInvaders() {
             bullet.y < enemy.y + enemy.height &&
             bullet.y + bullet.height > enemy.y
           ) {
+            createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2, '#ff0000');
+            bullets.splice(i, 1);
             enemies.splice(j, 1);
-            collisionDetected = true;
-            setCurrentScore(prev => prev + 100);
+            gameState.score += enemy.points;
+            gameState.highScore = Math.max(gameState.highScore, gameState.score);
+            localStorage.setItem('sparqInvadersHighScore', gameState.highScore.toString());
+            setDisplayScore({ current: gameState.score, high: gameState.highScore });
             break;
           }
         }
-
-        if (collisionDetected) {
-          bullets.splice(i, 1);
-        }
       }
 
-      // Draw scores
-      ctx.fillStyle = 'white';
-      ctx.font = '16px Arial';
-      ctx.textAlign = 'left';
-      ctx.fillText(`Score: ${currentScore}`, 10, 20);
-      ctx.fillText(`High Score: ${highScore}`, 10, 40);
+      // Check game over
+      if (enemies.some(enemy => enemy.y + enemy.height > player.y)) {
+        gameOver();
+      }
 
-      // Check win condition
+      // Check level complete
       if (enemies.length === 0) {
-        setGameOver(true);
-        if (currentScore > highScore) {
-          setHighScore(currentScore);
-        }
+        gameState.level++;
+        createEnemies();
+      }
+
+      updateParticles();
+    }
+
+    function drawGame() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw background
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (!gameStarted) {
+        // Draw start screen
         ctx.fillStyle = 'white';
-        ctx.font = '32px Arial';
+        ctx.font = '24px "Chakra Petch"';
         ctx.textAlign = 'center';
-        ctx.fillText('You Win!', canvas.width / 2, canvas.height / 2);
+        ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2);
+        ctx.font = '16px "Chakra Petch"';
+        ctx.fillText('Use A/D or Arrow Keys to Move', canvas.width / 2, canvas.height / 2 + 40);
+        ctx.fillText('SPACE to Shoot', canvas.width / 2, canvas.height / 2 + 70);
         return;
       }
 
-      animationFrameId = requestAnimationFrame(gameLoop);
-    };
+      if (!gameState.isGameOver) {
+        // Draw player
+        ctx.drawImage(playerImage, player.x, player.y, player.width, player.height);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameOver) return;
-
-      if (e.key === 'ArrowLeft' || e.key === 'a') {
-        player.x = Math.max(player.x - 10, 0);
-      }
-      if (e.key === 'ArrowRight' || e.key === 'd') {
-        player.x = Math.min(player.x + 10, canvas.width - player.width);
-      }
-      if (e.key === ' ') {
-        bullets.push({
-          x: player.x + player.width / 2 - 2,
-          y: player.y,
-          width: 4,
-          height: 10
+        // Draw enemies
+        enemies.forEach(enemy => {
+          ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
         });
+
+        // Draw bullets
+        ctx.fillStyle = '#ff0000';
+        bullets.forEach(bullet => {
+          ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+        });
+
+        // Draw particles
+        particles.forEach(p => {
+          ctx.globalAlpha = p.life;
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        ctx.globalAlpha = 1;
+
+        // Draw HUD
+        ctx.fillStyle = 'white';
+        ctx.font = '16px "Chakra Petch"';
+        ctx.textAlign = 'left';
+        ctx.fillText(`Score: ${gameState.score}`, 10, 25);
+        ctx.fillText(`High Score: ${gameState.highScore}`, 10, 50);
+        ctx.fillText(`Level: ${gameState.level}`, canvas.width - 100, 25);
+      } else {
+        // Draw game over screen
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        ctx.font = '32px "Chakra Petch"';
+        ctx.textAlign = 'center';
+        ctx.fillText('Game Over!', canvas.width / 2, canvas.height / 2 - 40);
+        ctx.font = '24px "Chakra Petch"';
+        ctx.fillText(`Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 10);
+        ctx.fillText(`High Score: ${gameState.highScore}`, canvas.width / 2, canvas.height / 2 + 40);
+        ctx.font = '20px "Chakra Petch"';
+        ctx.fillText('Press SPACE to Play Again', canvas.width / 2, canvas.height / 2 + 90);
+      }
+    }
+
+    function gameLoop() {
+      if (!isGameActive) return;
+
+      updateGame();
+      drawGame();
+      animationFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    function gameOver() {
+      gameState.isGameOver = true;
+      setDisplayScore({ current: gameState.score, high: gameState.highScore });
+    }
+
+    function resetGame() {
+      gameState.score = 0;
+      gameState.level = 1;
+      gameState.isGameOver = false;
+      player.x = canvas.width / 2 - player.width / 2;
+      bullets = [];
+      particles = [];
+      createEnemies();
+      setDisplayScore({ current: 0, high: gameState.highScore });
+    }
+
+    // Set up event listeners
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    // Initialize game
+    createEnemies();
+    gameLoop();
+
+    // Cleanup
+    return () => {
+      isGameActive = false;
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
       }
     };
-
-    document.addEventListener('keydown', handleKeyDown);
-    initGame();
-
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, [currentScore, highScore, gameOver]);
-
-  const handleRestart = () => {
-    setCurrentScore(0);
-    setGameOver(false);
-  };
+  }, []);
 
   return (
-    <Card className="bento-card">
-      <canvas ref={canvasRef} width={350} height={635} style={{ backgroundColor: 'black' }} />
-      <div style={{ color: 'white', padding: '10px', textAlign: 'center' }}>
-        <p>Score: {currentScore}</p>
-        <p>High Score: {highScore}</p>
-        {gameOver && (
-          <button 
-            onClick={handleRestart}
-            style={{
-              padding: '8px 16px',
-              backgroundColor: '#4CAF50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              marginTop: '10px'
-            }}
-          >
-            Restart Game
-          </button>
-        )}
-      </div>
+    <Card className="w-full h-full bg-black flex items-center justify-center">
+      <canvas
+        ref={canvasRef}
+        width={350}
+        height={635}
+        className="max-w-full h-auto"
+        style={{ backgroundColor: 'black' }}
+      />
     </Card>
   );
 }
