@@ -11,7 +11,7 @@ import { DiscordWidget } from "./DiscordWidget";
 import { JoinUs } from "./JoinUs";
 import { SchoolSpotlight } from "./SchoolSpotlight";
 import { TeamCarousel, executiveTeam, advisoryTeam } from "./TeamCarousel";
-import { SparqInvaders } from "./SparqInvaders";
+import { SparqInvaders } from "./games/SparqInvaders";
 import { ThreeViewer } from "./ThreeViewer";
 import { BetaForm } from "./BetaForm";
 import { BentoCardModal } from "./BentoCardModal";
@@ -238,7 +238,7 @@ export function BentoGrid() {
         return <DiscordWidget />;
       case "3d":
         return <ThreeViewer />;
-      case "mission":
+       case "mission":
         return (
           <div className="p-6 space-y-4">
             <h2 className="text-2xl font-bold">Our Mission</h2>
@@ -363,11 +363,11 @@ export function BentoGrid() {
 
       <div className="card-16">
         <Card className="bento-card h-[1035px] bg-carbon hover:transform-none hover:bg-carbon">
-          {/* Card #16 - Sparq Invaders */}
           <div className="h-full">
             <div className="card-title-container">
               <h2 className="card-title">Sparq Invaders</h2>
             </div>
+            <SparqInvaders />
           </div>
         </Card>
       </div>
