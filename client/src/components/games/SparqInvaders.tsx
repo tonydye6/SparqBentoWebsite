@@ -16,7 +16,6 @@ interface Enemy extends GameObject {
   direction: number;
   points: number;
   type: number;
-  movePattern: (time: number) => void;
 }
 
 interface GameState {
@@ -34,8 +33,8 @@ interface SoundEffects {
 export function SparqInvaders() {
   const { toast } = useToast();
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [score, setScore] = useState<number>(0);
-  const [highScore, setHighScore] = useState<number>(0);
+  const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
   const [gameState, setGameState] = useState<GameState>({
     isPlaying: false,
     level: 1,
@@ -44,8 +43,8 @@ export function SparqInvaders() {
   });
 
   // Canvas constants
-  const CANVAS_WIDTH = 800;
-  const CANVAS_HEIGHT = 600;
+  const CANVAS_WIDTH = 600;
+  const CANVAS_HEIGHT = 935;
   const ENEMY_ROWS = 4;
   const ENEMY_COLS = 8;
   const ENEMY_PADDING = 60;
@@ -95,10 +94,16 @@ export function SparqInvaders() {
 
   const initAssets = async () => {
     try {
-      // Load images
       const [playerImg, ...enemyImgs] = await Promise.all([
         loadImage('/game_hero.png'),
-        ...Array(8).fill(null).map((_, i) => loadImage(`/invader_${i + 1}.png`))
+        loadImage('/invader_1.png'),
+        loadImage('/invader_2.png'),
+        loadImage('/invader_3.png'),
+        loadImage('/invader_4.png'),
+        loadImage('/invader_5.png'),
+        loadImage('/invader_6.png'),
+        loadImage('/invader_7.png'),
+        loadImage('/invader_8.png')
       ]);
 
       // Load sounds
@@ -121,29 +126,11 @@ export function SparqInvaders() {
     }
   };
 
-  // Enemy patterns
-  const enemyPatterns = {
-    zigzag: (enemy: Enemy, time: number) => {
-      enemy.x += Math.sin(time * 2) * enemy.speed!;
-    },
-    circular: (enemy: Enemy, time: number) => {
-      enemy.x += Math.cos(time) * enemy.speed!;
-      enemy.y += Math.sin(time) * enemy.speed! * 0.5;
-    },
-    straight: (enemy: Enemy) => {
-      enemy.x += enemy.direction * enemy.speed!;
-    }
-  };
-
   const initEnemies = () => {
     enemies.current = [];
     for (let row = 0; row < ENEMY_ROWS; row++) {
       for (let col = 0; col < ENEMY_COLS; col++) {
         const enemyType = row % assets.current.enemies.length;
-        const pattern = row === 0 ? enemyPatterns.zigzag : 
-                       row === 1 ? enemyPatterns.circular : 
-                       enemyPatterns.straight;
-        
         enemies.current.push({
           x: col * ENEMY_PADDING + ENEMY_PADDING,
           y: row * ENEMY_PADDING + ENEMY_TOP_OFFSET,
@@ -153,14 +140,12 @@ export function SparqInvaders() {
           direction: 1,
           points: (ENEMY_ROWS - row) * 100,
           type: enemyType,
-          speed: 1 + (gameState.level * 0.1),
-          movePattern: (time: number) => pattern(enemies.current[enemies.current.length - 1], time)
+          speed: 1 + (gameState.level * 0.1)
         });
       }
     }
   };
 
-  // Input handling
   const handleKeyDown = (e: KeyboardEvent) => {
     pressedKeys.current.add(e.key);
     if (e.key === ' ') {
@@ -173,7 +158,6 @@ export function SparqInvaders() {
     pressedKeys.current.delete(e.key);
   };
 
-  // Game mechanics
   const createBullet = () => {
     bullets.current.push({
       x: player.current.x + player.current.width / 2 - 2,
@@ -183,19 +167,6 @@ export function SparqInvaders() {
     });
   };
 
-  const applyScreenShake = (ctx: CanvasRenderingContext2D) => {
-    if (gameState.screenShake > 0) {
-      const magnitude = gameState.screenShake * 5;
-      ctx.save();
-      ctx.translate(
-        Math.random() * magnitude - magnitude / 2,
-        Math.random() * magnitude - magnitude / 2
-      );
-      setGameState(prev => ({ ...prev, screenShake: prev.screenShake * 0.9 }));
-    }
-  };
-
-  // Game loop functions
   const updatePlayer = (deltaTime: number) => {
     const keys = pressedKeys.current;
     if (keys.has('ArrowLeft') || keys.has('a')) {
@@ -216,10 +187,10 @@ export function SparqInvaders() {
     });
   };
 
-  const updateEnemies = (deltaTime: number, time: number) => {
+  const updateEnemies = (deltaTime: number) => {
     let shouldChangeDirection = false;
     enemies.current.forEach(enemy => {
-      enemy.movePattern(time);
+      enemy.x += enemy.direction * enemy.speed! * deltaTime * 100;
       if (enemy.x <= 0 || enemy.x + enemy.width >= CANVAS_WIDTH) {
         shouldChangeDirection = true;
       }
@@ -255,7 +226,7 @@ export function SparqInvaders() {
     });
   };
 
-  const detectCollision = (a: GameObject, b: GameObject): boolean => {
+  const detectCollision = (a: GameObject, b: GameObject) => {
     return (
       a.x < b.x + b.width &&
       a.x + a.width > b.x &&
@@ -266,34 +237,37 @@ export function SparqInvaders() {
 
   const createExplosion = (x: number, y: number) => {
     for (let i = 0; i < 10; i++) {
-      const angle = (Math.PI * 2 * i) / 10;
-      const speed = Math.random() * 2 + 1;
       particles.current.push({
         x,
         y,
         width: 2,
         height: 2,
-        speed,
-        direction: angle
+        speed: Math.random() * 3 + 1
       });
     }
   };
 
   const updateParticles = (deltaTime: number) => {
     particles.current = particles.current.filter(particle => {
-      particle.x += Math.cos(particle.direction!) * particle.speed! * deltaTime * 100;
-      particle.y += Math.sin(particle.direction!) * particle.speed! * deltaTime * 100;
-      particle.speed! *= 0.99;
-      return particle.speed! > 0.1;
+      particle.y += particle.speed! * deltaTime * 100;
+      return particle.y < CANVAS_HEIGHT;
     });
   };
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    
+
     // Apply screen shake
-    applyScreenShake(ctx);
-    
+    if (gameState.screenShake > 0) {
+      const magnitude = gameState.screenShake * 5;
+      ctx.save();
+      ctx.translate(
+        Math.random() * magnitude - magnitude / 2,
+        Math.random() * magnitude - magnitude / 2
+      );
+      setGameState(prev => ({ ...prev, screenShake: prev.screenShake * 0.9 }));
+    }
+
     // Draw background gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
     gradient.addColorStop(0, '#000033');
@@ -301,7 +275,7 @@ export function SparqInvaders() {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Draw game objects
+    // Draw player
     if (assets.current.player) {
       ctx.drawImage(
         assets.current.player,
@@ -312,15 +286,18 @@ export function SparqInvaders() {
       );
     }
 
+    // Draw bullets
     ctx.fillStyle = '#ff0000';
     bullets.current.forEach(bullet => {
       ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     });
 
+    // Draw enemies
     enemies.current.forEach(enemy => {
       ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
     });
 
+    // Draw particles
     ctx.fillStyle = '#ffff00';
     particles.current.forEach(particle => {
       ctx.fillRect(particle.x, particle.y, particle.width, particle.height);
@@ -349,7 +326,7 @@ export function SparqInvaders() {
 
     updatePlayer(deltaTime);
     updateBullets(deltaTime);
-    updateEnemies(deltaTime, timestamp / 1000);
+    updateEnemies(deltaTime);
     updateParticles(deltaTime);
     checkCollisions();
     draw(ctx);
@@ -391,7 +368,7 @@ export function SparqInvaders() {
   }, []);
 
   return (
-    <Card className="w-[800px] h-[700px] flex flex-col items-center justify-center bg-gray-900 p-4">
+    <Card className="w-[600px] h-[1035px] flex flex-col items-center justify-center bg-gray-900 p-4">
       <canvas
         ref={canvasRef}
         className="border border-gray-700 rounded-lg"
