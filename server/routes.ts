@@ -250,6 +250,20 @@ export function registerRoutes(app: Express): Server {
     try {
       let items = [];
       try {
+        // Attempt to create table if it doesn't exist
+        await db.execute(`
+          CREATE TABLE IF NOT EXISTS news_items (
+            id SERIAL PRIMARY KEY,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            category TEXT NOT NULL,
+            url TEXT,
+            active BOOLEAN DEFAULT true NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+          );
+        `);
+        
         items = await db.select()
           .from(newsItems)
           .where(eq(newsItems.active, true))
