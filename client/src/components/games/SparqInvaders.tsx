@@ -185,9 +185,12 @@ export function SparqInvaders() {
             height={1035} 
             style={{ backgroundColor: 'black' }}
           />
-          <div className="absolute top-4 left-4 text-white">
-            <p>Score: {currentScore}</p>
+          <div className="absolute top-4 right-4 text-white text-right">
+            <p>Current Score: {currentScore}</p>
             <p>High Score: {highScore}</p>
+          </div>
+          <div className="absolute top-4 left-4 text-white">
+            <p>Level: 1</p>
           </div>
           <div className="absolute bottom-8 left-0 right-0 text-center text-white bg-black/50 py-2">
             <p className="font-bold mb-1">Controls</p>
