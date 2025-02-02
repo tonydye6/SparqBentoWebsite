@@ -150,7 +150,7 @@ return () => {
 }, [currentScore, highScore]);
 return (
 <Card className="bento-card">
-<canvas ref={canvasRef} width={350} height={935} style={{ backgroundColor: 'black' }} />
+<canvas ref={canvasRef} width={350} height={635} style={{ backgroundColor: 'black' }} />
 <div style={{ color: 'white', padding: '10px', textAlign: 'center' }}>
 <p>Score: {currentScore}</p>
 <p>High Score: {highScore}</p>
