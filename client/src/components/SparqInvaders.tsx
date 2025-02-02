@@ -94,11 +94,11 @@ export function SparqInvaders() {
 
     // Initialize the game
     Promise.all([
-      loadImage('/sparqIcon.png'), //Corrected path
-      loadImage('/invader_1.png'),
-      loadImage('/invader_2.png'),
-      loadImage('/invader_3.png'),
-      loadImage('/invader_4.png')
+      loadImage('/public/sparqIcon.png'),
+      loadImage('/public/Skull(Red).png'),
+      loadImage('/public/bfpf.png'),
+      loadImage('/public/bfpfr.png'),
+      loadImage('/public/bfpfw.png')
     ]).then(([hero, ...invaders]) => {
       playerImg = hero;
       enemyImgs = invaders;
