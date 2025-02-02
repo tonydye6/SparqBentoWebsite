@@ -5,11 +5,11 @@ import { Card } from '@/components/ui/card';
 export function SparqInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<number>();
-  const [currentScore, setCurrentScore] = useState(0);
-  const [currentLevel, setCurrentLevel] = useState(1);
-  const [highScore, setHighScore] = useState(() => 
-    parseInt(localStorage.getItem('sparqInvadersHighScore') || '0')
-  );
+  const [gameState, setGameState] = useState({
+    currentScore: 0,
+    highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
+    currentLevel: 1
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,7 +18,6 @@ export function SparqInvaders() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Game state
     const player = {
       x: canvas.width / 2 - 40,
       y: canvas.height - 80,
@@ -59,7 +58,7 @@ export function SparqInvaders() {
       const offsetY = 150;
       const spacingX = 60;
       const spacingY = 50;
-      const baseSpeed = currentLevel * 0.5;
+      const baseSpeed = gameState.currentLevel * 0.5;
 
       enemies.length = 0;
       for (let r = 0; r < rows; r++) {
@@ -124,7 +123,6 @@ export function SparqInvaders() {
         }
       });
 
-      // Collision detection
       for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
         for (let j = enemies.length - 1; j >= 0; j--) {
@@ -137,11 +135,13 @@ export function SparqInvaders() {
           ) {
             bullets.splice(i, 1);
             enemies.splice(j, 1);
-            const newScore = currentScore + 100;
-            setCurrentScore(newScore);
-            
-            if (newScore > highScore) {
-              setHighScore(newScore);
+            const newScore = gameState.currentScore + 100;
+            setGameState(prev => ({
+              ...prev,
+              currentScore: newScore,
+              highScore: Math.max(prev.highScore, newScore)
+            }));
+            if (newScore > gameState.highScore) {
               localStorage.setItem('sparqInvadersHighScore', newScore.toString());
             }
             break;
@@ -149,18 +149,19 @@ export function SparqInvaders() {
         }
       }
 
-      // Level completion check
       if (enemies.length === 0) {
-        setCurrentLevel(prev => prev + 1);
+        setGameState(prev => ({
+          ...prev,
+          currentLevel: prev.currentLevel + 1
+        }));
         loadEnemyImages();
       }
 
-      // Draw scores and level
       ctx.fillStyle = 'white';
       ctx.font = '16px Arial';
-      ctx.fillText(`Score: ${currentScore}`, 10, 20);
-      ctx.fillText(`High Score: ${highScore}`, 10, 40);
-      ctx.fillText(`Level: ${currentLevel}`, 10, 60);
+      ctx.fillText(`Score: ${gameState.currentScore}`, 10, 20);
+      ctx.fillText(`High Score: ${gameState.highScore}`, 10, 40);
+      ctx.fillText(`Level: ${gameState.currentLevel}`, 10, 60);
 
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
@@ -175,7 +176,7 @@ export function SparqInvaders() {
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, [currentScore, highScore, currentLevel]);
+  }, []);
 
   return (
     <Card className="w-full h-full bg-black flex items-center justify-center">
