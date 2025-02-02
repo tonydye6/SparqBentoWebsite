@@ -344,29 +344,32 @@ export function BentoGrid() {
 
       {/* Split Card 3 into two independent cards */}
       <motion.div
-        className="relative perspective-1000 card-3"
+        className="relative perspective-1000"
         style={{ transformStyle: "preserve-3d" }}
         whileHover={{ scale: 1.02 }}
       >
-        <Card className="bento-card h-[635px] mb-5 cursor-pointer">
-          {/* Card #3 - Sparq Team */}
+        <Card className="bento-card h-[735px] mb-5 cursor-pointer">
+          {/* Card #3 - Sparq Invaders Game */}
           <div className="h-full">
             <div className="card-title-container">
-              <h2 className="card-title">Sparq Team</h2>
+              <h2 className="card-title">Sparq Invaders</h2>
             </div>
-            <div className="h-full pt-16 px-4">
-              <TeamCarousel members={executiveTeam} interval={5000} />
+            <div className="h-full pt-16">
+              <SparqInvaders />
             </div>
           </div>
         </Card>
       </motion.div>
 
+      {/* Card #16 - Sparq Invaders */}
       <div className="card-16">
         <Card className="bento-card h-[1035px] bg-carbon hover:transform-none hover:bg-carbon">
-          {/* Card #16 - Sparq Invaders */}
           <div className="h-full">
             <div className="card-title-container">
               <h2 className="card-title">Sparq Invaders</h2>
+            </div>
+            <div className="h-full pt-16 flex items-center justify-center">
+              <SparqInvaders />
             </div>
           </div>
         </Card>
