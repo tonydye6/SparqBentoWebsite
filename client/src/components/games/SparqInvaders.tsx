@@ -24,17 +24,17 @@ export function SparqInvaders() {
     const loadImage = (src: string): Promise<HTMLImageElement> => {
       return new Promise((resolve, reject) => {
         const img = new Image();
-        img.src = src;
         img.onload = () => resolve(img);
         img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
+        img.src = src;
       });
     };
 
     // Initialize game: load assets and create enemy formation
     const initGame = async () => {
       try {
-        playerImg = await loadImage('/images/game_hero.png');
-        enemyImg = await loadImage('/images/invader_1.png');
+        playerImg = await loadImage('game_hero.png');
+        enemyImg = await loadImage('invader_1.png');
 
         // Create enemies in a grid formation
         const rows = 3;
@@ -155,17 +155,34 @@ export function SparqInvaders() {
   }, [currentScore, highScore]);
 
   return (
-    <Card className="bento-card">
-      <canvas 
-        ref={canvasRef} 
-        width={350} 
-        height={500} 
-        style={{ backgroundColor: 'black' }} 
-      />
-      <div style={{ color: 'white', padding: '10px', textAlign: 'center' }}>
-        <p>Score: {currentScore}</p>
-        <p>High Score: {highScore}</p>
-      </div>
-    </Card>
+    <div className="w-[44rem] h-[31.25rem] flex flex-col items-center justify-center relative">
+      <Card className="w-full h-full bg-black">
+        <canvas 
+          ref={canvasRef} 
+          width={350} 
+          height={500} 
+          style={{ 
+            backgroundColor: 'black',
+            margin: '0 auto',
+            display: 'block',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
+        />
+        <div style={{ 
+          color: 'white', 
+          padding: '10px', 
+          textAlign: 'center',
+          position: 'absolute',
+          bottom: '10px',
+          width: '100%'
+        }}>
+          <p>Score: {currentScore}</p>
+          <p>High Score: {highScore}</p>
+        </div>
+      </Card>
+    </div>
   );
 }
