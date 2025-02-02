@@ -268,6 +268,13 @@ export function SparqInvaders() {
       ctx.fillStyle = '#000000';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      // Create and draw background image with opacity
+      const backgroundImage = new Image();
+      backgroundImage.src = '/ftcc.png';
+      ctx.globalAlpha = 0.2; // Set low opacity for background
+      ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1.0; // Reset opacity for other elements
+
       if (!gameStarted) {
         // Draw start screen
         ctx.fillStyle = 'white';
@@ -313,7 +320,7 @@ export function SparqInvaders() {
         ctx.fillText(`High Score: ${gameState.highScore}`, 10, 50);
         ctx.fillText(`Level: ${gameState.level}`, canvas.width - 100, 25);
       } else {
-        // Draw game over screen
+         // Draw game over screen
         ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = 'white';
