@@ -7,9 +7,40 @@ import { Volume2 } from "lucide-react";
 import { AboutUs } from "./AboutUs";
 import { GameNews } from "./GameNews";
 import { lazy, Suspense } from "react";
-import { TeamCarousel, executiveTeam, advisoryTeam } from "./TeamCarousel";
+import { TeamCarousel } from "./TeamCarousel";
+import type { TeamMember } from "./TeamCarousel";
 const AiChat = lazy(() => import("./AiChat"));
 const SparqInvaders = lazy(() => import("./games/SparqInvaders"));
+
+const executiveTeam: TeamMember[] = [
+  {
+    name: "Jan Horsfall",
+    title: "CEO / BOD Chair",
+    photo: "/jandraw.png",
+    linkedIn: "https://www.linkedin.com/in/janhorsfall/",
+    previousCompanies: [
+      { name: "Turbine Games", logo: "/turb.png" },
+      { name: "Lycos", logo: "/lycos.png" }
+    ],
+    bio: "Ran marketing at Valvoline and then at tech juggernaut, Lycos..."
+  }
+  // Add other team members as needed
+];
+
+const advisoryTeam: TeamMember[] = [
+  {
+    name: "David Ortiz",
+    title: "Advisory Board Member", 
+    photo: "/davido.png",
+    linkedIn: "https://www.linkedin.com/in/david-ortiz-9b79a41/",
+    previousCompanies: [
+      { name: "EA Sports", logo: "/eas.png" },
+      { name: "Activision/Blizzard", logo: "/ab.png" }
+    ],
+    bio: "20+ years of experience in gaming..."
+  }
+  // Add other advisory members as needed
+];
 import { DiscordWidget } from "./DiscordWidget";
 import { JoinUs } from "./JoinUs";
 import { SchoolSpotlight } from "./SchoolSpotlight";
@@ -356,7 +387,7 @@ export function BentoGrid() {
               <h2 className="card-title">Sparq Team</h2>
             </div>
             <div className="h-full pt-16 px-4">
-              <TeamCarousel members={executiveTeam} interval={5000} />
+              <TeamCarousel members={executiveTeam || []} interval={5000} />
             </div>
           </div>
         </Card>
