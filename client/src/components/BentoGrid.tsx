@@ -7,10 +7,9 @@ import { Volume2 } from "lucide-react";
 import { AboutUs } from "./AboutUs";
 import { GameNews } from "./GameNews";
 import { lazy, Suspense } from "react";
+import { TeamCarousel, executiveTeam, advisoryTeam } from "./TeamCarousel";
 const AiChat = lazy(() => import("./AiChat"));
-const TeamCarousel = lazy(() => import("./TeamCarousel").then(module => ({ default: module.TeamCarousel })));
-const SparqInvaders = lazy(() => import("./games/SparqInvaders").then(module => ({ default: module.SparqInvaders })));
-import { executiveTeam, advisoryTeam } from "./TeamCarousel";
+const SparqInvaders = lazy(() => import("./games/SparqInvaders"));
 import { DiscordWidget } from "./DiscordWidget";
 import { JoinUs } from "./JoinUs";
 import { SchoolSpotlight } from "./SchoolSpotlight";
@@ -357,9 +356,7 @@ export function BentoGrid() {
               <h2 className="card-title">Sparq Team</h2>
             </div>
             <div className="h-full pt-16 px-4">
-              <Suspense fallback={<div className="w-full h-full flex items-center justify-center">Loading...</div>}>
-                <TeamCarousel members={executiveTeam} interval={5000} />
-              </Suspense>
+              <TeamCarousel members={executiveTeam} interval={5000} />
             </div>
           </div>
         </Card>
