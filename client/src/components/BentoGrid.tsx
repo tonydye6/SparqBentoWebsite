@@ -379,23 +379,17 @@ export function BentoGrid() {
         </div>
         <div className="flex flex-col h-full card-content">
           <div className="flex-1 flex justify-center items-center gap-8 p-4">
-            <div className="social-icon">
-              <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M3 16V8C3 5.23858 5.23858 3 8 3H16C18.7614 3 21 5.23858 21 8V16C21 18.7614 18.7614 21 16 21H8C5.23858 21 3 18.7614 3 16Z" stroke="currentColor" strokeWidth="2" />
-                <path d="M17.5 6.51L17.51 6.49889" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-            <div className="social-icon">
+            <a href="https://x.com/SparqGaming" target="_blank" rel="noopener noreferrer" className="social-icon">
               <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M19.7778 3L12.5556 11.9444L21 21H17.4444L11.3889 14.5L4.55556 21H3L10.6667 11.4722L2.55556 3H6.11111L11.7222 8.94444L18.1111 3H19.7778ZM18.2222 19.5L7.22222 4.27778H5.33333L16.3889 19.5H18.2222Z" fill="currentColor" />
               </svg>
-            </div>
-            <div className="social-icon">
+            </a>
+            <a href="https://discord.com/invite/sparq" target="_blank" rel="noopener noreferrer" className="social-icon">
               <svg className="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19 9.5V15C19 18.866 15.866 22 12 22C8.13401 22 5 18.866 5 15C5 11.134 8.13401 8 12 8V11C9.79086 11 8 12.7909 8 15C8 17.2091 9.79086 19 12 19C14.2091 19 16 17.2091 16 15V2H19C19 2 19 2.5 19 3C19 5.20914 20.7909 7 23 7V9.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9.555 12.027C8.492 12.027 7.635 12.97 7.635 14.121C7.635 15.272 8.508 16.216 9.555 16.216C10.618 16.216 11.475 15.272 11.475 14.121C11.491 12.97 10.618 12.027 9.555 12.027ZM14.462 12.027C13.399 12.027 12.542 12.97 12.542 14.121C12.542 15.272 13.415 16.216 14.462 16.216C15.525 16.216 16.382 15.272 16.382 14.121C16.382 12.97 15.525 12.027 14.462 12.027Z" fill="currentColor"/>
+                <path d="M19.978 3H4.022C2.904 3 2 3.904 2 5.022V19.978C2 21.096 2.904 22 4.022 22H19.978C21.096 22 22 21.096 22 19.978V5.022C22 3.904 21.096 3 19.978 3ZM16.847 18.187L16.033 17.211C16.847 16.847 17.548 16.339 18.153 15.703C16.7 16.701 15.009 17.211 13.173 17.211C11.337 17.211 9.646 16.701 8.193 15.703C8.798 16.339 9.499 16.847 10.313 17.211L9.499 18.187C6.788 17.992 5.335 16.361 5.335 16.361C5.335 12.027 7.342 8.521 7.342 8.521C9.35 7.035 11.24 7.083 11.24 7.083L11.401 7.277C9.271 7.877 8.306 8.781 8.306 8.781C9.822 7.877 11.691 7.374 13.173 7.294C13.752 7.262 14.316 7.277 14.913 7.342C16.129 7.471 17.484 7.846 18.888 8.781C18.888 8.781 17.972 7.925 15.976 7.325L16.204 7.083C16.204 7.083 18.094 7.035 20.102 8.521C20.102 8.521 22.109 12.027 22.109 16.361C22.109 16.361 20.64 17.992 17.929 18.187H16.847Z" fill="currentColor"/>
               </svg>
-            </div>
+            </a>
           </div>
         </div>
       </motion.div>
