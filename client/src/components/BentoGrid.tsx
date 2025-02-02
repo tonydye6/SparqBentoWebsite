@@ -88,7 +88,6 @@ const MagneticCard: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         rotateY,
         perspective: 1000,
       }}
-      whileHover={{ scale: 1.02 }}
     >
       {children}
     </motion.div>
@@ -349,7 +348,7 @@ export function BentoGrid() {
           style={{ transformStyle: "preserve-3d" }} 
           whileHover={{ scale: 1.02 }}
         >
-          <Card className="bento-card h-[735px] mb-5 cursor-pointer bg-black/20">
+          <Card className="bento-card h-[735px] mb-5 cursor-pointer">
             {/* Card #3 - Sparq Invaders Game */}
             <div className="h-full">
               <div className="card-title-container">
@@ -368,9 +367,6 @@ export function BentoGrid() {
           <div className="h-full">
             <div className="card-title-container">
               <h2 className="card-title">Featured Games</h2>
-            </div>
-            <div className="flex items-center justify-center h-full">
-              <p className="text-lg text-center">Upcoming Game Releases</p>
             </div>
           </div>
         </Card>
