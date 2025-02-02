@@ -362,8 +362,8 @@ export function BentoGrid() {
           </Card>
 
           {/* Lower Card (#16) */}
-          <div className="flex-1 bg-carbon">
-            <div className="h-full">
+          <Card className="bento-card flex-1 bg-black/20">
+            <div className="h-full p-4">
               <div className="card-title-container">
                 <h2 className="card-title">Sparq Invaders</h2>
               </div>
@@ -371,7 +371,7 @@ export function BentoGrid() {
                 <SparqInvaders />
               </div>
             </div>
-          </div>
+          </Card>
         </div>
       </motion.div>
 

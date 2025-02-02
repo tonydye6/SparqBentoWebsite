@@ -15,7 +15,7 @@ export function SparqInvaders() {
     if (!ctx) return;
 
     // Game settings
-    const player = { x: 150, y: 400, width: 120, height: 120 };
+    const player = { x: 150, y: 400, width: 80, height: 80 }; // Increased size
     const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
     const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, direction?: number }> = [];
     let playerImg: HTMLImageElement;
