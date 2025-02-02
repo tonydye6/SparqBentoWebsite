@@ -1,7 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { Card } from "@/components/ui/card";
 
 export function SparqInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [currentScore, setCurrentScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
+  const scoreRef = useRef(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -16,6 +20,7 @@ export function SparqInvaders() {
     const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, direction?: number }> = [];
     let playerImg: HTMLImageElement;
     let enemyImgs: HTMLImageElement[] = [];
+    let gameLoop: number;
 
     // Load assets with proper error handling
     const loadImage = (src: string): Promise<HTMLImageElement> => {
@@ -25,6 +30,22 @@ export function SparqInvaders() {
         img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
         img.src = src;
       });
+    };
+
+    // Load or initialize high score
+    const loadHighScore = () => {
+      const savedScore = localStorage.getItem('sparqInvadersHighScore');
+      if (savedScore) {
+        setHighScore(parseInt(savedScore, 10));
+      }
+    };
+
+    // Save high score
+    const saveHighScore = (score: number) => {
+      if (score > highScore) {
+        setHighScore(score);
+        localStorage.setItem('sparqInvadersHighScore', score.toString());
+      }
     };
 
     // Game loop
@@ -55,6 +76,9 @@ export function SparqInvaders() {
               bullet.y + bullet.height > enemy.y) {
             bullets.splice(index, 1);
             enemies.splice(enemyIndex, 1);
+            scoreRef.current += 100;
+            setCurrentScore(scoreRef.current);
+            saveHighScore(scoreRef.current);
           }
         });
       });
@@ -71,7 +95,13 @@ export function SparqInvaders() {
         }
       });
 
-      requestAnimationFrame(draw);
+      // Draw scores
+      ctx.fillStyle = 'white';
+      ctx.font = '16px Arial';
+      ctx.fillText(`Score: ${scoreRef.current}`, 10, 20);
+      ctx.fillText(`High Score: ${highScore}`, 10, 40);
+
+      gameLoop = requestAnimationFrame(draw);
     }
 
     // Player controls
@@ -94,14 +124,15 @@ export function SparqInvaders() {
 
     // Initialize the game
     Promise.all([
-      loadImage('/public/sparqIcon.png'),
-      loadImage('/public/Skull(Red).png'),
-      loadImage('/public/bfpf.png'),
-      loadImage('/public/bfpfr.png'),
-      loadImage('/public/bfpfw.png')
+      loadImage('/sparqIcon.png'),
+      loadImage('/Skull(Red).png'),
+      loadImage('/bfpf.png'),
+      loadImage('/bfpfr.png'),
+      loadImage('/bfpfw.png')
     ]).then(([hero, ...invaders]) => {
       playerImg = hero;
       enemyImgs = invaders;
+      loadHighScore();
 
       // Initialize enemies after images are loaded
       for (let i = 0; i < 5; i++) {
@@ -130,15 +161,31 @@ export function SparqInvaders() {
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
+      if (gameLoop) {
+        cancelAnimationFrame(gameLoop);
+      }
     };
-  }, []);
+  }, [highScore]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      width={350}
-      height={500}
-      className="max-w-full h-auto"
-    />
+    <div className="relative w-full h-full flex flex-col items-center">
+      <div className="mb-4 w-full flex justify-between px-4">
+        <div className="text-sm">
+          <div>Score: {currentScore}</div>
+          <div>High Score: {highScore}</div>
+        </div>
+        <div className="text-sm text-right">
+          <div>Controls:</div>
+          <div>← → or A/D: Move</div>
+          <div>Space/W/↑: Shoot</div>
+        </div>
+      </div>
+      <canvas
+        ref={canvasRef}
+        width={350}
+        height={500}
+        className="max-w-full h-auto"
+      />
+    </div>
   );
 }
