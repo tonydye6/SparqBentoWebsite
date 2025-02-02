@@ -79,13 +79,7 @@ export function AiChat() {
 
   return (
     <div className="flex flex-col h-full p-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-carbon/20 via-primary/5 to-carbon/20 animate-gradient" />
-      <div className="absolute inset-0" style={{ 
-        backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(235, 0, 40, 0.1) 0%, transparent 50%)',
-        animation: 'pulse 4s ease-in-out infinite'
-      }} />
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />
-      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />
+      <div className="absolute inset-0 bg-gradient-to-br from-carbon/10 to-carbon/5" />
       <ScrollArea className="flex-1 pr-4 h-[calc(100%-80px)]">
         <div className="space-y-4">
           {messages.map((msg, i) => (
