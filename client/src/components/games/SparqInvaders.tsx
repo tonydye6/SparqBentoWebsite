@@ -12,6 +12,7 @@ interface GameState {
 
 export function SparqInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const gameLoopRef = useRef<number>();
   const [gameState, setGameState] = useState<GameState>({
     currentScore: 0,
     highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
@@ -27,7 +28,6 @@ export function SparqInvaders() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrameId: number;
     const keys = {
       left: false,
       right: false,
@@ -83,9 +83,10 @@ export function SparqInvaders() {
       }
     };
 
-    const handleInput = () => {
+    const update = () => {
       if (!gameState.isRunning) return;
-      
+
+      // Handle player movement
       if (keys.left) {
         player.x = Math.max(0, player.x - player.speed);
       }
@@ -101,12 +102,6 @@ export function SparqInvaders() {
         });
         lastShot = Date.now();
       }
-    };
-
-    const update = () => {
-      if (!gameState.isRunning) return;
-
-      handleInput();
 
       // Update bullets
       for (let i = bullets.length - 1; i >= 0; i--) {
@@ -208,7 +203,7 @@ export function SparqInvaders() {
     const gameLoop = () => {
       update();
       draw();
-      animationFrameId = requestAnimationFrame(gameLoop);
+      gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
 
     const gameOver = () => {
@@ -266,9 +261,11 @@ export function SparqInvaders() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
-      cancelAnimationFrame(animationFrameId);
+      if (gameLoopRef.current) {
+        cancelAnimationFrame(gameLoopRef.current);
+      }
     };
-  }, [gameState.isRunning, gameState.level, gameState.currentScore]);
+  }, [gameState.isRunning]); // Only re-run when game running state changes
 
   return (
     <Card className="w-full h-full bg-black flex items-center justify-center">
