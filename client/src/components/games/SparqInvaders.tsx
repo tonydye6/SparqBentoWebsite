@@ -71,19 +71,20 @@ export function SparqInvaders() {
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft' || e.key === 'a') {
-        player.x = Math.max(player.x - 10, 0);
-      }
-      if (e.key === 'ArrowRight' || e.key === 'd') {
-        player.x = Math.min(player.x + 10, canvas.width - player.width);
-      }
       if (e.key === ' ') {
+        e.preventDefault();
         bullets.push({
           x: player.x + player.width / 2 - 2,
           y: player.y,
           width: 4,
           height: 10
         });
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'a') {
+        player.x = Math.max(player.x - 10, 0);
+      }
+      if (e.key === 'ArrowRight' || e.key === 'd') {
+        player.x = Math.min(player.x + 10, canvas.width - player.width);
       }
     };
 
