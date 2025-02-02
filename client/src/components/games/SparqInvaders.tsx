@@ -34,7 +34,6 @@ export function SparqInvaders() {
       height: number;
       img: HTMLImageElement;
       dx: number;
-      speed: number;
     }> = [];
 
     let playerImg = new Image();
@@ -71,8 +70,7 @@ export function SparqInvaders() {
             width: 40,
             height: 40,
             img: images[Math.floor(Math.random() * images.length)],
-            dx: baseSpeed,
-            speed: baseSpeed
+            dx: baseSpeed
           });
         }
       }
@@ -101,12 +99,10 @@ export function SparqInvaders() {
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw player
       if (playerImg.complete) {
         ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
       }
 
-      // Update and draw bullets
       for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
         bullet.y -= 5;
@@ -117,7 +113,6 @@ export function SparqInvaders() {
         }
       }
 
-      // Update and draw enemies
       enemies.forEach((enemy) => {
         enemy.x += enemy.dx;
         if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
@@ -142,17 +137,19 @@ export function SparqInvaders() {
           ) {
             bullets.splice(i, 1);
             enemies.splice(j, 1);
-            setCurrentScore(prev => prev + 100);
-            if (currentScore + 100 > highScore) {
-              setHighScore(currentScore + 100);
-              localStorage.setItem('sparqInvadersHighScore', (currentScore + 100).toString());
+            const newScore = currentScore + 100;
+            setCurrentScore(newScore);
+            
+            if (newScore > highScore) {
+              setHighScore(newScore);
+              localStorage.setItem('sparqInvadersHighScore', newScore.toString());
             }
             break;
           }
         }
       }
 
-      // Check for level completion
+      // Level completion check
       if (enemies.length === 0) {
         setCurrentLevel(prev => prev + 1);
         loadEnemyImages();
@@ -168,7 +165,6 @@ export function SparqInvaders() {
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
 
-    // Start game
     document.addEventListener('keydown', handleKeyDown);
     loadEnemyImages();
     gameLoop();
@@ -179,7 +175,7 @@ export function SparqInvaders() {
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, []); // Remove dependencies that cause infinite updates
+  }, [currentScore, highScore, currentLevel]);
 
   return (
     <Card className="w-full h-full bg-black flex items-center justify-center">
