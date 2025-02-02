@@ -56,6 +56,8 @@ export function SparqInvaders() {
       points: number;
       direction: number;
       speed: number;
+      movementPattern: any;
+      initialY: number;
     }[] = [];
     let particles: {
       x: number;
@@ -148,6 +150,29 @@ export function SparqInvaders() {
         if (popup.life <= 0) scorePopups.splice(i, 1);
       }
     }
+    
+    const MOVEMENT_PATTERNS = {
+      HORIZONTAL: (enemy: any, time: number) => {
+        return { dx: enemy.direction * enemy.speed, dy: 0 };
+      },
+      WAVE: (enemy: any, time: number) => {
+        const amplitude = 30;
+        const frequency = 0.02;
+        const dy = Math.cos(time * frequency) * 0.5;
+        return { dx: enemy.direction * enemy.speed * 0.8, dy };
+      },
+      DIAGONAL: (enemy: any, time: number) => {
+        const amplitude = 20;
+        const frequency = 0.015;
+        const dy = Math.sin(time * frequency) * 0.3;
+        return { dx: enemy.direction * enemy.speed * 1.2, dy };
+      },
+      ZIGZAG: (enemy: any, time: number) => {
+        const zigzagTime = Math.floor(time / 60) % 2;
+        const dy = zigzagTime === 0 ? 0.5 : -0.5;
+        return { dx: enemy.direction * enemy.speed * (zigzagTime === 0 ? 1 : -1), dy };
+      }
+    };
 
     // Add enemy type definitions and modified enemy creation logic
     interface EnemyType {
@@ -155,6 +180,7 @@ export function SparqInvaders() {
       speed: number;
       imageIndex: number;
       probability: number;
+      movementPattern: any;
     }
 
     const ENEMY_TYPES: { [key: string]: EnemyType } = {
@@ -162,27 +188,32 @@ export function SparqInvaders() {
         points: 100,
         speed: 1,
         imageIndex: 0,
-        probability: 0.4
+        probability: 0.4,
+        movementPattern: MOVEMENT_PATTERNS.HORIZONTAL
       },
       FAST: {
         points: 150,
         speed: 1.5,
         imageIndex: 1,
-        probability: 0.3
+        probability: 0.3,
+        movementPattern: MOVEMENT_PATTERNS.DIAGONAL
       },
       TANK: {
         points: 200,
         speed: 0.8,
         imageIndex: 2,
-        probability: 0.2
+        probability: 0.2,
+        movementPattern: MOVEMENT_PATTERNS.WAVE
       },
       ELITE: {
         points: 300,
         speed: 1.2,
         imageIndex: 3,
-        probability: 0.1
+        probability: 0.1,
+        movementPattern: MOVEMENT_PATTERNS.ZIGZAG
       }
     };
+      let gameTime = 0;
 
     // Update the createEnemies function with enemy type selection
     function createEnemies() {
@@ -228,7 +259,9 @@ export function SparqInvaders() {
             img: enemyImages[selectedType.imageIndex],
             points: selectedType.points,
             direction: 1,
-            speed: selectedType.speed
+            speed: selectedType.speed,
+            movementPattern: selectedType.movementPattern,
+            initialY: startY + row * 40
           });
         }
       }
@@ -311,6 +344,7 @@ export function SparqInvaders() {
       if (keys.space) {
         shoot();
       }
+        gameTime++;
 
       // Update bullets
       for (let i = bullets.length - 1; i >= 0; i--) {
@@ -319,16 +353,28 @@ export function SparqInvaders() {
         if (bullet.y < 0) bullets.splice(i, 1);
       }
 
-      // Update enemies with modified speed progression and individual speeds
-      let touchedEdge = false;
-      const currentLevelSpeed = ENEMY_SPEED * (1 + 0.15 * (gameState.level - 1));
+        let touchedEdge = false;
+        const currentLevelSpeed = ENEMY_SPEED * (1 + 0.15 * (gameState.level - 1));
 
-      enemies.forEach(enemy => {
-        enemy.x += enemy.direction * currentLevelSpeed * (enemy.speed || 1);
-        if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
-          touchedEdge = true;
+        enemies.forEach(enemy => {
+          // Calculate movement based on pattern
+          const movement = enemy.movementPattern(enemy, gameTime);
+
+          // Update position
+          enemy.x += movement.dx * currentLevelSpeed;
+          enemy.y += movement.dy;
+
+          // Check boundaries
+          if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
+            touchedEdge = true;
+          }
+
+           const maxVerticalDeviation = 100;
+          if (Math.abs(enemy.y - enemy.initialY) > maxVerticalDeviation) {
+            enemy.y = enemy.initialY + (maxVerticalDeviation * Math.sign(enemy.y - enemy.initialY));
         }
-      });
+        });
+
 
       if (touchedEdge) {
         enemies.forEach(enemy => {
@@ -444,7 +490,7 @@ export function SparqInvaders() {
           ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
         });
 
-        // Draw particles with glow
+         // Draw particles with glow
         particles.forEach(p => {
           ctx.globalAlpha = p.life;
           ctx.fillStyle = p.color;
