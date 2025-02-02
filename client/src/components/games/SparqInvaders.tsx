@@ -179,7 +179,7 @@ export function SparqInvaders() {
     if (e.key === ' ') {
       e.preventDefault();
     }
-    if (!gameState.hasStarted) return;
+    if (!gameState.hasStarted || !gameState.isPlaying) return;
     pressedKeys.current.add(e.key);
     if (e.key === ' ') {
       createBullet();
