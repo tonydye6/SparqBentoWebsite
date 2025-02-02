@@ -154,12 +154,6 @@ export function SparqInvaders() {
         }
       }
 
-      // Draw scores
-      ctx.fillStyle = 'white';
-      ctx.font = '16px Arial';
-      ctx.fillText(`Score: ${currentScore}`, 10, 20);
-      ctx.fillText(`High Score: ${highScore}`, 10, 40);
-
       animationFrameId = requestAnimationFrame(gameLoop);
     };
 
@@ -177,18 +171,21 @@ export function SparqInvaders() {
 
   return (
     <div className="col-span-8 row-span-4">
-      <Card className="w-full h-full bg-black flex items-center justify-center">
-        <div className="relative" style={{ width: '350px', height: '935px' }}>
+      <Card className="w-full h-full bg-black flex flex-col items-center justify-center">
+        <div className="relative" style={{ width: '350px', height: '500px' }}>
+          {/* Score display at the top */}
+          <div className="absolute top-2 left-0 right-0 z-10 flex justify-between px-4">
+            <span className="text-white font-mono">Score: {currentScore}</span>
+            <span className="text-white font-mono">High Score: {highScore}</span>
+          </div>
+
+          {/* Game canvas */}
           <canvas 
             ref={canvasRef} 
             width={350} 
-            height={935} 
+            height={500} 
             style={{ backgroundColor: 'black' }}
           />
-          <div className="absolute bottom-4 left-0 right-0 text-center text-white">
-            <p>Score: {currentScore}</p>
-            <p>High Score: {highScore}</p>
-          </div>
         </div>
       </Card>
     </div>
