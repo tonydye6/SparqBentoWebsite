@@ -19,7 +19,7 @@ const executiveTeam: TeamMember[] = [
   {
     name: "Jan Horsfall",
     title: "CEO / BOD Chair",
-    photo: "/janh.png",
+    photo: "/jandraw.png",
     linkedIn: "https://www.linkedin.com/in/janhorsfall/",
     previousCompanies: [
       { name: "Turbine Games", logo: "/turb.png" },
@@ -30,7 +30,7 @@ const executiveTeam: TeamMember[] = [
   {
     name: "Tony Dye",
     title: "President / BOD - HR Comm. Chair",
-    photo: "/tonyd.png",
+    photo: "/tonydraw.png",
     linkedIn: "https://www.linkedin.com/in/tony-dye-0a0836113/",
     previousCompanies: [
       { name: "Cincinnati Bengals", logo: "/bengals.png" },
@@ -41,7 +41,7 @@ const executiveTeam: TeamMember[] = [
   {
     name: "Chase Huber",
     title: "SVP - User Acquisition",
-    photo: "/chaseh.png",
+    photo: "/chasedraw.png",
     linkedIn: "https://www.linkedin.com/in/chase-huber-132b033/",
     previousCompanies: [
       { name: "Turbine", logo: "/turb.png" },
@@ -52,7 +52,7 @@ const executiveTeam: TeamMember[] = [
   {
     name: "Rob Vogel",
     title: "SVP - University & Player Relationships",
-    photo: "/robv.png",
+    photo: "/robdraw.png",
     linkedIn: "https://www.linkedin.com/in/robvogelj5partners/",
     previousCompanies: [
       { name: "J5 Partners", logo: "/j5.png" },
@@ -63,7 +63,7 @@ const executiveTeam: TeamMember[] = [
   {
     name: "Jeffrey Steefel",
     title: "SVP - Games",
-    photo: "/jeffreys.png",
+    photo: "/jeffreydraw.png",
     linkedIn: "https://www.linkedin.com/in/jeffrey-steefel-97380/",
     previousCompanies: [
       { name: "Disney", logo: "/dis.png" },
@@ -74,7 +74,7 @@ const executiveTeam: TeamMember[] = [
   {
     name: "Daniel Algattas",
     title: "Director - AI Projects & Technology",
-    photo: "/daniela.png",
+    photo: "/danieldraw.png",
     linkedIn: "https://www.linkedin.com/in/danielalgattas/",
     previousCompanies: [
       { name: "UCLA", logo: "/ucla.png" }
