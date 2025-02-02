@@ -339,14 +339,22 @@ export function SparqInvaders() {
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+    // Debug asset loading
+    console.log('Player asset:', assets.current.player);
+    console.log('Drawing player at:', player.current.x, player.current.y);
+
     if (assets.current.player) {
-      ctx.drawImage(
-        assets.current.player,
-        player.current.x,
-        player.current.y,
-        player.current.width,
-        player.current.height
-      );
+      try {
+        ctx.drawImage(
+          assets.current.player,
+          player.current.x,
+          player.current.y,
+          player.current.width,
+          player.current.height
+        );
+      } catch (error) {
+        console.error('Error drawing player:', error);
+      }
     }
 
     ctx.fillStyle = '#ff0000';
@@ -381,8 +389,16 @@ export function SparqInvaders() {
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
+    // Debug game loop
+    console.log('Game loop running, timestamp:', timestamp);
+    
     const deltaTime = (timestamp - lastTime.current) / 1000;
     lastTime.current = timestamp;
+
+    // Force first frame
+    if (!lastTime.current) {
+      lastTime.current = timestamp;
+    }
 
     if (gameState.hasStarted && gameState.isPlaying) {
       updatePlayer(deltaTime);
