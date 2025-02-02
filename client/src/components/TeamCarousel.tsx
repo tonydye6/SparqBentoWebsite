@@ -198,18 +198,18 @@ export function TeamCarousel({ members, interval = 5000 }: TeamCarouselProps) {
           </AvatarFallback>
         </Avatar>
 
-        <h4 className="font-semibold text-center text-2xl mb-2">{member.name}</h4>
-        <p className="text-lg text-muted-foreground mb-4">{member.title}</p>
+        <h4 className="font-semibold text-center">{member.name}</h4>
+        <p className="text-sm text-muted-foreground mb-2">{member.title}</p>
 
-        <div className="flex gap-4 mb-4">
+        <div className="flex gap-2 mb-2">
           {member.previousCompanies.map((company, i) => (
             <div key={i} className="flex items-center gap-1">
-              <img src={company.logo} alt={company.name} className="w-16 h-16 object-contain" />
+              <img src={company.logo} alt={company.name} className="w-12 h-12 object-contain" />
             </div>
           ))}
         </div>
 
-        <p className="text-base text-muted-foreground text-center mb-6 line-clamp-4 hover:line-clamp-none">
+        <p className="text-xs text-muted-foreground text-center mb-4 line-clamp-4 hover:line-clamp-none">
           {member.bio}
         </p>
 

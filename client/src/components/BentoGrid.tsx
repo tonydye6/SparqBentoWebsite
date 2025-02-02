@@ -460,6 +460,14 @@ export function BentoGrid() {
             <TeamCarousel members={advisoryTeam} interval={7000} />
           </div>
           <div className="flex flex-col space-y-4 p-6">
+            <blockquote className="text-lg italic text-center">
+              "AI is the future of gaming."
+              <footer className="mt-1 text-sm text-white/70">- Elon Musk</footer>
+            </blockquote>
+            <blockquote className="text-lg italic text-center">
+              "Gaming as an industry is going to get revitalized by AI"
+              <footer className="mt-1 text-sm text-white/70">- Jensen Huang</footer>
+            </blockquote>
           </div>
         </div>
       </motion.div>
