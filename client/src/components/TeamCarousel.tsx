@@ -162,9 +162,76 @@ const advisoryTeam: TeamMember[] = [
   }
 ];
 
+export const executiveTeam = [
+  {
+    name: "Jan Horsfall",
+    title: "CEO & Co-Founder",
+    photo: "/janh.png",
+    previousCompanies: [
+      { name: "Turbine Games", logo: "/turb.png" },
+      { name: "Lycos", logo: "/lycos.png" }
+    ]
+  },
+  {
+    name: "Tony Dedeaux",
+    title: "Chief Gaming Officer & Co-Founder",
+    photo: "/tonyd.png",
+    previousCompanies: [
+      { name: "Electronic Arts", logo: "/eas.png" },
+      { name: "Warner Bros", logo: "/wb.png" }
+    ]
+  },
+  {
+    name: "Sean Epperson",
+    title: "Chief Technology Officer",
+    photo: "/seane.png",
+    previousCompanies: [
+      { name: "Electronic Arts", logo: "/eas.png" },
+      { name: "Disney", logo: "/dis.png" }
+    ]
+  }
+];
+
+export const advisoryTeam = [
+  {
+    name: "Jim Dorey",
+    title: "Platform Advisor",
+    photo: "/jimd.png",
+    previousCompanies: [
+      { name: "PlayStation", logo: "/ps.png" },
+      { name: "Pyramid Games", logo: "/pyramid.png" }
+    ]
+  },
+  {
+    name: "Jeffrey Steefel",
+    title: "Business Advisor",
+    photo: "/jeffreys.png",
+    previousCompanies: [
+      { name: "Electronic Arts", logo: "/eas.png" },
+      { name: "Warner Bros", logo: "/wb.png" }
+    ]
+  },
+  {
+    name: "Michelle Krausman",
+    title: "Legal Advisor",
+    photo: "/michellek.png",
+    previousCompanies: [
+      { name: "GameStop", logo: "/gs.png" },
+      { name: "EA Sports", logo: "/eas.png" }
+    ]
+  }
+];
+
 interface TeamCarouselProps {
   members: TeamMember[];
   interval?: number;
+}
+
+interface TeamMember {
+  name: string;
+  title: string;
+  photo: string;
+  previousCompanies: { name: string; logo: string; }[];
 }
 
 export function TeamCarousel({ members, interval = 5000 }: TeamCarouselProps) {
