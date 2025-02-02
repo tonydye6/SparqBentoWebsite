@@ -453,7 +453,7 @@ export function BentoGrid() {
         onClick={() => handleCardClick("team")}
       >
         <div className="card-title-container">
-          <h2 className="card-title">Meet Our Team</h2>
+          <h2 className="card-title">Advisors</h2>
         </div>
         <div className="flex flex-col h-full card-content justify-center space-y-6">
           <div className="flex-1">
