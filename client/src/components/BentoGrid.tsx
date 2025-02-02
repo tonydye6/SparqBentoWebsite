@@ -345,22 +345,22 @@ export function BentoGrid() {
 
       {/* Split Card 3 into two independent cards */}
       <motion.div 
-        className="relative perspective-1000 card-3" 
-        style={{ transformStyle: "preserve-3d" }} 
-        whileHover={{ scale: 1.02 }}
-      >
-        <Card className="bento-card h-[445px] mb-5 cursor-pointer bg-black/20">
-          {/* Card #3 - Sparq Invaders Game */}
-          <div className="h-full">
-            <div className="card-title-container">
-              <h2 className="card-title">Sparq Invaders</h2>
-            </div>
+          className="relative perspective-1000 card-3" 
+          style={{ transformStyle: "preserve-3d" }} 
+          whileHover={{ scale: 1.02 }}
+        >
+          <Card className="bento-card h-[645px] mb-5 cursor-pointer bg-black/20">
+            {/* Card #3 - Sparq Invaders Game */}
             <div className="h-full">
-              <SparqInvaders />
+              <div className="card-title-container">
+                <h2 className="card-title">Sparq Invaders</h2>
+              </div>
+              <div className="h-full">
+                <SparqInvaders />
+              </div>
             </div>
-          </div>
-        </Card>
-      </motion.div>
+          </Card>
+        </motion.div>
 
       <motion.div 
         className="relative perspective-1000 card-16" 
