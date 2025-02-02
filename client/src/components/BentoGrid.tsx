@@ -239,7 +239,7 @@ export function BentoGrid() {
         return <DiscordWidget />;
       case "3d":
         return <ThreeViewer />;
-      case "mission":
+        case "mission":
         return (
           <div className="p-6 space-y-4">
             <h2 className="text-2xl font-bold">Our Mission</h2>
@@ -271,7 +271,7 @@ export function BentoGrid() {
             </ul>
           </div>
         );
-      case "values":
+        case "values":
         return (
           <div className="p-6 space-y-6">
             <h2 className="text-2xl font-bold">Our Values</h2>
@@ -343,36 +343,41 @@ export function BentoGrid() {
         </div>
       </motion.div>
 
-      {/* Split Card 3 into two parts */}
-      <motion.div
-        className="bento-card card-3 relative overflow-hidden"
+      {/* Split Card 3 into two independent cards */}
+      <motion.div 
+        className="relative perspective-1000 card-3" 
+        style={{ transformStyle: "preserve-3d" }} 
         whileHover={{ scale: 1.02 }}
       >
-        <div className="flex flex-col h-full gap-5">
-          {/* Upper Card (#3) */}
-          <Card className="bento-card flex-1 bg-black/20 cursor-pointer">
-            <div className="h-full p-4">
-              <div className="card-title-container">
-                <h2 className="card-title">Featured Games</h2>
-              </div>
-              <div className="flex items-center justify-center h-full">
-                <p className="text-lg text-center">Upcoming Game Releases</p>
-              </div>
+        <Card className="bento-card h-[440px] mb-6 cursor-pointer bg-black/20">
+          {/* Card #3 - Sparq Invaders Game */}
+          <div className="h-full">
+            <div className="card-title-container">
+              <h2 className="card-title">Sparq Invaders</h2>
             </div>
-          </Card>
+            <div className="h-full">
+              <SparqInvaders />
+            </div>
+          </div>
+        </Card>
+      </motion.div>
 
-          {/* Lower Card (#16) */}
-          <Card className="bento-card flex-1 bg-black/20">
-            <div className="h-full p-4">
-              <div className="card-title-container">
-                <h2 className="card-title">Sparq Invaders</h2>
-              </div>
-              <div className="flex items-center justify-center h-full">
-                <SparqInvaders />
-              </div>
+      <motion.div 
+        className="relative perspective-1000 card-16" 
+        style={{ transformStyle: "preserve-3d" }} 
+        whileHover={{ scale: 1.02 }}
+      >
+        <Card className="bento-card h-[440px] cursor-pointer bg-black/20">
+          {/* Card #16 - Featured Games */}
+          <div className="h-full">
+            <div className="card-title-container">
+              <h2 className="card-title">Featured Games</h2>
             </div>
-          </Card>
-        </div>
+            <div className="flex items-center justify-center h-full">
+              <p className="text-lg text-center">Upcoming Game Releases</p>
+            </div>
+          </div>
+        </Card>
       </motion.div>
 
       {/* Card 4: Connect With Us */}
