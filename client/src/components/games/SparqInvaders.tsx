@@ -8,11 +8,10 @@ interface GameObject {
   y: number;
   width: number;
   height: number;
-  speed?: number;
 }
 
 interface Enemy extends GameObject {
-  img: HTMLImageElement;
+  img: HTMLImageElement | null;
   direction: number;
   points: number;
   type: number;
@@ -43,63 +42,126 @@ export function SparqInvaders() {
 
   const bullets = useRef<GameObject[]>([]);
   const enemies = useRef<Enemy[]>([]);
-  const assets = useRef<{
-    player: HTMLImageElement | null;
-    enemies: HTMLImageElement[];
-  }>({ player: null, enemies: [] });
+  const playerImage = useRef<HTMLImageElement | null>(null);
+  const enemyImages = useRef<HTMLImageElement[]>([]);
 
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
+      console.log(`Attempting to load image: ${src}`);
       const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
-      img.src = src;
+      img.onload = () => {
+        console.log(`Successfully loaded image: ${src}`);
+        resolve(img);
+      };
+      img.onerror = () => {
+        console.error(`Failed to load image: ${src}`);
+        reject(new Error(`Failed to load image: ${src}`));
+      };
+      // Try with and without leading slash
+      img.src = src.startsWith('/') ? src : `/${src}`;
     });
   };
 
-  const initAssets = async () => {
+  const tryLoadAssets = async () => {
     try {
-      const playerImg = await loadImage('/images/game_hero.svg');
-      const enemyImgs = await Promise.all([
-        loadImage('/images/invader_1.svg'),
-        loadImage('/images/invader_2.svg'),
-        loadImage('/images/invader_3.svg'),
-        loadImage('/images/invader_4.svg')
-      ]);
+      console.log('Starting asset loading...');
 
-      assets.current = {
-        player: playerImg,
-        enemies: enemyImgs
-      };
-      console.log('All assets loaded successfully');
+      // Try different paths for player image
+      const playerPaths = ['images/game_hero.png', '/images/game_hero.png', 'public/images/game_hero.png'];
+      for (const path of playerPaths) {
+        try {
+          playerImage.current = await loadImage(path);
+          console.log('Player image loaded successfully');
+          break;
+        } catch (e) {
+          console.error(`Failed to load player image from ${path}`);
+        }
+      }
+
+      // Try loading enemy images
+      const enemyPaths = [
+        'images/invader_1.png',
+        'images/invader_2.png',
+        'images/invader_3.png',
+        'images/invader_4.png'
+      ];
+
+      for (const path of enemyPaths) {
+        try {
+          const img = await loadImage(path);
+          enemyImages.current.push(img);
+        } catch (e) {
+          console.error(`Failed to load enemy image: ${path}`);
+        }
+      }
+
+      console.log('Asset loading complete');
+      console.log('Player image:', playerImage.current);
+      console.log('Enemy images:', enemyImages.current);
+
       return true;
     } catch (error) {
-      console.error('Failed to load game assets:', error);
-      toast({
-        title: "Asset Loading Error",
-        description: "Failed to load game graphics. Please refresh.",
-        variant: "destructive"
-      });
+      console.error('Asset loading failed:', error);
       return false;
     }
   };
 
+  const drawPlayer = (ctx: CanvasRenderingContext2D) => {
+    if (playerImage.current) {
+      ctx.drawImage(
+        playerImage.current,
+        player.current.x,
+        player.current.y,
+        player.current.width,
+        player.current.height
+      );
+    } else {
+      // Fallback triangle shape
+      ctx.fillStyle = '#00ff00';
+      ctx.beginPath();
+      ctx.moveTo(player.current.x + player.current.width / 2, player.current.y);
+      ctx.lineTo(player.current.x, player.current.y + player.current.height);
+      ctx.lineTo(player.current.x + player.current.width, player.current.y + player.current.height);
+      ctx.closePath();
+      ctx.fill();
+    }
+  };
+
+  const drawEnemy = (ctx: CanvasRenderingContext2D, enemy: Enemy) => {
+    if (enemy.img) {
+      ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+    } else {
+      // Fallback rectangle shape
+      ctx.fillStyle = '#ff0000';
+      ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+      // Eyes
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(enemy.x + 10, enemy.y + 10, 3, 0, Math.PI * 2);
+      ctx.arc(enemy.x + enemy.width - 10, enemy.y + 10, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  };
+
   const initEnemies = () => {
+    console.log('Initializing enemies...');
     enemies.current = [];
     for (let row = 0; row < ENEMY_ROWS; row++) {
       for (let col = 0; col < ENEMY_COLS; col++) {
+        const enemyType = row % enemyImages.current.length;
         enemies.current.push({
           x: col * ENEMY_PADDING + ENEMY_PADDING,
           y: row * ENEMY_PADDING + ENEMY_TOP_OFFSET,
           width: 30,
           height: 30,
-          img: assets.current.enemies[row % assets.current.enemies.length],
+          img: enemyImages.current[enemyType] || null,
           direction: 1,
           points: (ENEMY_ROWS - row) * 100,
-          type: row % assets.current.enemies.length
+          type: enemyType
         });
       }
     }
+    console.log(`Initialized ${enemies.current.length} enemies`);
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -126,7 +188,6 @@ export function SparqInvaders() {
   const updatePlayer = (deltaTime: number) => {
     if (!isPlaying) return;
     const moveSpeed = 300;
-
     if (pressedKeys.current.has('ArrowLeft') || pressedKeys.current.has('a')) {
       player.current.x = Math.max(0, player.current.x - moveSpeed * deltaTime);
     }
@@ -148,7 +209,6 @@ export function SparqInvaders() {
 
   const updateEnemies = (deltaTime: number) => {
     if (!isPlaying) return;
-
     let shouldChangeDirection = false;
     const enemySpeed = 100;
 
@@ -185,42 +245,21 @@ export function SparqInvaders() {
   };
 
   const draw = (ctx: CanvasRenderingContext2D) => {
-    // Clear and draw background
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     ctx.fillStyle = '#000033';
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Draw player if game is active and assets are loaded
-    if (isPlaying && assets.current.player) {
-      ctx.drawImage(
-        assets.current.player,
-        player.current.x,
-        player.current.y,
-        player.current.width,
-        player.current.height
-      );
-    }
+    drawPlayer(ctx);
 
-    // Draw bullets
     ctx.fillStyle = '#ff0000';
     bullets.current.forEach(bullet => {
       ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     });
 
-    // Draw enemies
     enemies.current.forEach(enemy => {
-      if (enemy.img) {
-        ctx.drawImage(
-          enemy.img,
-          enemy.x,
-          enemy.y,
-          enemy.width,
-          enemy.height
-        );
-      }
+      drawEnemy(ctx, enemy);
     });
 
-    // Draw UI
     ctx.fillStyle = '#ffffff';
     ctx.font = '20px Arial';
     ctx.textAlign = 'left';
@@ -241,22 +280,18 @@ export function SparqInvaders() {
     checkCollisions();
     draw(ctx);
 
-    gameLoop.current = requestAnimationFrame(gameUpdate);
+    if (isPlaying) {
+      gameLoop.current = requestAnimationFrame(gameUpdate);
+    }
   };
 
   const startGame = async () => {
-    if (!assets.current.player) {
-      const loaded = await initAssets();
-      if (!loaded) return;
-    }
-
+    console.log('Starting game...');
     initEnemies();
     setIsPlaying(true);
-
-    if (!gameLoop.current) {
-      lastTime.current = performance.now();
-      gameLoop.current = requestAnimationFrame(gameUpdate);
-    }
+    lastTime.current = performance.now();
+    gameLoop.current = requestAnimationFrame(gameUpdate);
+    console.log('Game started');
   };
 
   useEffect(() => {
@@ -269,8 +304,8 @@ export function SparqInvaders() {
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
 
-    // Start loading assets immediately
-    initAssets();
+    console.log('Loading initial assets...');
+    tryLoadAssets().catch(console.error);
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
