@@ -50,6 +50,8 @@ export function SparqInvaders() {
 
     // Game loop
     function draw() {
+      if (!ctx || !canvas) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw player
@@ -59,6 +61,8 @@ export function SparqInvaders() {
 
       // Draw bullets
       bullets.forEach((bullet, index) => {
+        if (!ctx) return;
+
         ctx.fillStyle = 'red';
         bullet.y -= 5;
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
@@ -85,6 +89,7 @@ export function SparqInvaders() {
 
       // Draw enemies
       enemies.forEach((enemy) => {
+        if (!ctx) return;
         if (enemy.img) {
           ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
           enemy.x += enemy.direction || (enemy.direction = Math.random() > 0.5 ? -1 : 1);
@@ -106,6 +111,8 @@ export function SparqInvaders() {
 
     // Player controls
     function handleKeyDown(e: KeyboardEvent) {
+      if (!canvas) return;
+
       if (e.key === 'ArrowLeft' || e.key === 'a') {
         player.x = Math.max(player.x - 10, 0);
       }
@@ -153,10 +160,12 @@ export function SparqInvaders() {
       draw();
     }).catch(error => {
       console.error('Failed to load game assets:', error);
-      ctx.fillStyle = 'white';
-      ctx.font = '14px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('Failed to load game assets', canvas.width/2, canvas.height/2);
+      if (ctx) {
+        ctx.fillStyle = 'white';
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Failed to load game assets', canvas.width/2, canvas.height/2);
+      }
     });
 
     return () => {
