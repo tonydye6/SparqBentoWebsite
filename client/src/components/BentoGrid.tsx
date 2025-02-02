@@ -364,7 +364,7 @@ export function BentoGrid() {
           <Card className="bento-card flex-1 bg-black/20 cursor-pointer">
             <div className="h-full p-4">
               <div className="card-title-container">
-                <h2 className="card-title">Game Stats</h2>
+                <h2 className="card-title">Sparq Invaders</h2>
               </div>
               <div className="flex items-center justify-center h-full">
                 <p className="text-lg text-center">Latest Gaming Statistics</p>
