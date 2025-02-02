@@ -28,15 +28,18 @@ export function SparqInvaders() {
     if (!ctx) return;
 
     let animationFrameId: number;
+    const keys = {
+      left: false,
+      right: false,
+      space: false
+    };
 
-    // Game constants
     const PLAYER_SPEED = 5;
     const BULLET_SPEED = 7;
-    const ENEMY_SPEED_BASE = 1;
-    const ENEMY_DROP_DISTANCE = 20;
+    const SHOOT_COOLDOWN = 250;
 
-    // Game state
-    const player = {
+    let lastShot = Date.now();
+    let player = {
       x: canvas.width / 2 - 40,
       y: canvas.height - 80,
       width: 80,
@@ -44,12 +47,9 @@ export function SparqInvaders() {
       speed: PLAYER_SPEED
     };
 
-    let bullets: any[] = [];
-    let enemies: any[] = [];
-    let lastShot = 0;
-    const SHOOT_COOLDOWN = 250;
+    let bullets: Array<{x: number, y: number, width: number, height: number}> = [];
+    let enemies: Array<{x: number, y: number, width: number, height: number, img: HTMLImageElement, points: number, direction: number}> = [];
 
-    // Initialize game assets
     const playerImg = new Image();
     playerImg.src = '/game_hero.png';
 
@@ -83,42 +83,30 @@ export function SparqInvaders() {
       }
     };
 
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'black';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      if (!gameState.isRunning) {
-        ctx.fillStyle = 'white';
-        ctx.font = '24px Chakra Petch';
-        ctx.textAlign = 'center';
-        ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2);
-        return;
+    const handleInput = () => {
+      if (!gameState.isRunning) return;
+      
+      if (keys.left) {
+        player.x = Math.max(0, player.x - player.speed);
       }
-
-      ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-
-      enemies.forEach(enemy => {
-        ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
-      });
-
-      ctx.fillStyle = '#eb0028';
-      bullets.forEach(bullet => {
-        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-      });
-
-      // Draw UI
-      ctx.fillStyle = 'white';
-      ctx.font = '16px Chakra Petch';
-      ctx.textAlign = 'left';
-      ctx.fillText(`Score: ${gameState.currentScore}`, 10, 25);
-      ctx.fillText(`High Score: ${gameState.highScore}`, 10, 50);
-      ctx.fillText(`Level: ${gameState.level}`, canvas.width - 100, 25);
-      ctx.fillText(`Lives: ${gameState.lives}`, canvas.width - 100, 50);
+      if (keys.right) {
+        player.x = Math.min(canvas.width - player.width, player.x + player.speed);
+      }
+      if (keys.space && Date.now() - lastShot > SHOOT_COOLDOWN) {
+        bullets.push({
+          x: player.x + player.width / 2 - 2,
+          y: player.y,
+          width: 4,
+          height: 10
+        });
+        lastShot = Date.now();
+      }
     };
 
     const update = () => {
       if (!gameState.isRunning) return;
+
+      handleInput();
 
       // Update bullets
       for (let i = bullets.length - 1; i >= 0; i--) {
@@ -132,7 +120,7 @@ export function SparqInvaders() {
       // Update enemies
       let touchedEdge = false;
       enemies.forEach(enemy => {
-        enemy.x += enemy.direction * (ENEMY_SPEED_BASE * (1 + 0.1 * (gameState.level - 1)));
+        enemy.x += enemy.direction * (1 + 0.1 * (gameState.level - 1));
         if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
           touchedEdge = true;
         }
@@ -141,7 +129,7 @@ export function SparqInvaders() {
       if (touchedEdge) {
         enemies.forEach(enemy => {
           enemy.direction *= -1;
-          enemy.y += ENEMY_DROP_DISTANCE;
+          enemy.y += 20;
         });
       }
 
@@ -184,6 +172,39 @@ export function SparqInvaders() {
       });
     };
 
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (!gameState.isRunning) {
+        ctx.fillStyle = 'white';
+        ctx.font = '24px Chakra Petch';
+        ctx.textAlign = 'center';
+        ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2);
+        return;
+      }
+
+      ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+
+      enemies.forEach(enemy => {
+        ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+      });
+
+      ctx.fillStyle = '#eb0028';
+      bullets.forEach(bullet => {
+        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+      });
+
+      ctx.fillStyle = 'white';
+      ctx.font = '16px Chakra Petch';
+      ctx.textAlign = 'left';
+      ctx.fillText(`Score: ${gameState.currentScore}`, 10, 25);
+      ctx.fillText(`High Score: ${gameState.highScore}`, 10, 50);
+      ctx.fillText(`Level: ${gameState.level}`, canvas.width - 100, 25);
+      ctx.fillText(`Lives: ${gameState.lives}`, canvas.width - 100, 50);
+    };
+
     const gameLoop = () => {
       update();
       draw();
@@ -214,13 +235,8 @@ export function SparqInvaders() {
         isRunning: true
       }));
       bullets = [];
+      player.x = canvas.width / 2 - 40;
       initEnemies();
-    };
-
-    const keys = {
-      left: false,
-      right: false,
-      space: false
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -245,7 +261,6 @@ export function SparqInvaders() {
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
-    // Start the game loop
     gameLoop();
 
     return () => {
