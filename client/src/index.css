@@ -330,16 +330,6 @@ body {
   z-index: -1;
 }
 
-.beta-card .card-title-container {
-  background: linear-gradient(to bottom, 
-    rgba(43, 45, 66, 0.95), 
-    rgba(43, 45, 66, 0.7),
-    rgba(43, 45, 66, 0)
-  );
-  padding: 2rem 1rem;
-  backdrop-filter: blur(5px);
-}
-
 .beta-card:hover {
   transform: translateY(-8px) scale(1.03);
   box-shadow: 
@@ -364,64 +354,14 @@ body {
   background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradientText 8s ease infinite,
-           pulseGlow 2s ease-in-out infinite,
-           pulseScale 3s ease-in-out infinite;
-  text-shadow: 
-    2px 2px 0 rgba(0, 0, 0, 0.8),
-    -2px -2px 0 rgba(0, 0, 0, 0.8),
-    2px -2px 0 rgba(0, 0, 0, 0.8),
-    -2px 2px 0 rgba(0, 0, 0, 0.8);
+  animation: gradientText 8s ease infinite;
+  text-shadow: none;
   letter-spacing: 0.15em;
   position: relative;
-  text-transform: uppercase;
-  font-weight: 800;
-  transition: transform 0.3s ease;
-}
-
-.beta-card:hover .card-title {
-  transform: scale(1.05);
 }
 
 .beta-card .card-title::after {
   display: none;
-}
-
-@keyframes pulseGlow {
-  0% {
-    text-shadow: 
-      2px 2px 0 rgba(0, 0, 0, 0.8),
-      -2px -2px 0 rgba(0, 0, 0, 0.8),
-      2px -2px 0 rgba(0, 0, 0, 0.8),
-      -2px 2px 0 rgba(0, 0, 0, 0.8),
-      0 0 10px rgba(255, 0, 51, 0.5);
-  }
-  50% {
-    text-shadow: 
-      2px 2px 0 rgba(0, 0, 0, 0.8),
-      -2px -2px 0 rgba(0, 0, 0, 0.8),
-      2px -2px 0 rgba(0, 0, 0, 0.8),
-      -2px 2px 0 rgba(0, 0, 0, 0.8),
-      0 0 20px rgba(255, 0, 51, 0.8),
-      0 0 30px rgba(255, 0, 51, 0.4);
-  }
-  100% {
-    text-shadow: 
-      2px 2px 0 rgba(0, 0, 0, 0.8),
-      -2px -2px 0 rgba(0, 0, 0, 0.8),
-      2px -2px 0 rgba(0, 0, 0, 0.8),
-      -2px 2px 0 rgba(0, 0, 0, 0.8),
-      0 0 10px rgba(255, 0, 51, 0.5);
-  }
-}
-
-@keyframes pulseScale {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.02);
-  }
 }
 
 @keyframes gradientFlow {
@@ -498,15 +438,15 @@ body {
     .card-2 { min-height: 200px !important; }
     .card-13, .card-14, .card-15 { height: 150px !important; }
   }
-  
-  /* Remove pulse animation for desktop */
+
+    /* Remove pulse animation for desktop */
     @media screen and (min-width: 769px) {
         .pulse-title {
             animation: none;
         }
     }
-
-    /* Desktop card positioning */
+    
+  /* Desktop card positioning */
     .card-1 { @apply col-start-4 col-span-9 row-span-1; }
     .card-2 { @apply col-start-1 col-span-3 row-span-2; }
     .card-3 { @apply col-start-1 col-span-3 row-start-3 row-span-2; height: calc(100% - 100px); }
