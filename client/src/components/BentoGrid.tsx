@@ -362,7 +362,7 @@ export function BentoGrid() {
         </motion.div>
 
       <div className="card-16">
-        <Card className="bento-card h-[1135px] bg-carbon hover:transform-none hover:bg-carbon">
+        <Card className="bento-card h-[1135px] bg-carbon transform-none transition-none border-none">
           {/* Card #16 - Featured Games */}
           <div className="h-full">
             <div className="card-title-container">
