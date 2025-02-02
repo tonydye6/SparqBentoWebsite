@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -175,8 +174,8 @@ export function TeamCarousel({ members, interval = 5000 }: TeamCarouselProps) {
       setCurrentIndex((prev) => (prev + 1) % members.length);
     }, interval);
 
-    return () => clearInterval(interval);
-  }, [members.length]);
+    return () => clearInterval(carouselInterval); //Corrected clearInterval argument
+  }, [members.length, interval]); //Added interval to dependencies
 
   const nextMember = () => {
     setCurrentIndex((prev) => (prev + 1) % members.length);
@@ -204,7 +203,7 @@ export function TeamCarousel({ members, interval = 5000 }: TeamCarouselProps) {
         <div className="flex gap-4 mb-4">
           {member.previousCompanies.map((company, i) => (
             <div key={i} className="flex items-center gap-1">
-              <img src={company.logo} alt={company.name} className="w-16 h-16 object-contain" />
+              <img loading="lazy" src={company.logo} alt={company.name} className="w-16 h-16 object-contain" />
             </div>
           ))}
         </div>

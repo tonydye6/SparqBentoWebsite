@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Volume2 } from "lucide-react";
 import { AboutUs } from "./AboutUs";
 import { GameNews } from "./GameNews";
-import { AiChat } from "./AiChat";
+import { lazy, Suspense } from "react";
+const AiChat = lazy(() => import("./AiChat"));
+const TeamCarousel = lazy(() => import("./TeamCarousel"));
+const SparqInvaders = lazy(() => import("./games/SparqInvaders"));
 import { DiscordWidget } from "./DiscordWidget";
 import { JoinUs } from "./JoinUs";
 import { SchoolSpotlight } from "./SchoolSpotlight";
-import { TeamCarousel, executiveTeam, advisoryTeam } from "./TeamCarousel";
-import { SparqInvaders } from "./games/SparqInvaders";
 import { ThreeViewer } from "./ThreeViewer";
 import { BetaForm } from "./BetaForm";
 import { BentoCardModal } from "./BentoCardModal";
@@ -355,7 +356,9 @@ export function BentoGrid() {
               <h2 className="card-title">Sparq Team</h2>
             </div>
             <div className="h-full pt-16 px-4">
-              <TeamCarousel members={executiveTeam} interval={5000} />
+              <Suspense fallback={<div className="w-full h-full flex items-center justify-center">Loading...</div>}>
+                <TeamCarousel members={executiveTeam} interval={5000} />
+              </Suspense>
             </div>
           </div>
         </Card>
@@ -364,7 +367,9 @@ export function BentoGrid() {
       <div className="card-16">
         <Card className="bento-card h-[1035px] bg-carbon hover:transform-none hover:bg-carbon">
           <div className="h-full">
-            <SparqInvaders />
+            <Suspense fallback={<div className="w-full h-full flex items-center justify-center">Loading...</div>}>
+              <SparqInvaders />
+            </Suspense>
           </div>
         </Card>
       </div>
@@ -409,7 +414,9 @@ export function BentoGrid() {
         <div className="card-title-container">
           <h2 className="card-title">3D Viewport</h2>
         </div>
-        <ThreeViewer />
+        <Suspense fallback={<div className="w-full h-full flex items-center justify-center">Loading...</div>}>
+          <ThreeViewer />
+        </Suspense>
       </motion.div>
 
       {/* Card 6: Video Teaser */}
@@ -454,7 +461,9 @@ export function BentoGrid() {
         </div>
         <div className="flex flex-col h-full card-content justify-center space-y-6">
           <div className="flex-1">
-            <TeamCarousel members={advisoryTeam} interval={7000} />
+            <Suspense fallback={<div className="w-full h-full flex items-center justify-center">Loading...</div>}>
+              <TeamCarousel members={advisoryTeam} interval={7000} />
+            </Suspense>
           </div>
           <div className="flex flex-col space-y-4 p-6">
             <blockquote className="text-xl italic text-center">
@@ -513,7 +522,9 @@ export function BentoGrid() {
           <h2 className="card-title">Sparq Assistant</h2>
         </div>
         <div className="h-full">
-          <AiChat />
+          <Suspense fallback={<div className="w-full h-full flex items-center justify-center">Loading...</div>}>
+            <AiChat />
+          </Suspense>
         </div>
       </motion.div>
 
