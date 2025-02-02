@@ -106,6 +106,8 @@ const gameLoop = () => {
   // Collision detection between bullets and enemies
   for (let i = bullets.length - 1; i >= 0; i--) {
     const bullet = bullets[i];
+    let collisionDetected = false;
+    
     for (let j = enemies.length - 1; j >= 0; j--) {
       const enemy = enemies[j];
       if (
@@ -114,12 +116,16 @@ const gameLoop = () => {
         bullet.y < enemy.y + enemy.height &&
         bullet.y + bullet.height > enemy.y
       ) {
-        // Collision detected:
-        bullets.splice(i, 1);
+        // Collision detected - remove only this enemy and bullet
         enemies.splice(j, 1);
+        collisionDetected = true;
         setCurrentScore(prev => prev + 100);
         break;
       }
+    }
+    
+    if (collisionDetected) {
+      bullets.splice(i, 1);
     }
   }
 
