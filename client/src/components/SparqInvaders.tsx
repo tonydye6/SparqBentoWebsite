@@ -15,6 +15,8 @@ export function SparqInvaders() {
     const player = { x: 150, y: 450, width: 50, height: 50 };
     const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
     const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, direction?: number }> = [];
+    let playerImg: HTMLImageElement;
+    let enemyImgs: HTMLImageElement[] = [];
 
     // Load assets with proper error handling
     const loadImage = (src: string): Promise<HTMLImageElement> => {
@@ -26,45 +28,14 @@ export function SparqInvaders() {
       });
     };
 
-    // Load all images before starting the game
-    Promise.all([
-      loadImage('/game_hero.png'),
-      loadImage('/invader_1.png'),
-      loadImage('/invader_2.png'),
-      loadImage('/invader_3.png'),
-      loadImage('/invader_4.png')
-    ]).then(([playerImg, ...enemyImgs]) => {
-      // Initialize enemies after images are loaded
-      for (let i = 0; i < 5; i++) {
-        for (let j = 0; j < 3; j++) {
-          enemies.push({
-            x: i * 60 + 20,
-            y: j * 60 + 20,
-            width: 40,
-            height: 40,
-            img: enemyImgs[j % enemyImgs.length]
-          });
-        }
-      }
-
-      // Start game loop only after images are loaded
-      document.addEventListener('keydown', handleKeyDown);
-      draw();
-    }).catch(error => {
-      console.error('Failed to load game assets:', error);
-      // Draw error message on canvas
-      ctx.fillStyle = 'white';
-      ctx.font = '14px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('Failed to load game assets', canvas.width/2, canvas.height/2);
-    });
-
     // Game loop
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw player
-      ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+      if (playerImg) {
+        ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+      }
 
       // Draw bullets
       bullets.forEach((bullet, index) => {
@@ -91,11 +62,13 @@ export function SparqInvaders() {
 
       // Draw enemies
       enemies.forEach((enemy) => {
-        ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
-        enemy.x += enemy.direction || (enemy.direction = Math.random() > 0.5 ? -1 : 1);
-        if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
-          enemy.direction! *= -1;
-          enemy.y += 20;
+        if (enemy.img) {
+          ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
+          enemy.x += enemy.direction || (enemy.direction = Math.random() > 0.5 ? -1 : 1);
+          if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
+            enemy.direction! *= -1;
+            enemy.y += 20;
+          }
         }
       });
 
@@ -120,8 +93,41 @@ export function SparqInvaders() {
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown);
-    draw();
+    // Initialize the game
+    Promise.all([
+      loadImage('/game_hero.png'),
+      loadImage('/invader_1.png'),
+      loadImage('/invader_2.png'),
+      loadImage('/invader_3.png'),
+      loadImage('/invader_4.png')
+    ]).then(([hero, ...invaders]) => {
+      playerImg = hero;
+      enemyImgs = invaders;
+
+      // Initialize enemies after images are loaded
+      for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 3; j++) {
+          enemies.push({
+            x: i * 60 + 20,
+            y: j * 60 + 20,
+            width: 40,
+            height: 40,
+            img: enemyImgs[j % enemyImgs.length],
+            direction: 1
+          });
+        }
+      }
+
+      // Start game loop and add event listener
+      document.addEventListener('keydown', handleKeyDown);
+      draw();
+    }).catch(error => {
+      console.error('Failed to load game assets:', error);
+      ctx.fillStyle = 'white';
+      ctx.font = '14px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText('Failed to load game assets', canvas.width/2, canvas.height/2);
+    });
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
