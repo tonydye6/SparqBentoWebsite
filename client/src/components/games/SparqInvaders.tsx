@@ -178,11 +178,11 @@ export function SparqInvaders() {
   return (
     <div className="col-span-8 row-span-4">
       <Card className="w-full h-full bg-black flex items-center justify-center">
-        <div className="relative" style={{ width: '350px', height: '500px' }}>
+        <div className="relative" style={{ width: '350px', height: '935px' }}>
           <canvas 
             ref={canvasRef} 
             width={350} 
-            height={500} 
+            height={935} 
             style={{ backgroundColor: 'black' }}
           />
           <div className="absolute bottom-4 left-0 right-0 text-center text-white">
