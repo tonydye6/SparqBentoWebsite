@@ -5,6 +5,8 @@ export function SparqInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [currentScore, setCurrentScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
+  const playerRef = useRef<{ x: number, y: number, width: number, height: number }>();
+  const bulletsRef = useRef<Array<{ x: number, y: number, width: number, height: number }>>([]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -13,8 +15,8 @@ export function SparqInvaders() {
     if (!ctx) return;
 
     // Game state
-    const player = { x: canvas.width / 2 - 40, y: canvas.height - 100, width: 80, height: 80 };
-    const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
+    playerRef.current = { x: canvas.width / 2 - 40, y: canvas.height - 100, width: 80, height: 80 };
+    bulletsRef.current = [];
     const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, dx: number }> = [];
     let playerImg: HTMLImageElement;
     let enemyImg: HTMLImageElement;
@@ -28,6 +30,33 @@ export function SparqInvaders() {
         img.onerror = () => reject(new Error(`Failed to load image: ${src}`));
         img.src = src;
       });
+    };
+
+    // Handle keyboard input for player movement and shooting
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!playerRef.current) return;
+
+      // Prevent default actions for game controls
+      if (['ArrowLeft', 'ArrowRight', 'a', 'd', ' '].includes(e.key)) {
+        e.preventDefault();
+      }
+
+      const moveSpeed = 20;
+
+      if (e.key === 'ArrowLeft' || e.key === 'a') {
+        playerRef.current.x = Math.max(playerRef.current.x - moveSpeed, 0);
+      }
+      if (e.key === 'ArrowRight' || e.key === 'd') {
+        playerRef.current.x = Math.min(playerRef.current.x + moveSpeed, canvas.width - playerRef.current.width);
+      }
+      if (e.key === ' ' && bulletsRef.current) {
+        bulletsRef.current.push({
+          x: playerRef.current.x + playerRef.current.width / 2 - 2,
+          y: playerRef.current.y,
+          width: 4,
+          height: 10
+        });
+      }
     };
 
     // Initialize game: load assets and create enemy formation
@@ -69,21 +98,26 @@ export function SparqInvaders() {
     };
 
     const gameLoop = () => {
-      if (!ctx || !canvas) return;
+      if (!ctx || !canvas || !playerRef.current) return;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw the player
-      ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+      if (playerImg) {
+        ctx.drawImage(playerImg, playerRef.current.x, playerRef.current.y, playerRef.current.width, playerRef.current.height);
+      }
 
       // Update and draw bullets
-      for (let i = bullets.length - 1; i >= 0; i--) {
-        const bullet = bullets[i];
-        bullet.y -= 5;
-        ctx.fillStyle = 'red';
-        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-        // Remove bullets off screen
-        if (bullet.y + bullet.height < 0) {
-          bullets.splice(i, 1);
+      if (bulletsRef.current) {
+        for (let i = bulletsRef.current.length - 1; i >= 0; i--) {
+          const bullet = bulletsRef.current[i];
+          bullet.y -= 5;
+          ctx.fillStyle = 'red';
+          ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+          // Remove bullets off screen
+          if (bullet.y + bullet.height < 0) {
+            bulletsRef.current.splice(i, 1);
+          }
         }
       }
 
@@ -99,21 +133,23 @@ export function SparqInvaders() {
       });
 
       // Collision detection between bullets and enemies
-      for (let i = bullets.length - 1; i >= 0; i--) {
-        const bullet = bullets[i];
-        for (let j = enemies.length - 1; j >= 0; j--) {
-          const enemy = enemies[j];
-          if (
-            bullet.x < enemy.x + enemy.width &&
-            bullet.x + bullet.width > enemy.x &&
-            bullet.y < enemy.y + enemy.height &&
-            bullet.y + bullet.height > enemy.y
-          ) {
-            // Collision detected:
-            bullets.splice(i, 1);
-            enemies.splice(j, 1);
-            setCurrentScore(prev => prev + 100);
-            break;
+      if (bulletsRef.current) {
+        for (let i = bulletsRef.current.length - 1; i >= 0; i--) {
+          const bullet = bulletsRef.current[i];
+          for (let j = enemies.length - 1; j >= 0; j--) {
+            const enemy = enemies[j];
+            if (
+              bullet.x < enemy.x + enemy.width &&
+              bullet.x + bullet.width > enemy.x &&
+              bullet.y < enemy.y + enemy.height &&
+              bullet.y + bullet.height > enemy.y
+            ) {
+              // Collision detected:
+              bulletsRef.current.splice(i, 1);
+              enemies.splice(j, 1);
+              setCurrentScore(prev => prev + 100);
+              break;
+            }
           }
         }
       }
@@ -127,31 +163,14 @@ export function SparqInvaders() {
       animationFrameId = requestAnimationFrame(gameLoop);
     };
 
-    // Handle keyboard input for player movement and shooting
-    const handleKeyDown = (e: KeyboardEvent) => {
-      e.preventDefault(); // Prevent default scrolling behavior
+    // Add event listener for keyboard controls
+    window.addEventListener('keydown', handleKeyDown);
 
-      if (e.key === 'ArrowLeft' || e.key === 'a') {
-        player.x = Math.max(player.x - 10, 0);
-      }
-      if (e.key === 'ArrowRight' || e.key === 'd') {
-        player.x = Math.min(player.x + 10, canvas.width - player.width);
-      }
-      if (e.key === ' ') {
-        bullets.push({
-          x: player.x + player.width / 2 - 2,
-          y: player.y,
-          width: 4,
-          height: 10
-        });
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
+    // Initialize the game
     initGame();
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
       cancelAnimationFrame(animationFrameId);
     };
   }, [currentScore, highScore]);
