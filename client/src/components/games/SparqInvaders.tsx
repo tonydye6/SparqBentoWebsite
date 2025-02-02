@@ -44,11 +44,11 @@ export function SparqInvaders() {
     screenShake: 0
   });
 
-  const CANVAS_WIDTH = 600;
-  const CANVAS_HEIGHT = 935;
+  const CANVAS_WIDTH = 350;
+  const CANVAS_HEIGHT = 500;
   const ENEMY_ROWS = 4;
-  const ENEMY_COLS = 8;
-  const ENEMY_PADDING = 60;
+  const ENEMY_COLS = 6;
+  const ENEMY_PADDING = 40;
   const ENEMY_TOP_OFFSET = 50;
 
   const gameLoop = useRef<number>();
@@ -61,10 +61,10 @@ export function SparqInvaders() {
   }>({ player: null, enemies: [] });
 
   const player = useRef<GameObject>({
-    x: CANVAS_WIDTH / 2,
-    y: CANVAS_HEIGHT - 80,
-    width: 50,
-    height: 50,
+    x: CANVAS_WIDTH / 2 - 25,
+    y: CANVAS_HEIGHT - 60,
+    width: 40,
+    height: 40,
     speed: 5
   });
 
@@ -203,14 +203,18 @@ export function SparqInvaders() {
   };
 
   const updatePlayer = (deltaTime: number) => {
+    if (!gameState.isPlaying) return;
+    
     const keys = pressedKeys.current;
+    const moveSpeed = 200;
+    
     if (keys.has('ArrowLeft') || keys.has('a')) {
-      player.current.x = Math.max(0, player.current.x - 300 * deltaTime);
+      player.current.x = Math.max(0, player.current.x - moveSpeed * deltaTime);
     }
     if (keys.has('ArrowRight') || keys.has('d')) {
       player.current.x = Math.min(
         CANVAS_WIDTH - player.current.width,
-        player.current.x + 300 * deltaTime
+        player.current.x + moveSpeed * deltaTime
       );
     }
   };
@@ -223,9 +227,13 @@ export function SparqInvaders() {
   };
 
   const updateEnemies = (deltaTime: number) => {
+    if (!gameState.isPlaying) return;
+    
     let shouldChangeDirection = false;
+    const moveSpeed = 50 * (1 + gameState.level * 0.1);
+    
     enemies.current.forEach(enemy => {
-      enemy.x += enemy.direction * 100 * deltaTime;
+      enemy.x += enemy.direction * moveSpeed * deltaTime;
       if (enemy.x <= 0 || enemy.x + enemy.width >= CANVAS_WIDTH) {
         shouldChangeDirection = true;
       }
