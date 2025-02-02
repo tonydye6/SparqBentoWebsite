@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 
 export function SparqInvaders() {
@@ -42,7 +41,7 @@ export function SparqInvaders() {
         ctx.fillStyle = 'red';
         bullet.y -= 5;
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-        
+
         // Remove bullets that are off screen
         if (bullet.y < 0) {
           bullets.splice(index, 1);
@@ -95,7 +94,7 @@ export function SparqInvaders() {
 
     // Initialize the game
     Promise.all([
-      loadImage('/game_hero.png'),
+      loadImage('/sparqIcon.png'), //Corrected path
       loadImage('/invader_1.png'),
       loadImage('/invader_2.png'),
       loadImage('/invader_3.png'),
