@@ -271,12 +271,15 @@ export function SparqInvaders() {
       if (!gameStarted) {
         // Draw start screen
         ctx.fillStyle = 'white';
-        ctx.font = '24px "Chakra Petch"';
+        ctx.font = 'bold 24px "Chakra Petch"';
         ctx.textAlign = 'center';
+        ctx.shadowColor = 'rgba(235, 0, 40, 0.5)';
+        ctx.shadowBlur = 10;
         ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2);
-        ctx.font = '16px "Chakra Petch"';
+        ctx.font = 'bold 16px "Chakra Petch"';
         ctx.fillText('Use A/D or Arrow Keys to Move', canvas.width / 2, canvas.height / 2 + 40);
         ctx.fillText('SPACE to Shoot', canvas.width / 2, canvas.height / 2 + 70);
+        ctx.shadowBlur = 0;
         return;
       }
 
@@ -372,13 +375,18 @@ export function SparqInvaders() {
   }, []);
 
   return (
-    <Card className="w-full h-full bg-black flex items-center justify-center">
+    <Card className="w-full h-full bg-carbon flex items-center justify-center relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#2b2d42]/80 to-[#1e1e24]/40 pointer-events-none" />
       <canvas
         ref={canvasRef}
         width={350}
         height={635}
-        className="max-w-full h-auto"
-        style={{ backgroundColor: 'black' }}
+        className="max-w-full h-auto relative z-10"
+        style={{ 
+          backgroundColor: 'transparent',
+          boxShadow: '0 0 20px rgba(235, 0, 40, 0.15)',
+          border: '1px solid rgba(235, 0, 40, 0.3)'
+        }}
       />
     </Card>
   );
