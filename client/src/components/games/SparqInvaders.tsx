@@ -191,40 +191,41 @@ export function SparqInvaders() {
     pressedKeys.current.delete(e.key);
   };
 
-    const createBullet = () => {
+  const createBullet = () => {
     if (!gameState.hasStarted || !gameState.isPlaying) return;
-    bullets.current.push({
+    const newBullet = {
       x: player.current.x + player.current.width / 2 - 2,
       y: player.current.y,
       width: 4,
       height: 10
-    });
+    };
+    bullets.current.push(newBullet);
   };
 
   const updatePlayer = (deltaTime: number) => {
     const keys = pressedKeys.current;
     if (keys.has('ArrowLeft') || keys.has('a')) {
-      player.current.x = Math.max(0, player.current.x - (player.current.speed || 0) * deltaTime * 200);
+      player.current.x = Math.max(0, player.current.x - 300 * deltaTime);
     }
     if (keys.has('ArrowRight') || keys.has('d')) {
       player.current.x = Math.min(
         CANVAS_WIDTH - player.current.width,
-        player.current.x + (player.current.speed || 0) * deltaTime * 200
+        player.current.x + 300 * deltaTime
       );
     }
   };
 
   const updateBullets = (deltaTime: number) => {
-    bullets.current.forEach((bullet, index) => {
-      bullet.y -= 400 * deltaTime;
-      if (bullet.y < 0) bullets.current.splice(index, 1);
+    bullets.current = bullets.current.filter(bullet => {
+      bullet.y -= 500 * deltaTime;
+      return bullet.y > 0;
     });
   };
 
   const updateEnemies = (deltaTime: number) => {
     let shouldChangeDirection = false;
     enemies.current.forEach(enemy => {
-      enemy.x += enemy.direction * enemy.speed! * deltaTime * 100;
+      enemy.x += enemy.direction * 100 * deltaTime;
       if (enemy.x <= 0 || enemy.x + enemy.width >= CANVAS_WIDTH) {
         shouldChangeDirection = true;
       }
@@ -237,6 +238,7 @@ export function SparqInvaders() {
       });
     }
   };
+
 
   const checkCollisions = () => {
     bullets.current.forEach((bullet, bulletIndex) => {
