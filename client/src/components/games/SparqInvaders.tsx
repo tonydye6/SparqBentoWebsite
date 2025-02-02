@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,11 +26,6 @@ interface GameState {
   screenShake: number;
 }
 
-interface SoundEffects {
-  shoot: HTMLAudioElement;
-  explosion: HTMLAudioElement;
-}
-
 export function SparqInvaders() {
   const { toast } = useToast();
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -55,12 +49,6 @@ export function SparqInvaders() {
   const gameLoop = useRef<number>();
   const lastTime = useRef<number>(0);
   const pressedKeys = useRef<Set<string>>(new Set());
-  const sounds = useRef<SoundEffects>();
-  const assets = useRef<{
-    player: HTMLImageElement | null;
-    enemies: HTMLImageElement[];
-  }>({ player: null, enemies: [] });
-
   const player = useRef<GameObject>({
     x: CANVAS_WIDTH / 2 - 25,
     y: CANVAS_HEIGHT - 60,
@@ -72,6 +60,10 @@ export function SparqInvaders() {
   const bullets = useRef<GameObject[]>([]);
   const enemies = useRef<Enemy[]>([]);
   const particles = useRef<GameObject[]>([]);
+  const assets = useRef<{
+    player: HTMLImageElement | null;
+    enemies: HTMLImageElement[];
+  }>({ player: null, enemies: [] });
 
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
@@ -82,58 +74,34 @@ export function SparqInvaders() {
       };
       img.onerror = (e) => {
         console.error(`Failed to load image: ${src}`, e);
-        console.error('Current image path:', img.src);
         reject(new Error(`Failed to load image: ${src}`));
       };
-      img.src = `/${src}`;
+      img.src = src;
     });
-  };
-
-  const generateBeepSound = (): HTMLAudioElement => {
-    const audio = new AudioContext();
-    const oscillator = audio.createOscillator();
-    const gainNode = audio.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(audio.destination);
-
-    oscillator.type = 'square';
-    oscillator.frequency.setValueAtTime(440, audio.currentTime);
-    gainNode.gain.setValueAtTime(0.1, audio.currentTime);
-
-    oscillator.start();
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 0.1);
-    oscillator.stop(audio.currentTime + 0.1);
-
-    return new Audio();
   };
 
   const initAssets = async () => {
     try {
       console.log('Starting asset loading...');
-      const playerImg = await loadImage('game_hero.png');
+
+      const playerImg = await loadImage('/images/game_hero.svg');
       console.log('Player ship loaded');
 
       const enemyPromises = [
-        loadImage('invader_1.png'),
-        loadImage('invader_2.png'),
-        loadImage('invader_3.png'),
-        loadImage('invader_4.png')
+        loadImage('/images/invader_1.svg'),
+        loadImage('/images/invader_2.svg'),
+        loadImage('/images/invader_3.svg'),
+        loadImage('/images/invader_4.svg')
       ];
 
       const enemyImgs = await Promise.all(enemyPromises);
       console.log('All enemy images loaded');
 
-      const shootSound = generateBeepSound();
-      const explosionSound = generateBeepSound();
-
-      assets.current = { 
-        player: playerImg, 
+      assets.current = {
+        player: playerImg,
         enemies: enemyImgs
       };
-      sounds.current = { shoot: shootSound, explosion: explosionSound };
 
-      console.log('Assets initialized:', assets.current);
       return true;
     } catch (error) {
       console.error('Failed to load game assets:', error);
@@ -142,50 +110,40 @@ export function SparqInvaders() {
         description: "Please refresh the page to try again.",
         variant: "destructive"
       });
-
-      const ctx = canvasRef.current?.getContext('2d');
-      if (ctx) {
-        ctx.fillStyle = 'white';
-        ctx.font = '20px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('Failed to load game assets', CANVAS_WIDTH/2, CANVAS_HEIGHT/2 - 20);
-        ctx.fillText('Please refresh the page', CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 20);
-      }
       return false;
     }
   };
 
   const initEnemies = () => {
-    console.log('Initializing enemies...');
     enemies.current = [];
     for (let row = 0; row < ENEMY_ROWS; row++) {
       for (let col = 0; col < ENEMY_COLS; col++) {
-        const enemyType = (row + Math.floor(col / 2)) % assets.current.enemies.length;
+        const enemyType = row % assets.current.enemies.length;
         enemies.current.push({
           x: col * ENEMY_PADDING + ENEMY_PADDING,
           y: row * ENEMY_PADDING + ENEMY_TOP_OFFSET,
-          width: 40,
-          height: 40,
+          width: 30,
+          height: 30,
           img: assets.current.enemies[enemyType],
           direction: 1,
-          points: (ENEMY_ROWS - row) * 100 + (enemyType + 1) * 50,
+          points: (ENEMY_ROWS - row) * 100,
           type: enemyType,
-          speed: 1 + (gameState.level * 0.1)
+          speed: 1
         });
       }
     }
-    console.log('Enemies initialized:', enemies.current.length);
+    console.log(`Initialized ${enemies.current.length} enemies`);
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === ' ') {
       e.preventDefault();
     }
-    if (!gameState.hasStarted || !gameState.isPlaying) return;
+    if (!gameState.isPlaying) return;
+
     pressedKeys.current.add(e.key);
     if (e.key === ' ') {
       createBullet();
-      sounds.current?.shoot.play().catch(console.error);
     }
   };
 
@@ -194,22 +152,22 @@ export function SparqInvaders() {
   };
 
   const createBullet = () => {
-    if (!gameState.hasStarted || !gameState.isPlaying) return;
-    const newBullet = {
+    if (!gameState.isPlaying) return;
+
+    bullets.current.push({
       x: player.current.x + player.current.width / 2 - 2,
       y: player.current.y,
       width: 4,
       height: 10
-    };
-    bullets.current.push(newBullet);
+    });
   };
 
   const updatePlayer = (deltaTime: number) => {
     if (!gameState.isPlaying) return;
-    
+
+    const moveSpeed = 300;
     const keys = pressedKeys.current;
-    const moveSpeed = 200;
-    
+
     if (keys.has('ArrowLeft') || keys.has('a')) {
       player.current.x = Math.max(0, player.current.x - moveSpeed * deltaTime);
     }
@@ -222,20 +180,21 @@ export function SparqInvaders() {
   };
 
   const updateBullets = (deltaTime: number) => {
+    const bulletSpeed = 400;
     bullets.current = bullets.current.filter(bullet => {
-      bullet.y -= 500 * deltaTime;
+      bullet.y -= bulletSpeed * deltaTime;
       return bullet.y > 0;
     });
   };
 
   const updateEnemies = (deltaTime: number) => {
     if (!gameState.isPlaying) return;
-    
+
     let shouldChangeDirection = false;
-    const moveSpeed = 50 * (1 + gameState.level * 0.1);
-    
+    const enemySpeed = 100 * (1 + gameState.level * 0.1);
+
     enemies.current.forEach(enemy => {
-      enemy.x += enemy.direction * moveSpeed * deltaTime;
+      enemy.x += enemy.direction * enemySpeed * deltaTime;
       if (enemy.x <= 0 || enemy.x + enemy.width >= CANVAS_WIDTH) {
         shouldChangeDirection = true;
       }
@@ -252,166 +211,100 @@ export function SparqInvaders() {
   const checkCollisions = () => {
     bullets.current.forEach((bullet, bulletIndex) => {
       enemies.current.forEach((enemy, enemyIndex) => {
-        if (detectCollision(bullet, enemy)) {
-          createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
+        if (
+          bullet.x < enemy.x + enemy.width &&
+          bullet.x + bullet.width > enemy.x &&
+          bullet.y < enemy.y + enemy.height &&
+          bullet.y + bullet.height > enemy.y
+        ) {
           bullets.current.splice(bulletIndex, 1);
           enemies.current.splice(enemyIndex, 1);
-          sounds.current?.explosion.play().catch(console.error);
-          setGameState(prev => ({ ...prev, screenShake: 1 }));
-          setScore(prev => {
-            const newScore = prev + enemy.points;
-            if (newScore > highScore) {
-              setHighScore(newScore);
-              localStorage.setItem('sparqInvadersHighScore', newScore.toString());
-            }
-            return newScore;
-          });
+          setScore(prev => prev + enemy.points);
         }
       });
     });
   };
 
-  const detectCollision = (a: GameObject, b: GameObject) => {
-    return (
-      a.x < b.x + b.width &&
-      a.x + a.width > b.x &&
-      a.y < b.y + b.height &&
-      a.y + a.height > b.y
-    );
-  };
-
-  const createExplosion = (x: number, y: number) => {
-    for (let i = 0; i < 10; i++) {
-      particles.current.push({
-        x,
-        y,
-        width: 2,
-        height: 2,
-        speed: Math.random() * 3 + 1
-      });
-    }
-  };
-
-  const updateParticles = (deltaTime: number) => {
-    particles.current = particles.current.filter(particle => {
-      particle.y += particle.speed! * deltaTime * 100;
-      return particle.y < CANVAS_HEIGHT;
-    });
-  };
-
-  const startGame = async () => {
-    console.log('Starting game...');
-    const assetsLoaded = await initAssets();
-    if (!assetsLoaded) {
-      console.error('Failed to load assets');
-      return;
-    }
-
-    console.log('Assets loaded, initializing game...');
-    initEnemies();
-
-    setGameState(prev => ({
-      ...prev,
-      hasStarted: true,
-      isPlaying: true
-    }));
-    setScore(0);
-
-    console.log('Game started');
-  };
-
   const draw = (ctx: CanvasRenderingContext2D) => {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    if (gameState.screenShake > 0) {
-      const magnitude = gameState.screenShake * 5;
-      ctx.save();
-      ctx.translate(
-        Math.random() * magnitude - magnitude / 2,
-        Math.random() * magnitude - magnitude / 2
-      );
-      setGameState(prev => ({ ...prev, screenShake: prev.screenShake * 0.9 }));
-    }
-
+    // Background
     const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
     gradient.addColorStop(0, '#000033');
     gradient.addColorStop(1, '#000066');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Debug asset loading
-    console.log('Player asset:', assets.current.player);
-    console.log('Drawing player at:', player.current.x, player.current.y);
-
-    if (assets.current.player) {
-      try {
-        ctx.drawImage(
-          assets.current.player,
-          player.current.x,
-          player.current.y,
-          player.current.width,
-          player.current.height
-        );
-      } catch (error) {
-        console.error('Error drawing player:', error);
-      }
+    // Draw player
+    if (assets.current.player && gameState.isPlaying) {
+      ctx.drawImage(
+        assets.current.player,
+        player.current.x,
+        player.current.y,
+        player.current.width,
+        player.current.height
+      );
     }
 
+    // Draw bullets
     ctx.fillStyle = '#ff0000';
     bullets.current.forEach(bullet => {
       ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     });
 
+    // Draw enemies
     enemies.current.forEach(enemy => {
       ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
     });
 
-    ctx.fillStyle = '#ffff00';
-    particles.current.forEach(particle => {
-      ctx.fillRect(particle.x, particle.y, particle.width, particle.height);
-    });
-
+    // Draw UI
     ctx.fillStyle = '#ffffff';
     ctx.font = '20px Arial';
     ctx.textAlign = 'left';
     ctx.fillText(`Score: ${score}`, 10, 30);
-    ctx.fillText(`High Score: ${highScore}`, 10, 60);
     ctx.fillText(`Lives: ${gameState.lives}`, CANVAS_WIDTH - 100, 30);
-    ctx.fillText(`Level: ${gameState.level}`, CANVAS_WIDTH - 100, 60);
-
-    if (gameState.screenShake > 0) {
-      ctx.restore();
-    }
   };
 
   const gameUpdate = (timestamp: number) => {
     if (!canvasRef.current) return;
+
     const ctx = canvasRef.current.getContext('2d');
     if (!ctx) return;
 
-    // Debug game loop
-    console.log('Game loop running, timestamp:', timestamp);
-    
     const deltaTime = (timestamp - lastTime.current) / 1000;
     lastTime.current = timestamp;
 
-    // Force first frame
-    if (!lastTime.current) {
-      lastTime.current = timestamp;
-    }
-
-    if (gameState.hasStarted && gameState.isPlaying) {
+    if (gameState.isPlaying) {
       updatePlayer(deltaTime);
       updateBullets(deltaTime);
       updateEnemies(deltaTime);
-      updateParticles(deltaTime);
       checkCollisions();
     }
 
     draw(ctx);
-    if (gameState.isPlaying) {
+    gameLoop.current = requestAnimationFrame(gameUpdate);
+  };
+
+  const startGame = async () => {
+    console.log('Starting game...');
+
+    if (!assets.current.player) {
+      const loaded = await initAssets();
+      if (!loaded) return;
+    }
+
+    initEnemies();
+    setGameState(prev => ({
+      ...prev,
+      isPlaying: true,
+      hasStarted: true
+    }));
+
+    if (!gameLoop.current) {
       gameLoop.current = requestAnimationFrame(gameUpdate);
     }
+
+    console.log('Game started successfully');
   };
 
   useEffect(() => {
@@ -420,7 +313,7 @@ export function SparqInvaders() {
 
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
-    
+
     document.addEventListener('keydown', handleKeyDown);
     document.addEventListener('keyup', handleKeyUp);
 
@@ -428,7 +321,10 @@ export function SparqInvaders() {
     if (savedHighScore) {
       setHighScore(parseInt(savedHighScore, 10));
     }
-    
+
+    // Start the game loop immediately
+    gameLoop.current = requestAnimationFrame(gameUpdate);
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('keyup', handleKeyUp);
@@ -442,23 +338,20 @@ export function SparqInvaders() {
     <Card className="w-full h-full flex flex-col items-center justify-center bg-gray-900 p-4">
       <canvas
         ref={canvasRef}
-        width={CANVAS_WIDTH}
-        height={CANVAS_HEIGHT}
-        className="border border-gray-700 rounded-lg bg-black"
+        className="border border-gray-700 rounded-lg bg-black mb-4"
         style={{ width: `${CANVAS_WIDTH}px`, height: `${CANVAS_HEIGHT}px` }}
-        tabIndex={0}
       />
-      <div className="h-[100px] mt-4 flex flex-col items-center justify-center">
-        {!gameState.hasStarted && (
-          <Button 
-            onClick={startGame}
-            className="mb-4 bg-primary hover:bg-primary/90 text-white"
-          >
-            Start Game
-          </Button>
-        )}
-        <p className="text-white">Use Arrow Keys or A/D to move</p>
-        <p className="text-white">Space to shoot</p>
+      {!gameState.isPlaying && (
+        <Button 
+          onClick={startGame}
+          className="bg-primary hover:bg-primary/90 text-white mb-4"
+        >
+          Start Game
+        </Button>
+      )}
+      <div className="text-center">
+        <p className="text-white text-sm">Use Arrow Keys or A/D to move</p>
+        <p className="text-white text-sm">Space to shoot</p>
       </div>
     </Card>
   );
