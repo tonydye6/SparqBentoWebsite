@@ -392,7 +392,9 @@ export function SparqInvaders() {
     }
 
     draw(ctx);
-    gameLoop.current = requestAnimationFrame(gameUpdate);
+    if (gameState.isPlaying) {
+      gameLoop.current = requestAnimationFrame(gameUpdate);
+    }
   };
 
   useEffect(() => {
@@ -401,14 +403,39 @@ export function SparqInvaders() {
 
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
-
-    const init = async () => {
-      document.addEventListener('keydown', handleKeyDown);
-      document.addEventListener('keyup', handleKeyUp);
-      requestAnimationFrame(gameUpdate);
+    
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+      if (gameLoop.current) {
+        cancelAnimationFrame(gameLoop.current);
+      }
     };
+  }, []);
 
-    init();
+  const startGame = async () => {
+    console.log('Starting game...');
+    const assetsLoaded = await initAssets();
+    if (!assetsLoaded) {
+      console.error('Failed to load assets');
+      return;
+    }
+
+    console.log('Assets loaded, initializing game...');
+    initEnemies();
+    lastTime.current = performance.now();
+    setGameState(prev => ({
+      ...prev,
+      hasStarted: true,
+      isPlaying: true
+    }));
+    setScore(0);
+    gameLoop.current = requestAnimationFrame(gameUpdate);
+    console.log('Game started');
+  };
 
     const savedHighScore = localStorage.getItem('sparqInvadersHighScore');
     if (savedHighScore) {
