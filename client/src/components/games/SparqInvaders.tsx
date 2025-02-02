@@ -205,14 +205,17 @@ export function SparqInvaders() {
         if (bullet.y < 0) bullets.splice(i, 1);
       }
 
-      // Update enemies
+      // Update enemies with modified speed progression
       let touchedEdge = false;
+      const currentLevelSpeed = ENEMY_SPEED * (1 + 0.15 * (gameState.level - 1));
+
       enemies.forEach(enemy => {
-        enemy.x += enemy.direction * (ENEMY_SPEED * (1 + 0.1 * (gameState.level - 1)));
+        enemy.x += enemy.direction * currentLevelSpeed;
         if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
           touchedEdge = true;
         }
       });
+
 
       if (touchedEdge) {
         enemies.forEach(enemy => {
