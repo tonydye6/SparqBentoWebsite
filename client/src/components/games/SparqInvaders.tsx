@@ -1,3 +1,4 @@
+
 import { useRef, useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 
@@ -5,6 +6,7 @@ export function SparqInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<number>();
   const [currentScore, setCurrentScore] = useState(0);
+  const [currentLevel, setCurrentLevel] = useState(1);
   const [highScore, setHighScore] = useState(() => 
     parseInt(localStorage.getItem('sparqInvadersHighScore') || '0')
   );
@@ -32,6 +34,7 @@ export function SparqInvaders() {
       height: number;
       img: HTMLImageElement;
       dx: number;
+      speed: number;
     }> = [];
 
     let playerImg = new Image();
@@ -47,14 +50,18 @@ export function SparqInvaders() {
           });
         })
       );
+      initEnemies(images);
+    };
 
-      // Create enemy formation
+    const initEnemies = (images: HTMLImageElement[]) => {
+      enemies.length = 0;
       const rows = 3;
       const cols = 8;
       const offsetX = 30;
       const offsetY = 150;
       const spacingX = 60;
       const spacingY = 50;
+      const baseSpeed = currentLevel * 0.5;
 
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
@@ -64,7 +71,8 @@ export function SparqInvaders() {
             width: 40,
             height: 40,
             img: images[Math.floor(Math.random() * images.length)],
-            dx: 1
+            dx: baseSpeed,
+            speed: baseSpeed
           });
         }
       }
@@ -111,7 +119,7 @@ export function SparqInvaders() {
       enemies.forEach((enemy) => {
         enemy.x += enemy.dx;
         if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
-          enemy.dx *= -1;
+          enemy.dx = -enemy.dx;
           enemy.y += 20;
         }
         ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
@@ -141,20 +149,25 @@ export function SparqInvaders() {
         }
       }
 
-      // Draw scores
+      // Check for level completion
+      if (enemies.length === 0) {
+        setCurrentLevel(prev => prev + 1);
+        loadEnemyImages(); // Reinitialize enemies for next level
+      }
+
+      // Draw scores and level
       ctx.fillStyle = 'white';
       ctx.font = '16px Arial';
       ctx.fillText(`Score: ${currentScore}`, 10, 20);
       ctx.fillText(`High Score: ${highScore}`, 10, 40);
+      ctx.fillText(`Level: ${currentLevel}`, 10, 60);
 
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
 
     // Start game
-    loadEnemyImages().then(() => {
-      document.addEventListener('keydown', handleKeyDown);
-      gameLoop();
-    });
+    loadEnemyImages();
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
@@ -162,7 +175,7 @@ export function SparqInvaders() {
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, []);
+  }, [currentScore, highScore, currentLevel]);
 
   return (
     <Card className="w-full h-full bg-black flex items-center justify-center">
