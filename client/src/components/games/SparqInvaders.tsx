@@ -330,7 +330,6 @@ export function SparqInvaders() {
       }
     }
 
-    // Update enemy movement in updateGame function
     function updateGame() {
       if (gameState.isGameOver) return;
 
@@ -344,7 +343,7 @@ export function SparqInvaders() {
       if (keys.space) {
         shoot();
       }
-        gameTime++;
+      gameTime++;
 
       // Update bullets
       for (let i = bullets.length - 1; i >= 0; i--) {
@@ -353,33 +352,35 @@ export function SparqInvaders() {
         if (bullet.y < 0) bullets.splice(i, 1);
       }
 
-        let touchedEdge = false;
-        const currentLevelSpeed = ENEMY_SPEED * (1 + 0.15 * (gameState.level - 1));
+      let touchedEdge = false;
+      const currentLevelSpeed = ENEMY_SPEED * (1 + 0.15 * (gameState.level - 1));
 
-        enemies.forEach(enemy => {
-          // Calculate movement based on pattern
-          const movement = enemy.movementPattern(enemy, gameTime);
+      enemies.forEach(enemy => {
+        // Calculate movement based on pattern
+        const movement = enemy.movementPattern(enemy, gameTime);
 
-          // Update position
-          enemy.x += movement.dx * currentLevelSpeed;
-          enemy.y += movement.dy;
+        // Update position
+        enemy.x += movement.dx * currentLevelSpeed;
+        enemy.y += movement.dy;
 
-          // Check boundaries
-          if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
-            touchedEdge = true;
-          }
-
-           const maxVerticalDeviation = 100;
-          if (Math.abs(enemy.y - enemy.initialY) > maxVerticalDeviation) {
-            enemy.y = enemy.initialY + (maxVerticalDeviation * Math.sign(enemy.y - enemy.initialY));
+        // Check boundaries
+        if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
+          touchedEdge = true;
         }
-        });
 
+        // Limit vertical movement range
+        const maxVerticalDeviation = 30;
+        if (Math.abs(enemy.y - enemy.initialY) > maxVerticalDeviation) {
+          enemy.y = enemy.initialY + (maxVerticalDeviation * Math.sign(enemy.y - enemy.initialY));
+        }
+      });
 
+      // If any enemy touches the edge, move all enemies down
       if (touchedEdge) {
         enemies.forEach(enemy => {
           enemy.direction *= -1;
-          enemy.y += 20;
+          enemy.y += 20;  // Move down
+          enemy.initialY += 20;  // Update the baseline for pattern movement
         });
       }
 
