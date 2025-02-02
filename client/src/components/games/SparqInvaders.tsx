@@ -75,7 +75,10 @@ export function SparqInvaders() {
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = () => resolve(img);
+      img.onload = () => {
+        console.log(`Successfully loaded: ${src}`);
+        resolve(img);
+      };
       img.onerror = () => {
         console.error(`Failed to load image: ${src}`);
         reject(new Error(`Failed to load image: ${src}`));
@@ -105,13 +108,19 @@ export function SparqInvaders() {
 
   const initAssets = async () => {
     try {
-      const [playerImg, ...enemyImgs] = await Promise.all([
-        loadImage('game_hero.svg'),
+      console.log('Starting asset loading...');
+      const playerImg = await loadImage('game_hero.svg');
+      console.log('Player ship loaded');
+
+      const enemyPromises = [
         loadImage('invader_1.svg'),
         loadImage('invader_2.svg'),
         loadImage('invader_3.svg'),
         loadImage('invader_4.svg')
-      ]);
+      ];
+
+      const enemyImgs = await Promise.all(enemyPromises);
+      console.log('All enemy images loaded');
 
       const shootSound = generateBeepSound();
       const explosionSound = generateBeepSound();
@@ -121,6 +130,8 @@ export function SparqInvaders() {
         enemies: enemyImgs
       };
       sounds.current = { shoot: shootSound, explosion: explosionSound };
+
+      console.log('Assets initialized:', assets.current);
       return true;
     } catch (error) {
       console.error('Failed to load game assets:', error);
@@ -143,6 +154,7 @@ export function SparqInvaders() {
   };
 
   const initEnemies = () => {
+    console.log('Initializing enemies...');
     enemies.current = [];
     for (let row = 0; row < ENEMY_ROWS; row++) {
       for (let col = 0; col < ENEMY_COLS; col++) {
@@ -160,19 +172,20 @@ export function SparqInvaders() {
         });
       }
     }
+    console.log('Enemies initialized:', enemies.current.length);
   };
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === ' ') {
-          e.preventDefault();
-        }
-        if (!gameState.hasStarted) return;
-        pressedKeys.current.add(e.key);
-        if (e.key === ' ') {
-          createBullet();
-          sounds.current?.shoot.play().catch(console.error);
-        }
-      };
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === ' ') {
+      e.preventDefault();
+    }
+    if (!gameState.hasStarted) return;
+    pressedKeys.current.add(e.key);
+    if (e.key === ' ') {
+      createBullet();
+      sounds.current?.shoot.play().catch(console.error);
+    }
+  };
 
   const handleKeyUp = (e: KeyboardEvent) => {
     pressedKeys.current.delete(e.key);
@@ -274,14 +287,25 @@ export function SparqInvaders() {
     });
   };
 
-  const startGame = () => {
+  const startGame = async () => {
+    console.log('Starting game...');
+    const assetsLoaded = await initAssets();
+    if (!assetsLoaded) {
+      console.error('Failed to load assets');
+      return;
+    }
+
+    console.log('Assets loaded, initializing game...');
+    initEnemies();
+
     setGameState(prev => ({
       ...prev,
       hasStarted: true,
       isPlaying: true
     }));
     setScore(0);
-    initEnemies();
+
+    console.log('Game started');
   };
 
   const draw = (ctx: CanvasRenderingContext2D) => {
@@ -302,16 +326,17 @@ export function SparqInvaders() {
     gradient.addColorStop(1, '#000066');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    
+
     if (!gameState.hasStarted) {
        ctx.fillStyle = '#ffffff';
        ctx.font = '48px Arial';
        ctx.textAlign = 'center';
        ctx.fillText('SPARQ INVADERS', CANVAS_WIDTH/2, CANVAS_HEIGHT/3);
-      return;
+       return;
     }
 
     if (assets.current.player) {
+      console.log('Drawing player ship...');
       ctx.drawImage(
         assets.current.player,
         player.current.x,
@@ -319,6 +344,8 @@ export function SparqInvaders() {
         player.current.width,
         player.current.height
       );
+    } else {
+      console.log('Player ship asset not loaded');
     }
 
     ctx.fillStyle = '#ff0000';
@@ -356,14 +383,13 @@ export function SparqInvaders() {
     const deltaTime = (timestamp - lastTime.current) / 1000;
     lastTime.current = timestamp;
 
-    if (gameState.hasStarted) {
-        updatePlayer(deltaTime);
-        updateBullets(deltaTime);
-        updateEnemies(deltaTime);
-        updateParticles(deltaTime);
-        checkCollisions();
+    if (gameState.hasStarted && gameState.isPlaying) {
+      updatePlayer(deltaTime);
+      updateBullets(deltaTime);
+      updateEnemies(deltaTime);
+      updateParticles(deltaTime);
+      checkCollisions();
     }
-
 
     draw(ctx);
     gameLoop.current = requestAnimationFrame(gameUpdate);
@@ -377,12 +403,9 @@ export function SparqInvaders() {
     canvas.height = CANVAS_HEIGHT;
 
     const init = async () => {
-      const loaded = await initAssets();
-      if (loaded) {
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('keyup', handleKeyUp);
-        requestAnimationFrame(gameUpdate);
-      }
+      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener('keyup', handleKeyUp);
+      requestAnimationFrame(gameUpdate);
     };
 
     init();
