@@ -147,7 +147,6 @@ export function SparqInvaders() {
       }
     };
 
-    // Add event listener and start game
     document.addEventListener('keydown', handleKeyDown);
     initGame();
 
@@ -159,29 +158,18 @@ export function SparqInvaders() {
 
   return (
     <div className="col-span-8 row-span-4">
-      <Card className="w-full h-full bg-black relative overflow-hidden">
-        <canvas 
-          ref={canvasRef} 
-          width={350} 
-          height={500} 
-          style={{ 
-            backgroundColor: 'black',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)'
-          }}
-        />
-        <div style={{ 
-          color: 'white', 
-          padding: '10px', 
-          textAlign: 'center',
-          position: 'absolute',
-          bottom: '10px',
-          width: '100%'
-        }}>
-          <p>Score: {currentScore}</p>
-          <p>High Score: {highScore}</p>
+      <Card className="w-full h-full bg-black flex items-center justify-center">
+        <div className="relative" style={{ width: '350px', height: '500px' }}>
+          <canvas 
+            ref={canvasRef} 
+            width={350} 
+            height={500} 
+            style={{ backgroundColor: 'black' }}
+          />
+          <div className="absolute bottom-4 left-0 right-0 text-center text-white">
+            <p>Score: {currentScore}</p>
+            <p>High Score: {highScore}</p>
+          </div>
         </div>
       </Card>
     </div>
