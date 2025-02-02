@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
-// Game object interfaces
 interface GameObject {
   x: number;
   y: number;
@@ -20,6 +20,7 @@ interface Enemy extends GameObject {
 
 interface GameState {
   isPlaying: boolean;
+  hasStarted: boolean;
   level: number;
   lives: number;
   screenShake: number;
@@ -37,12 +38,12 @@ export function SparqInvaders() {
   const [highScore, setHighScore] = useState(0);
   const [gameState, setGameState] = useState<GameState>({
     isPlaying: false,
+    hasStarted: false,
     level: 1,
     lives: 3,
     screenShake: 0
   });
 
-  // Canvas constants
   const CANVAS_WIDTH = 600;
   const CANVAS_HEIGHT = 935;
   const ENEMY_ROWS = 4;
@@ -50,7 +51,6 @@ export function SparqInvaders() {
   const ENEMY_PADDING = 60;
   const ENEMY_TOP_OFFSET = 50;
 
-  // Game refs
   const gameLoop = useRef<number>();
   const lastTime = useRef<number>(0);
   const pressedKeys = useRef<Set<string>>(new Set());
@@ -60,7 +60,6 @@ export function SparqInvaders() {
     enemies: HTMLImageElement[];
   }>({ player: null, enemies: [] });
 
-  // Game objects
   const player = useRef<GameObject>({
     x: CANVAS_WIDTH / 2,
     y: CANVAS_HEIGHT - 80,
@@ -73,7 +72,6 @@ export function SparqInvaders() {
   const enemies = useRef<Enemy[]>([]);
   const particles = useRef<GameObject[]>([]);
 
-  // Asset loading with SVG support
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -107,7 +105,6 @@ export function SparqInvaders() {
 
   const initAssets = async () => {
     try {
-      // Load only available SVG assets
       const [playerImg, ...enemyImgs] = await Promise.all([
         loadImage('game_hero.svg'),
         loadImage('invader_1.svg'),
@@ -116,7 +113,6 @@ export function SparqInvaders() {
         loadImage('invader_4.svg')
       ]);
 
-      // Generate sound effects
       const shootSound = generateBeepSound();
       const explosionSound = generateBeepSound();
 
@@ -125,9 +121,6 @@ export function SparqInvaders() {
         enemies: enemyImgs
       };
       sounds.current = { shoot: shootSound, explosion: explosionSound };
-
-      // Start game after assets are loaded
-      initEnemies();
       return true;
     } catch (error) {
       console.error('Failed to load game assets:', error);
@@ -137,7 +130,6 @@ export function SparqInvaders() {
         variant: "destructive"
       });
 
-      // Draw error message on canvas
       const ctx = canvasRef.current?.getContext('2d');
       if (ctx) {
         ctx.fillStyle = 'white';
@@ -154,7 +146,6 @@ export function SparqInvaders() {
     enemies.current = [];
     for (let row = 0; row < ENEMY_ROWS; row++) {
       for (let col = 0; col < ENEMY_COLS; col++) {
-        // Distribute 4 enemy types evenly
         const enemyType = (row + Math.floor(col / 2)) % assets.current.enemies.length;
         enemies.current.push({
           x: col * ENEMY_PADDING + ENEMY_PADDING,
@@ -171,13 +162,17 @@ export function SparqInvaders() {
     }
   };
 
-  const handleKeyDown = (e: KeyboardEvent) => {
-    pressedKeys.current.add(e.key);
-    if (e.key === ' ') {
-      createBullet();
-      sounds.current?.shoot.play().catch(console.error);
-    }
-  };
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === ' ') {
+          e.preventDefault();
+        }
+        if (!gameState.hasStarted) return;
+        pressedKeys.current.add(e.key);
+        if (e.key === ' ') {
+          createBullet();
+          sounds.current?.shoot.play().catch(console.error);
+        }
+      };
 
   const handleKeyUp = (e: KeyboardEvent) => {
     pressedKeys.current.delete(e.key);
@@ -279,10 +274,19 @@ export function SparqInvaders() {
     });
   };
 
+  const startGame = () => {
+    setGameState(prev => ({
+      ...prev,
+      hasStarted: true,
+      isPlaying: true
+    }));
+    setScore(0);
+    initEnemies();
+  };
+
   const draw = (ctx: CanvasRenderingContext2D) => {
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-    // Apply screen shake
     if (gameState.screenShake > 0) {
       const magnitude = gameState.screenShake * 5;
       ctx.save();
@@ -293,14 +297,20 @@ export function SparqInvaders() {
       setGameState(prev => ({ ...prev, screenShake: prev.screenShake * 0.9 }));
     }
 
-    // Draw background gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
     gradient.addColorStop(0, '#000033');
     gradient.addColorStop(1, '#000066');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    
+    if (!gameState.hasStarted) {
+       ctx.fillStyle = '#ffffff';
+       ctx.font = '48px Arial';
+       ctx.textAlign = 'center';
+       ctx.fillText('SPARQ INVADERS', CANVAS_WIDTH/2, CANVAS_HEIGHT/3);
+      return;
+    }
 
-    // Draw player
     if (assets.current.player) {
       ctx.drawImage(
         assets.current.player,
@@ -311,26 +321,23 @@ export function SparqInvaders() {
       );
     }
 
-    // Draw bullets
     ctx.fillStyle = '#ff0000';
     bullets.current.forEach(bullet => {
       ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
     });
 
-    // Draw enemies
     enemies.current.forEach(enemy => {
       ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
     });
 
-    // Draw particles
     ctx.fillStyle = '#ffff00';
     particles.current.forEach(particle => {
       ctx.fillRect(particle.x, particle.y, particle.width, particle.height);
     });
 
-    // Draw UI
     ctx.fillStyle = '#ffffff';
     ctx.font = '20px Arial';
+    ctx.textAlign = 'left';
     ctx.fillText(`Score: ${score}`, 10, 30);
     ctx.fillText(`High Score: ${highScore}`, 10, 60);
     ctx.fillText(`Lives: ${gameState.lives}`, CANVAS_WIDTH - 100, 30);
@@ -349,13 +356,16 @@ export function SparqInvaders() {
     const deltaTime = (timestamp - lastTime.current) / 1000;
     lastTime.current = timestamp;
 
-    updatePlayer(deltaTime);
-    updateBullets(deltaTime);
-    updateEnemies(deltaTime);
-    updateParticles(deltaTime);
-    checkCollisions();
-    draw(ctx);
+    if (gameState.hasStarted) {
+        updatePlayer(deltaTime);
+        updateBullets(deltaTime);
+        updateEnemies(deltaTime);
+        updateParticles(deltaTime);
+        checkCollisions();
+    }
 
+
+    draw(ctx);
     gameLoop.current = requestAnimationFrame(gameUpdate);
   };
 
@@ -398,9 +408,17 @@ export function SparqInvaders() {
         className="border border-gray-700 rounded-lg"
         tabIndex={0}
       />
-      <div className="h-[100px] mt-4 text-white text-center">
-        <p>Use Arrow Keys or A/D to move</p>
-        <p>Space to shoot</p>
+      <div className="h-[100px] mt-4 flex flex-col items-center justify-center">
+        {!gameState.hasStarted && (
+          <Button 
+            onClick={startGame}
+            className="mb-4 bg-primary hover:bg-primary/90 text-white"
+          >
+            Start Game
+          </Button>
+        )}
+        <p className="text-white">Use Arrow Keys or A/D to move</p>
+        <p className="text-white">Space to shoot</p>
       </div>
     </Card>
   );
