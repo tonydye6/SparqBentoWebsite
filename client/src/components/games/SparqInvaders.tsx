@@ -83,8 +83,10 @@ export function SparqInvaders() {
 
     // Draw grid background
     function drawGrid() {
-      ctx.strokeStyle = 'rgba(235, 0, 40, 0.15)';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(235, 0, 40, 0.25)';
+      ctx.lineWidth = 1.5;
+      ctx.shadowColor = 'rgba(235, 0, 40, 0.3)';
+      ctx.shadowBlur = 5;
 
       // Vertical lines
       for (let x = 0; x < canvas.width; x += 20) {
@@ -101,6 +103,8 @@ export function SparqInvaders() {
         ctx.lineTo(canvas.width, y);
         ctx.stroke();
       }
+
+      ctx.shadowBlur = 0;
     }
 
     function createExplosion(x: number, y: number, color: string) {
