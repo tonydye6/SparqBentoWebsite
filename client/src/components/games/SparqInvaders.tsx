@@ -73,55 +73,89 @@ export function SparqInvaders() {
   const enemies = useRef<Enemy[]>([]);
   const particles = useRef<GameObject[]>([]);
 
-  // Asset loading
+  // Asset loading with SVG support
   const loadImage = (src: string): Promise<HTMLImageElement> => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = src;
+      img.onerror = () => {
+        // Try SVG if PNG fails
+        if (!src.endsWith('.svg')) {
+          const svgSrc = src.replace('.png', '.svg');
+          img.src = `/images/${svgSrc}`;
+          img.onerror = () => {
+            console.error(`Failed to load image: ${src} and svg fallback`);
+            reject(new Error(`Failed to load image: ${src}`));
+          };
+        } else {
+          console.error(`Failed to load image: ${src}`);
+          reject(new Error(`Failed to load image: ${src}`));
+        }
+      };
+      img.src = `/images/${src}`;
     });
   };
 
-  const loadSound = (src: string): Promise<HTMLAudioElement> => {
-    return new Promise((resolve, reject) => {
-      const audio = new Audio(src);
-      audio.oncanplaythrough = () => resolve(audio);
-      audio.onerror = reject;
-      audio.src = src;
-    });
+  const generateBeepSound = (): HTMLAudioElement => {
+    const audio = new AudioContext();
+    const oscillator = audio.createOscillator();
+    const gainNode = audio.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audio.destination);
+
+    oscillator.type = 'square';
+    oscillator.frequency.setValueAtTime(440, audio.currentTime);
+    gainNode.gain.setValueAtTime(0.1, audio.currentTime);
+
+    oscillator.start();
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 0.1);
+    oscillator.stop(audio.currentTime + 0.1);
+
+    return new Audio();
   };
 
   const initAssets = async () => {
     try {
+      // Try loading SVG assets first
       const [playerImg, ...enemyImgs] = await Promise.all([
-        loadImage('/game_hero.png'),
-        loadImage('/invader_1.png'),
-        loadImage('/invader_2.png'),
-        loadImage('/invader_3.png'),
-        loadImage('/invader_4.png'),
-        loadImage('/invader_5.png'),
-        loadImage('/invader_6.png'),
-        loadImage('/invader_7.png'),
-        loadImage('/invader_8.png')
+        loadImage('game_hero.svg'),
+        loadImage('invader_1.svg'),
+        loadImage('invader_2.svg'),
+        loadImage('invader_3.svg'),
+        loadImage('invader_4.svg')
       ]);
 
-      // Load sounds
-      const [shootSound, explosionSound] = await Promise.all([
-        loadSound('/shoot.wav'),
-        loadSound('/explosion.wav')
-      ]);
+      // Generate sound effects
+      const shootSound = generateBeepSound();
+      const explosionSound = generateBeepSound();
 
-      assets.current = { player: playerImg, enemies: enemyImgs };
+      assets.current = { 
+        player: playerImg, 
+        enemies: [...enemyImgs, ...enemyImgs] // Duplicate enemies to fill 8 slots
+      };
       sounds.current = { shoot: shootSound, explosion: explosionSound };
+
+      // Start game after assets are loaded
+      initEnemies();
       return true;
     } catch (error) {
-      console.error('Failed to load assets:', error);
+      console.error('Failed to load game assets:', error);
       toast({
         title: "Asset Loading Error",
-        description: "Failed to load game assets. Please refresh the page.",
+        description: "Please check your internet connection and refresh the page.",
         variant: "destructive"
       });
+
+      // Draw error message on canvas
+      const ctx = canvasRef.current?.getContext('2d');
+      if (ctx) {
+        ctx.fillStyle = 'white';
+        ctx.font = '20px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Failed to load game assets', CANVAS_WIDTH/2, CANVAS_HEIGHT/2 - 20);
+        ctx.fillText('Please refresh the page', CANVAS_WIDTH/2, CANVAS_HEIGHT/2 + 20);
+      }
       return false;
     }
   };
@@ -344,7 +378,6 @@ export function SparqInvaders() {
     const init = async () => {
       const loaded = await initAssets();
       if (loaded) {
-        initEnemies();
         document.addEventListener('keydown', handleKeyDown);
         document.addEventListener('keyup', handleKeyUp);
         requestAnimationFrame(gameUpdate);
