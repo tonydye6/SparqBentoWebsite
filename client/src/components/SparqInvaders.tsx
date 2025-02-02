@@ -32,7 +32,17 @@ const loadImage = (src: string): Promise<HTMLImageElement> => {
 const initGame = async () => {
   try {
     playerImg = await loadImage('/game_hero.png');
-    enemyImg = await loadImage('/invader_1.png');
+    // Load all enemy images
+    const enemyImages = await Promise.all([
+      loadImage('/invader_1.png'),
+      loadImage('/invader_2.png'),
+      loadImage('/invader_3.png'),
+      loadImage('/invader_4.png'),
+      loadImage('/invader_5.png'),
+      loadImage('/invader_6.png'),
+      loadImage('/invader_7.png'),
+      loadImage('/invader_8.png')
+    ]);
     // Create enemies in a grid formation
     const rows = 3;
     const cols = 8;
@@ -47,7 +57,7 @@ const initGame = async () => {
           y: offsetY + r * spacingY,
           width: 40,
           height: 40,
-          img: enemyImg,
+          img: enemyImages[Math.floor(Math.random() * enemyImages.length)],
           dx: 1  // initial horizontal speed
         });
       }
