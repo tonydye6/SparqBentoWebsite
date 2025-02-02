@@ -7,8 +7,7 @@ export function SparqInvaders() {
   const gameLoopRef = useRef<number>();
   const [gameState, setGameState] = useState({
     currentScore: 0,
-    highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
-    currentLevel: 1
+    highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0')
   });
 
   useEffect(() => {
@@ -38,25 +37,17 @@ export function SparqInvaders() {
     const playerImg = new Image();
     playerImg.src = '/game_hero.png';
 
-    const loadEnemyImages = async () => {
-      try {
-        const images = await Promise.all(
-          Array.from({ length: 8 }, (_, i) => {
+    const initEnemies = async () => {
+      const enemyImages = await Promise.all(
+        Array.from({ length: 8 }, (_, i) => {
+          return new Promise<HTMLImageElement>((resolve) => {
             const img = new Image();
             img.src = `/invader_${i + 1}.png`;
-            return new Promise<HTMLImageElement>((resolve, reject) => {
-              img.onload = () => resolve(img);
-              img.onerror = reject;
-            });
-          })
-        );
-        initEnemies(images);
-      } catch (error) {
-        console.error('Failed to load enemy images:', error);
-      }
-    };
+            img.onload = () => resolve(img);
+          });
+        })
+      );
 
-    const initEnemies = (images: HTMLImageElement[]) => {
       const rows = 3;
       const cols = 8;
       const offsetX = 30;
@@ -64,7 +55,6 @@ export function SparqInvaders() {
       const spacingX = 60;
       const spacingY = 50;
 
-      enemies.length = 0;
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           enemies.push({
@@ -72,7 +62,7 @@ export function SparqInvaders() {
             y: offsetY + r * spacingY,
             width: 40,
             height: 40,
-            img: images[Math.floor(Math.random() * images.length)],
+            img: enemyImages[Math.floor(Math.random() * enemyImages.length)],
             dx: 2
           });
         }
@@ -106,29 +96,30 @@ export function SparqInvaders() {
         ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
       }
 
-      bullets.forEach((bullet, i) => {
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        const bullet = bullets[i];
         bullet.y -= 5;
         ctx.fillStyle = 'red';
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-      });
+        
+        if (bullet.y < 0) {
+          bullets.splice(i, 1);
+        }
+      }
 
-      enemies.forEach((enemy, i) => {
+      for (let i = enemies.length - 1; i >= 0; i--) {
+        const enemy = enemies[i];
         enemy.x += enemy.dx;
+        
         if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
           enemy.dx *= -1;
           enemy.y += 20;
         }
+
         if (enemy.img.complete) {
           ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
         }
-      });
-
-      // Clean up off-screen bullets
-      bullets.forEach((bullet, i) => {
-        if (bullet.y < 0) {
-          bullets.splice(i, 1);
-        }
-      });
+      }
 
       // Collision detection
       for (let i = bullets.length - 1; i >= 0; i--) {
@@ -155,26 +146,19 @@ export function SparqInvaders() {
         }
       }
 
-      if (enemies.length === 0) {
-        setGameState(prev => ({
-          ...prev,
-          currentLevel: prev.currentLevel + 1
-        }));
-        loadEnemyImages();
-      }
-
       ctx.fillStyle = 'white';
       ctx.font = '16px Arial';
       ctx.fillText(`Score: ${gameState.currentScore}`, 10, 20);
       ctx.fillText(`High Score: ${gameState.highScore}`, 10, 40);
-      ctx.fillText(`Level: ${gameState.currentLevel}`, 10, 60);
 
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
 
+    // Start game only after player image is loaded
     playerImg.onload = () => {
-      loadEnemyImages();
-      gameLoop();
+      initEnemies().then(() => {
+        gameLoop();
+      });
     };
 
     document.addEventListener('keydown', handleKeyDown);
@@ -185,7 +169,7 @@ export function SparqInvaders() {
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, []); // Empty dependency array to run only once
+  }, []); // Empty dependency array
 
   return (
     <Card className="w-full h-full bg-black flex items-center justify-center">
