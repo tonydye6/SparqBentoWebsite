@@ -129,6 +129,8 @@ export function SparqInvaders() {
 
     // Handle keyboard input for player movement and shooting
     const handleKeyDown = (e: KeyboardEvent) => {
+      e.preventDefault(); // Prevent default scrolling behavior
+
       if (e.key === 'ArrowLeft' || e.key === 'a') {
         player.x = Math.max(player.x - 10, 0);
       }
@@ -145,6 +147,7 @@ export function SparqInvaders() {
       }
     };
 
+    // Add event listener and start game
     document.addEventListener('keydown', handleKeyDown);
     initGame();
 
@@ -155,16 +158,14 @@ export function SparqInvaders() {
   }, [currentScore, highScore]);
 
   return (
-    <div className="w-[44rem] h-[31.25rem] flex flex-col items-center justify-center relative">
-      <Card className="w-full h-full bg-black">
+    <div className="col-span-8 row-span-4">
+      <Card className="w-full h-full bg-black relative overflow-hidden">
         <canvas 
           ref={canvasRef} 
           width={350} 
           height={500} 
           style={{ 
             backgroundColor: 'black',
-            margin: '0 auto',
-            display: 'block',
             position: 'absolute',
             top: '50%',
             left: '50%',
