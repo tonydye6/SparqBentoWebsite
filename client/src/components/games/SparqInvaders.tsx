@@ -1,25 +1,13 @@
-
 import { useRef, useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
-
-interface GameState {
-  currentScore: number;
-  highScore: number;
-  lives: number;
-  level: number;
-  isRunning: boolean;
-}
 
 export function SparqInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const gameLoopRef = useRef<number>();
-  const [gameState, setGameState] = useState<GameState>({
-    currentScore: 0,
-    highScore: parseInt(localStorage.getItem('sparqInvadersHighScore') || '0'),
-    lives: 3,
-    level: 1,
-    isRunning: false
-  });
+  const [currentScore, setCurrentScore] = useState(0);
+  const [highScore, setHighScore] = useState(() => 
+    parseInt(localStorage.getItem('sparqInvadersHighScore') || '0')
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -28,107 +16,107 @@ export function SparqInvaders() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const keys = {
-      left: false,
-      right: false,
-      space: false
-    };
-
-    const PLAYER_SPEED = 5;
-    const BULLET_SPEED = 7;
-    const SHOOT_COOLDOWN = 250;
-
-    let lastShot = Date.now();
-    let player = {
+    // Game state
+    const player = {
       x: canvas.width / 2 - 40,
       y: canvas.height - 80,
       width: 80,
-      height: 80,
-      speed: PLAYER_SPEED
+      height: 80
     };
 
-    let bullets: Array<{x: number, y: number, width: number, height: number}> = [];
-    let enemies: Array<{x: number, y: number, width: number, height: number, img: HTMLImageElement, points: number, direction: number}> = [];
+    const bullets: Array<{ x: number; y: number; width: number; height: number }> = [];
+    const enemies: Array<{
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+      img: HTMLImageElement;
+      dx: number;
+    }> = [];
 
-    const playerImg = new Image();
+    let playerImg = new Image();
     playerImg.src = '/game_hero.png';
 
-    const enemyImages = Array.from({length: 8}, (_, i) => {
-      const img = new Image();
-      img.src = `/invader_${i + 1}.png`;
-      return img;
-    });
+    const loadEnemyImages = async () => {
+      const images = await Promise.all(
+        Array.from({ length: 8 }, (_, i) => {
+          const img = new Image();
+          img.src = `/invader_${i + 1}.png`;
+          return new Promise<HTMLImageElement>((resolve) => {
+            img.onload = () => resolve(img);
+          });
+        })
+      );
 
-    const initEnemies = () => {
-      enemies = [];
-      const rows = 4;
+      // Create enemy formation
+      const rows = 3;
       const cols = 8;
-      const startX = 30;
-      const startY = 50;
-      const spacingX = (canvas.width - 2 * startX) / (cols - 1);
+      const offsetX = 30;
+      const offsetY = 150;
+      const spacingX = 60;
       const spacingY = 50;
 
-      for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < cols; col++) {
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
           enemies.push({
-            x: startX + col * spacingX,
-            y: startY + row * spacingY,
+            x: offsetX + c * spacingX,
+            y: offsetY + r * spacingY,
             width: 40,
             height: 40,
-            img: enemyImages[Math.floor(row * 2 + Math.random() * 2)],
-            points: (4 - row) * 100,
-            direction: 1
+            img: images[Math.floor(Math.random() * images.length)],
+            dx: 1
           });
         }
       }
     };
 
-    const update = () => {
-      if (!gameState.isRunning) return;
-
-      // Handle player movement
-      if (keys.left) {
-        player.x = Math.max(0, player.x - player.speed);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a') {
+        player.x = Math.max(player.x - 10, 0);
       }
-      if (keys.right) {
-        player.x = Math.min(canvas.width - player.width, player.x + player.speed);
+      if (e.key === 'ArrowRight' || e.key === 'd') {
+        player.x = Math.min(player.x + 10, canvas.width - player.width);
       }
-      if (keys.space && Date.now() - lastShot > SHOOT_COOLDOWN) {
+      if (e.key === ' ') {
         bullets.push({
           x: player.x + player.width / 2 - 2,
           y: player.y,
           width: 4,
           height: 10
         });
-        lastShot = Date.now();
       }
+    };
 
-      // Update bullets
+    const gameLoop = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw player
+      ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+
+      // Update and draw bullets
       for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
-        bullet.y -= BULLET_SPEED;
+        bullet.y -= 5;
+        ctx.fillStyle = 'red';
+        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
         if (bullet.y + bullet.height < 0) {
           bullets.splice(i, 1);
         }
       }
 
-      // Update enemies
-      let touchedEdge = false;
-      enemies.forEach(enemy => {
-        enemy.x += enemy.direction * (1 + 0.1 * (gameState.level - 1));
+      // Update and draw enemies
+      enemies.forEach((enemy) => {
+        enemy.x += enemy.dx;
         if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
-          touchedEdge = true;
+          enemy.dx *= -1;
+          enemy.y += 20;
         }
+        ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
       });
 
-      if (touchedEdge) {
-        enemies.forEach(enemy => {
-          enemy.direction *= -1;
-          enemy.y += 20;
-        });
-      }
-
-      // Check collisions
+      // Collision detection
       for (let i = bullets.length - 1; i >= 0; i--) {
         const bullet = bullets[i];
         for (let j = enemies.length - 1; j >= 0; j--) {
@@ -141,138 +129,46 @@ export function SparqInvaders() {
           ) {
             bullets.splice(i, 1);
             enemies.splice(j, 1);
-            setGameState(prev => ({
-              ...prev,
-              currentScore: prev.currentScore + enemy.points
-            }));
+            const newScore = currentScore + 100;
+            setCurrentScore(newScore);
+            if (newScore > highScore) {
+              setHighScore(newScore);
+              localStorage.setItem('sparqInvadersHighScore', newScore.toString());
+            }
             break;
           }
         }
       }
 
-      // Check for level completion
-      if (enemies.length === 0) {
-        setGameState(prev => ({
-          ...prev,
-          level: prev.level + 1
-        }));
-        initEnemies();
-      }
-
-      // Check for game over
-      enemies.forEach(enemy => {
-        if (enemy.y + enemy.height > player.y) {
-          gameOver();
-        }
-      });
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = 'black';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      if (!gameState.isRunning) {
-        ctx.fillStyle = 'white';
-        ctx.font = '24px Chakra Petch';
-        ctx.textAlign = 'center';
-        ctx.fillText('Press SPACE to Start', canvas.width / 2, canvas.height / 2);
-        return;
-      }
-
-      ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-
-      enemies.forEach(enemy => {
-        ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
-      });
-
-      ctx.fillStyle = '#eb0028';
-      bullets.forEach(bullet => {
-        ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
-      });
-
+      // Draw scores
       ctx.fillStyle = 'white';
-      ctx.font = '16px Chakra Petch';
-      ctx.textAlign = 'left';
-      ctx.fillText(`Score: ${gameState.currentScore}`, 10, 25);
-      ctx.fillText(`High Score: ${gameState.highScore}`, 10, 50);
-      ctx.fillText(`Level: ${gameState.level}`, canvas.width - 100, 25);
-      ctx.fillText(`Lives: ${gameState.lives}`, canvas.width - 100, 50);
-    };
+      ctx.font = '16px Arial';
+      ctx.fillText(`Score: ${currentScore}`, 10, 20);
+      ctx.fillText(`High Score: ${highScore}`, 10, 40);
 
-    const gameLoop = () => {
-      update();
-      draw();
       gameLoopRef.current = requestAnimationFrame(gameLoop);
     };
 
-    const gameOver = () => {
-      setGameState(prev => {
-        const finalScore = prev.currentScore;
-        if (finalScore > prev.highScore) {
-          localStorage.setItem('sparqInvadersHighScore', finalScore.toString());
-          return {
-            ...prev,
-            highScore: finalScore,
-            isRunning: false
-          };
-        }
-        return { ...prev, isRunning: false };
-      });
-    };
-
-    const startGame = () => {
-      setGameState(prev => ({
-        ...prev,
-        currentScore: 0,
-        lives: 3,
-        level: 1,
-        isRunning: true
-      }));
-      bullets = [];
-      player.x = canvas.width / 2 - 40;
-      initEnemies();
-    };
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'a' || e.key === 'A') keys.left = true;
-      if (e.key === 'd' || e.key === 'D') keys.right = true;
-      if (e.key === ' ') {
-        if (!gameState.isRunning) {
-          startGame();
-        }
-        keys.space = true;
-      }
-      e.preventDefault();
-    };
-
-    const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.key === 'a' || e.key === 'A') keys.left = false;
-      if (e.key === 'd' || e.key === 'D') keys.right = false;
-      if (e.key === ' ') keys.space = false;
-      e.preventDefault();
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('keyup', handleKeyUp);
-
-    gameLoop();
+    // Start game
+    loadEnemyImages().then(() => {
+      document.addEventListener('keydown', handleKeyDown);
+      gameLoop();
+    });
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('keyup', handleKeyUp);
+      document.removeEventListener('keydown', handleKeyDown);
       if (gameLoopRef.current) {
         cancelAnimationFrame(gameLoopRef.current);
       }
     };
-  }, [gameState.isRunning]); // Only re-run when game running state changes
+  }, []);
 
   return (
     <Card className="w-full h-full bg-black flex items-center justify-center">
-      <canvas 
-        ref={canvasRef} 
-        width={350} 
-        height={635} 
+      <canvas
+        ref={canvasRef}
+        width={350}
+        height={635}
         style={{ backgroundColor: 'black' }}
       />
     </Card>
