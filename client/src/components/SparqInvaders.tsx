@@ -11,7 +11,7 @@ const ctx = canvas.getContext('2d');
 if (!ctx) return;
 text
 // Game state
-const player = { x: canvas.width / 2 - 40, y: canvas.height - 120, width: 80, height: 80 };
+const player = { x: canvas.width / 2 - 40, y: canvas.height - 200, width: 80, height: 80 };
 const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
 const enemies: Array<{ x: number, y: number, width: number, height: number, img: HTMLImageElement, dx: number }> = [];
 let playerImg: HTMLImageElement;
@@ -37,7 +37,7 @@ const initGame = async () => {
     const rows = 3;
     const cols = 8;
     const offsetX = 30;
-    const offsetY = 30;
+    const offsetY = 150;  // Moved down the spawn position
     const spacingX = 60;
     const spacingY = 50;
     for (let r = 0; r < rows; r++) {
