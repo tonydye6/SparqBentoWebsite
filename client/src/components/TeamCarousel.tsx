@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,12 @@ interface TeamMember {
   bio: string;
 }
 
-const executiveTeam: TeamMember[] = [
+interface TeamCarouselProps {
+  members: TeamMember[];
+  interval?: number;
+}
+
+export const executiveTeam: TeamMember[] = [
   {
     name: "Jan Horsfall",
     title: "CEO / BOD Chair",
@@ -50,28 +54,6 @@ const executiveTeam: TeamMember[] = [
     bio: "Visionary and strategic growth architect with two decades of experience in transformative initiatives and fostering product-led growth across diverse sectors including gaming, tech, entertainment. Proven expertise at notable firms such as Workhuman, Liberty Mutual, Warner Bros. Games, and Digitas. He embodies a data-driven and collaborative leadership approach. Studied AI at Cal Berkeley."
   },
   {
-    name: "Rob Vogel",
-    title: "SVP - University & Player Relationships",
-    photo: "/robv.png",
-    linkedIn: "https://www.linkedin.com/in/robvogelj5partners/",
-    previousCompanies: [
-      { name: "J5 Partners", logo: "/j5.png" },
-      { name: "The Bonam Group", logo: "/bng.png" }
-    ],
-    bio: "Founder of J5 Partners, a sports business solutions firm. Uses 30 years of sports experience and leverages his network of sports decision-makers to drive business. Worked with brands such as JPMorgan Chase, FedEx, BofA, Honda, General Mills, Heineken, US Bank, IBM, Universal Studios and sports properties including the NFL, NBA, NHL, ACC, Big 12, Ohio State, Miami, UNC and UT."
-  },
-  {
-    name: "Jeffrey Steefel",
-    title: "SVP - Games",
-    photo: "/jeffreys.png",
-    linkedIn: "https://www.linkedin.com/in/jeffrey-steefel-97380/",
-    previousCompanies: [
-      { name: "Disney", logo: "/dis.png" },
-      { name: "Wizards of the Coast", logo: "/wiz.png" }
-    ],
-    bio: "Game-industry thought leader who headed franchises at 7th Level, Turbine, Sony, Warner Bros., Disney, Wizards/Hasbro. Created original IP for Disney, The Lord of the Rings, Dungeons & Dragons, Magic: The Gathering, Monty Python, and Bandai. Developer of single and multiplayer games across numerous genres."
-  },
-  {
     name: "Daniel Algattas",
     title: "Director - AI Projects & Technology",
     photo: "/daniela.png",
@@ -83,7 +65,7 @@ const executiveTeam: TeamMember[] = [
   }
 ];
 
-const advisoryTeam: TeamMember[] = [
+export const advisoryTeam: TeamMember[] = [
   {
     name: "David Ortiz",
     title: "Advisory Board Member",
@@ -116,123 +98,8 @@ const advisoryTeam: TeamMember[] = [
       { name: "Gamer Sensei", logo: "/gs.png" }
     ],
     bio: "Gaming and tech exec successfully applying data-driven product principles to consumer and B2B technology businesses. An innovator who identifies novel opportunities to improve outcomes and executes to deliver results. Skilled at building high-functioning teams and inspiring top performance."
-  },
-  {
-    name: "Michelle Kahle",
-    title: "Advisory Board Member",
-    photo: "/michellek.png",
-    linkedIn: "https://www.linkedin.com/in/mfbronson/",
-    previousCompanies: [
-      { name: "Valvoline", logo: "/val.png" }
-    ],
-    bio: "Initiative-taking, digital thought leader known for driving results with deep expertise in website development, UX design, content strategy, CRM, and integrated digital media marketing. A dedicated team leader with a focus on solutions and achieving business objectives. Expert in Sales Force applications and company integration."
-  },
-  {
-    name: "Adam Mersky",
-    title: "Advisory Board Member",
-    photo: "/adamm.png",
-    linkedIn: "https://www.linkedin.com/in/adammersky/",
-    previousCompanies: [
-      { name: "Warner Bros", logo: "/wb.png" },
-      { name: "Turbine", logo: "/turb.png" }
-    ],
-    bio: "Over 30 years in digital marketing, a connected, seasoned leader dedicated to helping video game brands find and amplify their unique voices. Has deep industry experience with globally recognized gaming IPs and has created campaigns that engage and resonate with large-scale, diverse gaming audiences. Expertise in social media, online media, and event marketing."
-  },
-  {
-    name: "Jon Embree",
-    title: "Advisory Board Member",
-    photo: "/jone.png",
-    linkedIn: "https://www.miamidolphins.com/team/coaches-roster/jon-embree",
-    previousCompanies: [
-      { name: "Colorado Buffaloes", logo: "/buffs.png" },
-      { name: "Miami Dolphins", logo: "/dolphins.png" }
-    ],
-    bio: "A seasoned football coach with extensive experience at both the collegiate and professional levels. Currently serving as the Assistant Head Coach and Tight Ends Coach for the Miami Dolphins, Jon brings a wealth of knowledge in athlete development and team management to Sparq Games."
-  },
-  {
-    name: "Craig Alexander",
-    title: "Advisory Board Member",
-    photo: "/craiga.png",
-    linkedIn: "https://www.linkedin.com/in/craig-alexander-2a46/",
-    previousCompanies: [
-      { name: "EA", logo: "/ear.png" },
-      { name: "Warner Bros", logo: "/wb.png" }
-    ],
-    bio: "Oversaw development for the Lord of the Rings Online (second highest-rated MMO ever, multiple Game of the Year awards), Dungeons & Dragons Online (first F2P MMO in North America/EU). Helped facilitate the sale of Turbine to Warner Bros. Expert in premium F2P online games and pioneering game business models."
   }
 ];
-
-export const executiveTeam = [
-  {
-    name: "Jan Horsfall",
-    title: "CEO & Co-Founder",
-    photo: "/janh.png",
-    previousCompanies: [
-      { name: "Turbine Games", logo: "/turb.png" },
-      { name: "Lycos", logo: "/lycos.png" }
-    ]
-  },
-  {
-    name: "Tony Dedeaux",
-    title: "Chief Gaming Officer & Co-Founder",
-    photo: "/tonyd.png",
-    previousCompanies: [
-      { name: "Electronic Arts", logo: "/eas.png" },
-      { name: "Warner Bros", logo: "/wb.png" }
-    ]
-  },
-  {
-    name: "Sean Epperson",
-    title: "Chief Technology Officer",
-    photo: "/seane.png",
-    previousCompanies: [
-      { name: "Electronic Arts", logo: "/eas.png" },
-      { name: "Disney", logo: "/dis.png" }
-    ]
-  }
-];
-
-export const advisoryTeam = [
-  {
-    name: "Jim Dorey",
-    title: "Platform Advisor",
-    photo: "/jimd.png",
-    previousCompanies: [
-      { name: "PlayStation", logo: "/ps.png" },
-      { name: "Pyramid Games", logo: "/pyramid.png" }
-    ]
-  },
-  {
-    name: "Jeffrey Steefel",
-    title: "Business Advisor",
-    photo: "/jeffreys.png",
-    previousCompanies: [
-      { name: "Electronic Arts", logo: "/eas.png" },
-      { name: "Warner Bros", logo: "/wb.png" }
-    ]
-  },
-  {
-    name: "Michelle Krausman",
-    title: "Legal Advisor",
-    photo: "/michellek.png",
-    previousCompanies: [
-      { name: "GameStop", logo: "/gs.png" },
-      { name: "EA Sports", logo: "/eas.png" }
-    ]
-  }
-];
-
-interface TeamCarouselProps {
-  members: TeamMember[];
-  interval?: number;
-}
-
-interface TeamMember {
-  name: string;
-  title: string;
-  photo: string;
-  previousCompanies: { name: string; logo: string; }[];
-}
 
 export function TeamCarousel({ members, interval = 5000 }: TeamCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -242,8 +109,8 @@ export function TeamCarousel({ members, interval = 5000 }: TeamCarouselProps) {
       setCurrentIndex((prev) => (prev + 1) % members.length);
     }, interval);
 
-    return () => clearInterval(interval);
-  }, [members.length]);
+    return () => clearInterval(carouselInterval);
+  }, [members.length, interval]);
 
   const nextMember = () => {
     setCurrentIndex((prev) => (prev + 1) % members.length);
@@ -301,5 +168,3 @@ export function TeamCarousel({ members, interval = 5000 }: TeamCarouselProps) {
     </div>
   );
 }
-
-export { executiveTeam, advisoryTeam };
