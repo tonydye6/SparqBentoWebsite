@@ -364,9 +364,6 @@ export function BentoGrid() {
       <div className="card-16">
         <Card className="bento-card h-[1035px] bg-carbon hover:transform-none hover:bg-carbon">
           <div className="h-full">
-            <div className="card-title-container">
-              <h2 className="card-title">Sparq Invaders</h2>
-            </div>
             <SparqInvaders />
           </div>
         </Card>
