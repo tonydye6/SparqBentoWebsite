@@ -83,8 +83,8 @@ export function SparqInvaders() {
 
     // Draw grid background
     function drawGrid() {
-      ctx.strokeStyle = 'rgba(235, 0, 40, 0.1)';
-      ctx.lineWidth = 0.5;
+      ctx.strokeStyle = 'rgba(235, 0, 40, 0.15)';
+      ctx.lineWidth = 1;
 
       // Vertical lines
       for (let x = 0; x < canvas.width; x += 20) {
@@ -392,14 +392,17 @@ export function SparqInvaders() {
         ctx.globalAlpha = 1;
         ctx.shadowBlur = 0;
 
-        // Draw score popups
+        // Draw score popups with enhanced visibility
         ctx.font = 'bold 16px "Chakra Petch"';
-        ctx.fillStyle = '#eb0028';
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = 'rgba(235, 0, 40, 0.8)';
+        ctx.shadowBlur = 10;
         scorePopups.forEach(popup => {
           ctx.globalAlpha = popup.life;
           ctx.fillText(`+${popup.value}`, popup.x, popup.y);
         });
         ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
 
         // Draw HUD
         ctx.fillStyle = '#ffffff';
