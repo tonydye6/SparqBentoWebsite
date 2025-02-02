@@ -424,14 +424,20 @@ export function SparqInvaders() {
 
   return (
     <Card className="w-full h-full bg-carbon flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#2b2d42]/80 to-[#1e1e24]/40 pointer-events-none" />
+      <div 
+        className="absolute inset-0 bg-cover bg-center opacity-40" 
+        style={{ 
+          backgroundImage: 'url("/bg3.png")',
+          filter: 'brightness(0.5) contrast(1.2)'
+        }} 
+      />
       <canvas
         ref={canvasRef}
         width={350}
         height={635}
         className="max-w-full h-auto relative z-10"
         style={{ 
-          backgroundColor: 'transparent',
+          backgroundColor: 'rgba(0,0,0,0.85)',
           boxShadow: '0 0 30px rgba(235, 0, 40, 0.2)',
           border: '1px solid rgba(235, 0, 40, 0.4)',
           borderRadius: '8px'
