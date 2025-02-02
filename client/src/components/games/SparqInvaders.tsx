@@ -40,12 +40,12 @@ export function SparqInvaders() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const player = { 
-      x: canvas.width / 2 - 40, 
-      y: canvas.height - 100, 
-      width: 60, 
+    const player = {
+      x: canvas.width / 2 - 30,
+      y: canvas.height - 100,
+      width: 60,
       height: 60,
-      speed: 5
+      speed: 5 // Set to required speed
     };
 
     const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
@@ -75,19 +75,19 @@ export function SparqInvaders() {
       const offsetY = 50;
       const spacingX = 60;
       const spacingY = 50;
+      const pointsPerRow = [300, 200, 150, 100];
 
       for (let r = 0; r < rows; r++) {
+        const imgIndex = r * 2;
         for (let c = 0; c < cols; c++) {
-          const points = [300, 200, 150, 100][r];
-          const imgIndex = r * 2 + Math.floor(Math.random() * 2);
           enemies.push({
             x: offsetX + c * spacingX,
             y: offsetY + r * spacingY,
             width: 40,
             height: 40,
-            img: enemyImages[imgIndex],
+            img: enemyImages[imgIndex + (c % 2)],
             dx: 2 * (1 + (level - 1) * 0.15),
-            points,
+            points: pointsPerRow[r],
             row: r
           });
         }
@@ -164,7 +164,6 @@ export function SparqInvaders() {
         enemy.x += enemy.dx;
         ctx.drawImage(enemy.img, enemy.x, enemy.y, enemy.width, enemy.height);
 
-        // Check if enemies reached bottom
         if (enemy.y + enemy.height > player.y) {
           setLives(0);
           setGameState('gameOver');
@@ -265,7 +264,6 @@ export function SparqInvaders() {
     };
   }, [level, lives, currentScore, highScore]);
 
-  // Update high score in localStorage when current score exceeds it
   useEffect(() => {
     if (currentScore > highScore) {
       setHighScore(currentScore);
