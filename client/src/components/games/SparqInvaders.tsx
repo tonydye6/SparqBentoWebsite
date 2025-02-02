@@ -416,28 +416,7 @@ export function SparqInvaders() {
     };
   }, []);
 
-  const startGame = async () => {
-    console.log('Starting game...');
-    const assetsLoaded = await initAssets();
-    if (!assetsLoaded) {
-      console.error('Failed to load assets');
-      return;
-    }
-
-    console.log('Assets loaded, initializing game...');
-    initEnemies();
-    lastTime.current = performance.now();
-    setGameState(prev => ({
-      ...prev,
-      hasStarted: true,
-      isPlaying: true
-    }));
-    setScore(0);
-    gameLoop.current = requestAnimationFrame(gameUpdate);
-    console.log('Game started');
-  };
-
-    const savedHighScore = localStorage.getItem('sparqInvadersHighScore');
+  const savedHighScore = localStorage.getItem('sparqInvadersHighScore');
     if (savedHighScore) {
       setHighScore(parseInt(savedHighScore, 10));
     }
