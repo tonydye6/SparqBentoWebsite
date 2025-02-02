@@ -79,18 +79,8 @@ export function SparqInvaders() {
       const img = new Image();
       img.onload = () => resolve(img);
       img.onerror = () => {
-        // Try SVG if PNG fails
-        if (!src.endsWith('.svg')) {
-          const svgSrc = src.replace('.png', '.svg');
-          img.src = `/images/${svgSrc}`;
-          img.onerror = () => {
-            console.error(`Failed to load image: ${src} and svg fallback`);
-            reject(new Error(`Failed to load image: ${src}`));
-          };
-        } else {
-          console.error(`Failed to load image: ${src}`);
-          reject(new Error(`Failed to load image: ${src}`));
-        }
+        console.error(`Failed to load image: ${src}`);
+        reject(new Error(`Failed to load image: ${src}`));
       };
       img.src = `/images/${src}`;
     });
@@ -117,7 +107,7 @@ export function SparqInvaders() {
 
   const initAssets = async () => {
     try {
-      // Try loading SVG assets first
+      // Load only available SVG assets
       const [playerImg, ...enemyImgs] = await Promise.all([
         loadImage('game_hero.svg'),
         loadImage('invader_1.svg'),
@@ -132,7 +122,7 @@ export function SparqInvaders() {
 
       assets.current = { 
         player: playerImg, 
-        enemies: [...enemyImgs, ...enemyImgs] // Duplicate enemies to fill 8 slots
+        enemies: enemyImgs
       };
       sounds.current = { shoot: shootSound, explosion: explosionSound };
 
@@ -143,7 +133,7 @@ export function SparqInvaders() {
       console.error('Failed to load game assets:', error);
       toast({
         title: "Asset Loading Error",
-        description: "Please check your internet connection and refresh the page.",
+        description: "Please refresh the page to try again.",
         variant: "destructive"
       });
 
@@ -164,7 +154,8 @@ export function SparqInvaders() {
     enemies.current = [];
     for (let row = 0; row < ENEMY_ROWS; row++) {
       for (let col = 0; col < ENEMY_COLS; col++) {
-        const enemyType = row % assets.current.enemies.length;
+        // Distribute 4 enemy types evenly
+        const enemyType = (row + Math.floor(col / 2)) % assets.current.enemies.length;
         enemies.current.push({
           x: col * ENEMY_PADDING + ENEMY_PADDING,
           y: row * ENEMY_PADDING + ENEMY_TOP_OFFSET,
@@ -172,7 +163,7 @@ export function SparqInvaders() {
           height: 40,
           img: assets.current.enemies[enemyType],
           direction: 1,
-          points: (ENEMY_ROWS - row) * 100,
+          points: (ENEMY_ROWS - row) * 100 + (enemyType + 1) * 50,
           type: enemyType,
           speed: 1 + (gameState.level * 0.1)
         });
