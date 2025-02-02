@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { Card } from '@/components/ui/card';
 
@@ -13,15 +12,6 @@ interface Enemy {
   row: number;
 }
 
-interface Particle {
-  x: number;
-  y: number;
-  dx: number;
-  dy: number;
-  life: number;
-  color: string;
-}
-
 export function SparqInvaders() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [currentScore, setCurrentScore] = useState(0);
@@ -30,13 +20,11 @@ export function SparqInvaders() {
   const [lives, setLives] = useState(3);
   const [gameState, setGameState] = useState<'playing' | 'gameOver' | 'levelComplete'>('playing');
   const lastShotTimeRef = useRef(0);
-  const particlesRef = useRef<Particle[]>([]);
-  const comboRef = useRef(1);
-  const comboTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -45,10 +33,10 @@ export function SparqInvaders() {
       y: canvas.height - 100,
       width: 60,
       height: 60,
-      speed: 5 // Set to required speed
+      speed: 5
     };
 
-    const bullets: Array<{ x: number, y: number, width: number, height: number }> = [];
+    const bullets: Array<{ x: number; y: number; width: number; height: number }> = [];
     const enemies: Enemy[] = [];
     let playerImg: HTMLImageElement;
     let animationFrameId: number;
@@ -94,43 +82,11 @@ export function SparqInvaders() {
       }
     };
 
-    const createExplosion = (x: number, y: number) => {
-      for (let i = 0; i < 15; i++) {
-        const angle = (Math.PI * 2 * i) / 15;
-        particlesRef.current.push({
-          x,
-          y,
-          dx: Math.cos(angle) * 3,
-          dy: Math.sin(angle) * 3,
-          life: 60,
-          color: '#ff4444'
-        });
-      }
-    };
-
-    const updateParticles = () => {
-      particlesRef.current = particlesRef.current.filter(p => {
-        p.x += p.dx;
-        p.y += p.dy;
-        p.life--;
-        return p.life > 0;
-      });
-    };
-
-    const drawParticles = () => {
-      particlesRef.current.forEach(p => {
-        ctx.fillStyle = p.color + Math.floor((p.life / 60) * 255).toString(16);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    };
-
     const gameLoop = () => {
-      if (!ctx || !canvas || lives <= 0) return;
+      if (!ctx || !canvas || gameState !== 'playing') return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       if (playerImg) {
         ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
       }
@@ -181,27 +137,13 @@ export function SparqInvaders() {
             bullet.y < enemy.y + enemy.height &&
             bullet.y + bullet.height > enemy.y
           ) {
-            createExplosion(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
-            const pointsEarned = enemy.points * comboRef.current;
-            setCurrentScore(prev => prev + pointsEarned);
-            comboRef.current++;
-            
-            if (comboTimeoutRef.current) {
-              clearTimeout(comboTimeoutRef.current);
-            }
-            comboTimeoutRef.current = setTimeout(() => {
-              comboRef.current = 1;
-            }, 1000);
-
+            setCurrentScore(prev => prev + enemy.points);
             enemies.splice(j, 1);
             bullets.splice(i, 1);
             break;
           }
         }
       }
-
-      updateParticles();
-      drawParticles();
 
       // Draw UI
       ctx.fillStyle = 'white';
@@ -210,9 +152,6 @@ export function SparqInvaders() {
       ctx.fillText(`High Score: ${highScore}`, 10, 40);
       ctx.fillText(`Level: ${level}`, canvas.width - 80, 20);
       ctx.fillText(`Lives: ${lives}`, canvas.width - 80, 40);
-      if (comboRef.current > 1) {
-        ctx.fillText(`Combo: x${comboRef.current}`, canvas.width/2 - 30, 20);
-      }
 
       // Check victory condition
       if (enemies.length === 0) {
@@ -229,15 +168,15 @@ export function SparqInvaders() {
         e.preventDefault();
       }
 
-      if (e.key === 'ArrowLeft' || e.key === 'a') {
+      if ((e.key === 'ArrowLeft' || e.key === 'a') && gameState === 'playing') {
         player.x = Math.max(player.x - player.speed, 0);
       }
-      if (e.key === 'ArrowRight' || e.key === 'd') {
+      if ((e.key === 'ArrowRight' || e.key === 'd') && gameState === 'playing') {
         player.x = Math.min(player.x + player.speed, canvas.width - player.width);
       }
-      if (e.key === ' ') {
+      if (e.key === ' ' && gameState === 'playing') {
         const currentTime = Date.now();
-        if (currentTime - lastShotTimeRef.current >= 250) { // 250ms cooldown
+        if (currentTime - lastShotTimeRef.current >= 250) {
           bullets.push({
             x: player.x + player.width / 2 - 2,
             y: player.y,
@@ -262,7 +201,7 @@ export function SparqInvaders() {
       document.removeEventListener('keydown', handleKeyDown);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [level, lives, currentScore, highScore]);
+  }, [level, lives, gameState, currentScore, highScore]);
 
   useEffect(() => {
     if (currentScore > highScore) {
