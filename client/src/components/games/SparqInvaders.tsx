@@ -55,6 +55,7 @@ export function SparqInvaders() {
       img: HTMLImageElement;
       points: number;
       direction: number;
+      speed: number;
     }[] = [];
     let particles: {
       x: number;
@@ -148,7 +149,42 @@ export function SparqInvaders() {
       }
     }
 
-    // Game functions
+    // Add enemy type definitions and modified enemy creation logic
+    interface EnemyType {
+      points: number;
+      speed: number;
+      imageIndex: number;
+      probability: number;
+    }
+
+    const ENEMY_TYPES: { [key: string]: EnemyType } = {
+      BASIC: {
+        points: 100,
+        speed: 1,
+        imageIndex: 0,
+        probability: 0.4
+      },
+      FAST: {
+        points: 150,
+        speed: 1.5,
+        imageIndex: 1,
+        probability: 0.3
+      },
+      TANK: {
+        points: 200,
+        speed: 0.8,
+        imageIndex: 2,
+        probability: 0.2
+      },
+      ELITE: {
+        points: 300,
+        speed: 1.2,
+        imageIndex: 3,
+        probability: 0.1
+      }
+    };
+
+    // Update the createEnemies function with enemy type selection
     function createEnemies() {
       const rows = 4;
       const cols = 8;
@@ -163,14 +199,36 @@ export function SparqInvaders() {
 
       for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
+          // Determine enemy type based on probabilities and row position
+          const rand = Math.random();
+          let selectedType: EnemyType;
+          let cumulative = 0;
+
+          // Higher rows have better chance for stronger enemies
+          const rowMultiplier = (rows - row) / rows;
+
+          for (const type of Object.values(ENEMY_TYPES)) {
+            cumulative += type.probability * rowMultiplier;
+            if (rand <= cumulative) {
+              selectedType = type;
+              break;
+            }
+          }
+
+          // Fallback to basic type if no selection was made
+          if (!selectedType) {
+            selectedType = ENEMY_TYPES.BASIC;
+          }
+
           enemies.push({
             x: startX + col * (width + spacing),
             y: startY + row * 40,
             width,
             height,
-            img: enemyImages[Math.floor(Math.random() * enemyImages.length)],
-            points: (rows - row) * 100,
-            direction: 1
+            img: enemyImages[selectedType.imageIndex],
+            points: selectedType.points,
+            direction: 1,
+            speed: selectedType.speed
           });
         }
       }
@@ -239,6 +297,7 @@ export function SparqInvaders() {
       }
     }
 
+    // Update enemy movement in updateGame function
     function updateGame() {
       if (gameState.isGameOver) return;
 
@@ -260,12 +319,12 @@ export function SparqInvaders() {
         if (bullet.y < 0) bullets.splice(i, 1);
       }
 
-      // Update enemies with modified speed progression
+      // Update enemies with modified speed progression and individual speeds
       let touchedEdge = false;
       const currentLevelSpeed = ENEMY_SPEED * (1 + 0.15 * (gameState.level - 1));
 
       enemies.forEach(enemy => {
-        enemy.x += enemy.direction * currentLevelSpeed;
+        enemy.x += enemy.direction * currentLevelSpeed * (enemy.speed || 1);
         if (enemy.x <= 0 || enemy.x + enemy.width >= canvas.width) {
           touchedEdge = true;
         }
