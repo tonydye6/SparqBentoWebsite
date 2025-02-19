@@ -74,7 +74,15 @@ const initGame = async () => {
 };
 
 const gameLoop = () => {
-  if (!ctx || !canvas) return;
+  if (!ctx || !canvas) {
+    console.debug('Canvas or context not available');
+    return;
+  }
+  console.debug('Game loop running', { 
+    bullets: bullets.length,
+    enemies: enemies.length,
+    score: currentScore
+  });
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Draw the player
