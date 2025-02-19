@@ -227,8 +227,8 @@ body {
   }
 
   .beta-card .card-title-container {
-    background: rgba(43, 45, 66, 0.85);
-    backdrop-filter: blur(8px);
+    background: rgba(43, 45, 66, 0.5);
+    backdrop-filter: blur(4px);
     border-radius: 8px;
     padding: 1.5rem;
     border: 2px solid rgba(255, 0, 51, 0.3);
